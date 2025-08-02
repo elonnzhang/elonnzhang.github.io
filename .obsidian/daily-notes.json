@@ -1,4 +1,5 @@
 {
   "folder": "_posts",
-  "autorun": true
+  "autorun": true,
+  "template": "_posts/2025-xx-xx-title"
 }
