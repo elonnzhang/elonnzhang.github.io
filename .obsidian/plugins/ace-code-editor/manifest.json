@@ -1,0 +1,13 @@
+{
+	"id": "ace-code-editor",
+	"name": "Ace Code Editor",
+	"version": "1.2.2",
+	"minAppVersion": "1.8.0",
+	"description": "An enhanced code editor using Ace editor, providing syntax highlighting, code folding, and other advanced editing features.",
+	"author": "RavenHogWarts",
+	"authorUrl": "https://github.com/RavenHogWarts",
+	"fundingUrl": {
+		"微信/支付宝": "https://s2.loli.net/2024/05/06/lWBj3ObszUXSV2f.png"
+	},
+	"isDesktopOnly": false
+}
