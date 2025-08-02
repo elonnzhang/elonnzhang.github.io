@@ -4,5 +4,6 @@
   "newFileLocation": "folder",
   "newFileFolderPath": "_posts",
   "alwaysUpdateLinks": true,
-  "propertiesInDocument": "source"
+  "propertiesInDocument": "source",
+  "useMarkdownLinks": true
 }
