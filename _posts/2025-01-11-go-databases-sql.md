@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Golang database/sql 数据库连接源码阅读"
+date:   2025-01-11
+categories: Golang
+---
+
 # Golang database/sql 数据库连接源码阅读
 代码仓库 database/sql
 
@@ -300,7 +307,7 @@ func (db *DB) PingContext(ctx context.Context) error {
 	return db.pingDC(ctx, dc, dc.releaseConn)
 }
 
-// 
+//
 func (db *DB) pingDC(ctx context.Context, dc *driverConn, release func(error)) error {
 	var err error
 	if pinger, ok := dc.ci.(driver.Pinger); ok {
@@ -667,8 +674,8 @@ func (rs *Rows) Close() error {
 }
 
 func (rs *Rows) close(err error) error {
-   // ... 
-  
+   // ...
+
 	rs.releaseConn(err)
 
 	rs.lasterr = rs.lasterrOrErrLocked(err)
@@ -810,9 +817,9 @@ func (tx *Tx) close(err error) {
 }
 // Commit commits the transaction.
 func (tx *Tx) Commit() error {
-	
+
 	// ....
-	
+
 	tx.close(err)
 	return err
 }
@@ -825,7 +832,7 @@ func (tx *Tx) Rollback() error {
 // the connection.
 func (tx *Tx) rollback(discardConn bool) error {
 	// ...
-	
+
 	tx.close(err)
 	return err
 }
@@ -843,5 +850,3 @@ db.Query() 调用完毕后会将连接传递给sql.Rows类型，调用.Close()�
 db.QueryRow()调用完毕后会将连接传递给sql.Row类型，当.Scan()方法调用之后把连接释放回到连接池。
 
 db.Begin() 调用完毕后将连接传递给sql.Tx类型对象，当.Commit()或.Rollback()方法调用后释放连接。
-
-
