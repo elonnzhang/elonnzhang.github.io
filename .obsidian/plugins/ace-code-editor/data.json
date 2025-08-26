@@ -6,10 +6,10 @@
     "html",
     "scss"
   ],
-  "lightTheme": "chrome",
+  "lightTheme": "github",
   "darkTheme": "monokai",
   "keyboard": "default",
-  "lineNumbers": true,
+  "showLineNumbers": true,
   "fontSize": 14,
   "fontFamily": [
     "Consolas",
@@ -20,5 +20,11 @@
   "snippetsManager": {
     "location": false,
     "icon": "code"
-  }
+  },
+  "showPrintMargin": true,
+  "showInvisibles": false,
+  "displayIndentGuides": true,
+  "showFoldWidgets": true,
+  "embedMaxHeight": 500,
+  "lineNumbers": true
 }
