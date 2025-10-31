@@ -6,5 +6,6 @@
   "alwaysUpdateLinks": true,
   "propertiesInDocument": "source",
   "useMarkdownLinks": true,
-  "promptDelete": false
+  "promptDelete": false,
+  "newLinkFormat": "absolute"
 }
