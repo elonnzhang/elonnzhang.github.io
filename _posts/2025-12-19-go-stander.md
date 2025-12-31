@@ -7,7 +7,7 @@ categories: golang
 
 # Golang 代码规范 - Tencent golang 代码规范
 
-> 代码从网上搜索得到
+> 内容从网上搜索得到
 
 ## 1. 前言
 
