@@ -32,8 +32,7 @@ JavaScript 最初是为**浏览器中的短脚本**设计的语言，而非大�
 - 访问不存在的属性却不报错，直到运行时才暴雷
 
 ----
-- JavaScript’s equality operator (`==`) _coerces_ its operands, leading to unexpected behavior:
-    
+- JavaScript’s equality operator (`==`) _coerces_ its operands, leading to unexpected behavior:  
 ```ts
 if ("" == 0) {
   // It is! But why??
@@ -49,6 +48,7 @@ const obj = { width: 10, height: 15 };
 // Why is this NaN? Spelling is hard!
 const area = obj.width * obj.heigth;
 ```
+----
 
 ## 二、TypeScript 的定位：静态类型检查器
 
