@@ -2,12 +2,43 @@
 layout: default
 ---
 
-<ul>
+<ul class="post-list" id="post-list">
     {% for post in paginator.posts %}
-    <li>
-        <h2><a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}">{{ post.title }}</a></h2>
-        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_to_string }}</time>
-        <p>{{ post.content | strip_html | truncatewords:50 }}</p>
+    <li class="post-list__item">
+        <time class="post-list__date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+        <span class="post-list__prompt" aria-hidden="true">&gt;</span>
+        <h2><a href="{{ post.url | relative_url }}" title="{{ post.title | escape }}">{{ post.title }}</a></h2>
+        <span class="post-list__category">
+          {% if post.categories.size > 0 %}[{{ post.categories | first }}]{% else %}[note]{% endif %}
+        </span>
+        {% capture post_description %}{{ post.excerpt | strip_html | normalize_whitespace }}{% endcapture %}
+        <span class="post-list__description"
+          tabindex="0"
+          data-description="{{ post_description | escape }}"
+          aria-label="文章摘要：{{ post_description | escape }}">
+          <span aria-hidden="true">—</span>
+          {{ post_description | truncatewords:18 }}
+        </span>
     </li>
     {% endfor %}
 </ul>
+
+<div class="post-list-footer" id="post-list-footer" hidden>
+  <div class="post-list-controls" id="post-list-controls">
+    <span class="post-list-controls__env" aria-hidden="true">ENV</span>
+    <label for="posts-per-page">PAGE_SIZE =</label>
+    <select id="posts-per-page" aria-label="每页文章数量">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+    </select>
+    <output id="post-list-range" aria-live="polite"></output>
+  </div>
+  <nav class="pagination pagination--client" id="client-pagination" aria-label="文章分页" hidden></nav>
+</div>
+
+<script
+  src="{{ "/assets/js/post-pagination.js" | relative_url }}"
+  data-posts-url="{{ "/posts.json" | relative_url }}"
+  data-root-url="{{ "/" | relative_url }}"
+  defer></script>

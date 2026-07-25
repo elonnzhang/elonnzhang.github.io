@@ -1,0 +1,18 @@
+---
+layout: default
+---
+
+<article class="code-space-doc">
+  <div class="code-space-doc__header">
+    <p class="code-space-prompt">~/code-space/{{ page.tool | escape }} $ cat {{ page.slug | escape }}</p>
+    <h1>{{ page.title | escape }}</h1>
+    <div class="code-space-doc__meta">
+      <span>[{{ page.tool | escape }}]</span>
+      <span aria-hidden="true">/</span>
+      <span>{{ page.kind | default: "guide" | escape }}</span>
+    </div>
+  </div>
+  <div class="post-content">
+    {{ content }}
+  </div>
+</article>

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: golang-gmp模型
+title: Go GMP 调度模型
 date: 2025-08-14
 categories: golang
 ---

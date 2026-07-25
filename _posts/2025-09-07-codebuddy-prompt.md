@@ -1,6 +1,6 @@
 ---
 layout: post
-title: codebuddy-prompt
+title: CodeBuddy Prompt
 date: 2025-09-07
 categories: prompt
 ---

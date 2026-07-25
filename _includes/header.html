@@ -1,11 +1,54 @@
 <header>
   <div class="header-container">
-    <a href="{{ "/" | prepend: site.baseurl | replace: '//' , '/' }}">
-      {% assign owner_first_name = site.owner | split: " " %}
-      <h1>{{ owner_first_name[0] | downcase }}@home:~$</h1>
+    {% assign owner_first_name = site.owner | split: " " %}
+    {% assign current_space = page.space | default: "home" %}
+    {% assign fallback_space = "code-space" %}
+    {% assign fallback_url = "/code-space/" %}
+    {% if current_space == "code-space" %}
+      {% assign fallback_space = "home" %}
+      {% assign fallback_url = "/" %}
+    {% endif %}
+    <details class="space-switcher">
+      <summary class="site-title" aria-label="切换空间">
+        <span class="site-title__prompt">{{ owner_first_name[0] | downcase }}@{{ current_space }}:~$</span>
+        <span class="site-title__caret" aria-hidden="true">▾</span>
+      </summary>
+      <nav class="space-switcher__menu" aria-label="空间">
+        <span class="space-switcher__command" aria-hidden="true">$ cd ~/</span>
+        <a href="{{ "/" | relative_url }}"{% if current_space == "home" %} aria-current="page"{% endif %}>
+          <span aria-hidden="true">{% if current_space == "home" %}&gt;{% else %}&nbsp;{% endif %}</span>
+          <span>home/</span>
+          {% if current_space == "home" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
+        </a>
+        <a href="{{ "/code-space/" | relative_url }}"{% if current_space == "code-space" %} aria-current="page"{% endif %}>
+          <span aria-hidden="true">{% if current_space == "code-space" %}&gt;{% else %}&nbsp;{% endif %}</span>
+          <span>code-space/</span>
+          {% if current_space == "code-space" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
+        </a>
+        <a href="{{ "/clippings/" | relative_url }}"{% if current_space == "clippings" %} aria-current="page"{% endif %}>
+          <span aria-hidden="true">{% if current_space == "clippings" %}&gt;{% else %}&nbsp;{% endif %}</span>
+          <span>clippings/</span>
+          {% if current_space == "clippings" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
+        </a>
+      </nav>
+    </details>
+    <a class="site-title space-switcher-fallback" href="{{ fallback_url | relative_url }}" aria-label="切换到 {{ fallback_space }} 空间">
+      <span class="site-title__prompt">{{ owner_first_name[0] | downcase }}@{{ current_space }}:~$</span>
+      <span class="site-title__caret" aria-hidden="true">→ {{ fallback_space }}</span>
     </a>
-    <div class="header-links">
-      # {% include links.html %}
-    </div>
+    <nav class="header-links" aria-label="Primary navigation">
+      <span aria-hidden="true">#</span>
+      {% include links.html %}
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换亮暗模式" aria-pressed="false">
+      <span class="theme-toggle__glow" aria-hidden="true"></span>
+      <svg class="theme-toggle__icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path class="theme-toggle__shade" d="M10.293 2.293a1 1 0 0 1 1.414 0l2.5 2.5 5.994 1.227a1 1 0 0 1 .506 1.687l-7 7a1 1 0 0 1-1.687-.506l-1.227-5.994-2.5-2.5a1 1 0 0 1 0-1.414z" />
+        <path d="m14.207 4.793-3.414 3.414" />
+        <path d="M3 20a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+        <path d="m9.086 6.5-4.793 4.793a1 1 0 0 0-.18 1.17L7 18" />
+      </svg>
+      <span class="theme-toggle__label sr-only">切换亮暗模式</span>
+    </button>
   </div>
 </header>

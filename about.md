@@ -14,14 +14,25 @@ Something about me.
 
 Golang/Java/Python
 
+use Claude Code & Codex
+
 Linux
 
 喜欢代码，喜欢终端。
 
 
 
-第一阶段
-[Tencent](tencent.com)
+ex [@Tencent](https://www.tencent.com/)
+
+now in @Baidu
+
+
+
+
+
+
+
+
 
 
 ```markdown

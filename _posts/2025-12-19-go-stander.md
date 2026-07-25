@@ -1,6 +1,6 @@
 ---
 layout: post
-title: go 代码规范
+title: Go 代码规范
 date: 2025-12-31
 categories: golang
 ---

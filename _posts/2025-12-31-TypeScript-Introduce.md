@@ -1,8 +1,8 @@
 ---
 layout: post
-title: TypeScript Introduce
+title: TypeScript 入门
 date: 2025-12-31
-categories: typescript
+categories: frontend
 ---
 
 [typescript org](https://www.typescriptlang.org/docs/handbook/intro.html)

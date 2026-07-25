@@ -1,47 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ site.lang | default: "zh-CN" }}">
 {% include head.html %}
 
 <body>
+  <a class="skip-link" href="#main-content">跳到正文</a>
   <div id="wrapper">
     {% include header.html %}
-    <div>
-      <!-- TODO -->
-    </div>
-    <div class="container">
-      <section id="main_content">
+    <div class="container{% if paginator %} container--post-index{% endif %}">
+      <main id="main-content">
         {{ content }}
-      </section>
+      </main>
     </div>
   </div>
 
   {% if paginator.total_pages > 1 %}
-  <div class="pagination">
+  <nav class="pagination" id="static-pagination" aria-label="文章分页">
     {% if paginator.previous_page == 1 %}
-    <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}" class="page-item">&laquo;</a>
+    <a href="{{ '/' | relative_url }}" class="page-item" aria-label="上一页">&laquo;</a>
     {% elsif paginator.previous_page%}
-    <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}"
-      class="page-item">&laquo;</a>
+    <a href="{{ paginator.previous_page_path | relative_url }}" class="page-item" aria-label="上一页">&laquo;</a>
     {% else %}
-    <span class="page-item">&laquo;</span>
+    <span class="page-item is-disabled" aria-hidden="true">&laquo;</span>
     {% endif %} {% for page in (1..paginator.total_pages) %} {% if page == paginator.page %}
-    <span class="page-item">{{ page }}</span>
+    <span class="page-item is-current" aria-current="page">{{ page }}</span>
     {% elsif page == 1 %}
-    <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}" class="page-item">{{ page }}</a>
+    <a href="{{ '/' | relative_url }}" class="page-item">{{ page }}</a>
     {% else %}
-    <a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}"
+    <a href="{{ site.paginate_path | replace: ':num', page | relative_url }}"
       class="page-item">{{ page }}</a>
     {% endif %} {% endfor %} {% if paginator.next_page %}
-    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}" class="page-item">&raquo;</a>
+    <a href="{{ paginator.next_page_path | relative_url }}" class="page-item" aria-label="下一页">&raquo;</a>
     {% else %}
-    <span class="page-item">&raquo;</span>
+    <span class="page-item is-disabled" aria-hidden="true">&raquo;</span>
     {% endif %}
-  </div>
+  </nav>
   {% endif %} {% include footer.html %}
 
   {% if site.google_analytics %}
   {% include analytics.html %}
   {% endif %}
+  <script src="{{ "/assets/js/theme.js" | relative_url }}" defer></script>
 </body>
 
 </html>

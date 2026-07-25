@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 分布式数据库和云原生数据库
+title: 分布式数据库与云原生数据库的区别
 date: 2025-01-11
-categories: Database
+categories: database
 ---
 
 

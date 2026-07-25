@@ -1,0 +1,15 @@
+---
+layout: null
+permalink: /posts.json
+---
+[
+{% for post in site.posts %}
+  {
+    "title": {{ post.title | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
+    "category": {% if post.categories.size > 0 %}{{ post.categories | first | jsonify }}{% else %}"note"{% endif %},
+    "description": {{ post.excerpt | strip_html | normalize_whitespace | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]

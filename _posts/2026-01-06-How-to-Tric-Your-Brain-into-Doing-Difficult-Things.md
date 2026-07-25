@@ -2,7 +2,7 @@
 layout: post
 title: 如何欺骗你的大脑去完成困难的事情
 date: 2026-01-06
-categories: translation
+categories: productivity
 ---
 
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: golang-heap
+title: Go heap 包笔记
 date: 2025-08-14
 categories: golang
 ---

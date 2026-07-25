@@ -1,3 +1,6 @@
+.DS_Store
+*/.DS_Store
+
 # Bundler cache
 .bundle
 vendor
@@ -26,3 +29,4 @@ package-lock.json
 # Misc
 _sass/vendors
 assets/js/dist
+assets/.DS_Store

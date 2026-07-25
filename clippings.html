@@ -1,0 +1,24 @@
+---
+layout: page
+title: Clippings
+space: clippings
+permalink: /clippings/
+---
+
+{% assign clippings = site.pages | where_exp: "item", "item.path contains 'Clippings/'" | sort: "created" | reverse %}
+
+<p class="clippings-intro">~/Clippings $ ls -t</p>
+
+<ol class="clippings-list">
+  {% for clipping in clippings %}
+  <li>
+    <time datetime="{{ clipping.created | date_to_xmlschema }}">{{ clipping.created | date: "%Y-%m-%d" }}</time>
+    <a href="{{ clipping.url | relative_url | escape }}">{{ clipping.title | escape }}</a>
+    {% if clipping.description %}
+    <span>{{ clipping.description | escape }}</span>
+    {% endif %}
+  </li>
+  {% else %}
+  <li>No clippings yet.</li>
+  {% endfor %}
+</ol>

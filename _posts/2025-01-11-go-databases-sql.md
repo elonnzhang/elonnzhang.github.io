@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Golang database/sql 数据库连接源码阅读"
+title: "Go database/sql 连接池源码阅读"
 date:   2025-01-11
-categories: Golang
+categories: golang
 ---
 
 # Golang database/sql 数据库连接源码阅读

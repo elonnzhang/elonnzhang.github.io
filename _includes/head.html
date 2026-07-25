@@ -1,11 +1,44 @@
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="Jekyll">
+  <meta name="color-scheme" content="light dark">
+  <meta id="theme-color" name="theme-color" content="#f7f7f2">
 
-  <title>{%if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var ua = navigator.userAgent || "";
+      var theme = "";
 
-  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}">
-  
-  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> {% seo %}
+      root.className += (root.className ? " " : "") + "js";
+      if (!("open" in document.createElement("details"))) {
+        root.className += " no-details";
+      }
+
+      if (/Kindle(?! Fire)/i.test(ua) ||
+          /(?:\?|&)eink=1(?:&|$)/.test(window.location.search)) {
+        root.setAttribute("data-eink", "true");
+      }
+
+      try {
+        theme = window.localStorage.getItem("elonnzhang-theme") || "";
+      } catch (error) {}
+
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      }
+      root.setAttribute("data-theme", theme);
+      document.getElementById("theme-color").setAttribute(
+        "content",
+        theme === "dark" ? "#111210" : "#f7f7f2"
+      );
+    }());
+  </script>
+  <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}">
+  <link href="{{ "/atom.xml" | relative_url }}" type="application/atom+xml" rel="alternate" title="{{ site.title }} Atom Feed">
+  {% seo %}
 </head>
