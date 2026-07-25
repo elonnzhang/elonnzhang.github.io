@@ -39,7 +39,7 @@
   {% if site.google_analytics %}
   {% include analytics.html %}
   {% endif %}
-  <script src="{{ "/assets/js/eink-reader.js" | relative_url }}" defer></script>
+  <script src="{{ "/assets/js/eink-reader.js" | relative_url }}?v={{ site.time | date: "%s" }}" defer></script>
   <script src="{{ "/assets/js/theme.js" | relative_url }}" defer></script>
 </body>
 

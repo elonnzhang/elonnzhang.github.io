@@ -7,6 +7,38 @@
     return;
   }
 
+  function forceCodeColors() {
+    var codeBlocks = document.getElementsByTagName("pre");
+    var inlineCode = document.getElementsByTagName("code");
+    var blockIndex;
+    var childIndex;
+    var codeIndex;
+
+    for (blockIndex = 0; blockIndex < codeBlocks.length; blockIndex += 1) {
+      var block = codeBlocks[blockIndex];
+      var children = block.getElementsByTagName("*");
+
+      block.style.backgroundColor = "#ffffff";
+      block.style.borderColor = "#000000";
+      block.style.color = "#000000";
+      block.style.boxShadow = "none";
+
+      for (childIndex = 0; childIndex < children.length; childIndex += 1) {
+        children[childIndex].style.backgroundColor = "transparent";
+        children[childIndex].style.color = "#000000";
+      }
+    }
+
+    for (codeIndex = 0; codeIndex < inlineCode.length; codeIndex += 1) {
+      var parent = inlineCode[codeIndex].parentNode;
+
+      inlineCode[codeIndex].style.color = "#000000";
+      if (!parent || !parent.tagName || parent.tagName.toLowerCase() !== "pre") {
+        inlineCode[codeIndex].style.backgroundColor = "#ffffff";
+      }
+    }
+  }
+
   function carryEinkParameter() {
     var links = document.getElementsByTagName("a");
     var currentHost = window.location.host;
@@ -264,6 +296,7 @@
     measure();
   }
 
+  forceCodeColors();
   carryEinkParameter();
 
   var reader = findReader();

@@ -1192,16 +1192,16 @@ footer {
 
 /*
   Kindle and other monochrome displays get a deliberately plain document.
-  The data attribute covers known Kindle user agents; the media query covers
+  The class covers known Kindle user agents and ?eink=1; the media query covers
   standards-aware monochrome browsers without relying on UA detection.
 */
-html[data-eink="true"],
-html[data-eink="true"] body {
+html.eink,
+html.eink body {
   background: #ffffff;
   color: #000000;
 }
 
-html[data-eink="true"] {
+html.eink {
   color-scheme: only light;
   --canvas: #ffffff;
   --surface: #ffffff;
@@ -1217,7 +1217,7 @@ html[data-eink="true"] {
   --selection: #d0d0d0;
 }
 
-html[data-eink="true"] body {
+html.eink body {
   overflow-x: visible;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 18px;
@@ -1225,96 +1225,96 @@ html[data-eink="true"] body {
   -webkit-font-smoothing: auto;
 }
 
-html[data-eink="true"] *,
-html[data-eink="true"] *::before,
-html[data-eink="true"] *::after {
+html.eink *,
+html.eink *::before,
+html.eink *::after {
   animation: none !important;
   transition: none !important;
   scroll-behavior: auto !important;
 }
 
-html[data-eink="true"] header,
-html[data-eink="true"] .post-header {
+html.eink header,
+html.eink .post-header {
   position: static;
   background: #ffffff;
 }
 
-html[data-eink="true"] a,
-html[data-eink="true"] h1,
-html[data-eink="true"] h2,
-html[data-eink="true"] h3,
-html[data-eink="true"] h4,
-html[data-eink="true"] h5,
-html[data-eink="true"] h6,
-html[data-eink="true"] .site-title,
-html[data-eink="true"] .header-links,
-html[data-eink="true"] .post-meta,
-html[data-eink="true"] .page-item,
-html[data-eink="true"] blockquote,
-html[data-eink="true"] th,
-html[data-eink="true"] footer {
+html.eink a,
+html.eink h1,
+html.eink h2,
+html.eink h3,
+html.eink h4,
+html.eink h5,
+html.eink h6,
+html.eink .site-title,
+html.eink .header-links,
+html.eink .post-meta,
+html.eink .page-item,
+html.eink blockquote,
+html.eink th,
+html.eink footer {
   color: #000000;
   text-shadow: none;
 }
 
-html[data-eink="true"] li::marker {
+html.eink li::marker {
   color: #000000;
 }
 
-html[data-eink="true"] .post-list__item {
+html.eink .post-list__item {
   grid-template-columns: 92px 12px minmax(0, 1fr) 112px;
 }
 
-html[data-eink="true"] .post-list__description {
+html.eink .post-list__description {
   display: none;
 }
 
-html[data-eink="true"] .post-list-controls,
-html[data-eink="true"] .pagination--client {
+html.eink .post-list-controls,
+html.eink .pagination--client {
   display: none;
 }
 
-html[data-eink="true"] a {
+html.eink a {
   text-decoration: underline;
 }
 
-html[data-eink="true"] .theme-toggle,
-html[data-eink="true"] .theme-toggle__glow {
+html.eink .theme-toggle,
+html.eink .theme-toggle__glow {
   color: #000000;
   box-shadow: none;
   transition: none;
 }
 
-html[data-eink="true"] .theme-toggle {
+html.eink .theme-toggle {
   display: none;
 }
 
-html[data-eink="true"] .reading-progress {
+html.eink .reading-progress {
   display: none;
 }
 
-html[data-eink="true"] .space-switcher > .site-title,
-html[data-eink="true"] .space-switcher-fallback {
+html.eink .space-switcher > .site-title,
+html.eink .space-switcher-fallback {
   pointer-events: none;
   cursor: default;
 }
 
-html[data-eink="true"] .site-title__caret,
-html[data-eink="true"] .space-switcher__menu {
+html.eink .site-title__caret,
+html.eink .space-switcher__menu {
   display: none !important;
 }
 
-html[data-eink="true"] .header-container {
+html.eink .header-container {
   padding-right: 0;
 }
 
-html[data-eink="true"] img {
+html.eink img {
   filter: grayscale(100%);
   outline: 1px solid #000000;
 }
 
-html[data-eink="true"] pre,
-html[data-eink="true"] code.highlighter-rouge {
+html.eink pre,
+html.eink code.highlighter-rouge {
   border-color: #000000;
   background: transparent !important;
   color: #000000;
@@ -1322,65 +1322,65 @@ html[data-eink="true"] code.highlighter-rouge {
   white-space: pre-wrap;
 }
 
-html[data-eink="true"] .highlight,
-html[data-eink="true"] .highlight code,
-html[data-eink="true"] .highlight span {
+html.eink .highlight,
+html.eink .highlight code,
+html.eink .highlight span {
   background-color: transparent !important;
   color: #000000 !important;
 }
 
-html[data-eink="true"] .post-list__item,
-html[data-eink="true"] .page > h1,
-html[data-eink="true"] th,
-html[data-eink="true"] td,
-html[data-eink="true"] hr,
-html[data-eink="true"] header {
+html.eink .post-list__item,
+html.eink .page > h1,
+html.eink th,
+html.eink td,
+html.eink hr,
+html.eink header {
   border-color: #000000;
 }
 
-html[data-eink="true"].eink-reader-enabled,
-html[data-eink="true"].eink-reader-enabled body {
+html.eink.eink-reader-enabled,
+html.eink.eink-reader-enabled body {
   height: 100%;
   overflow: hidden;
 }
 
-html[data-eink="true"].eink-reader-enabled #wrapper {
+html.eink.eink-reader-enabled #wrapper {
   min-height: 0;
 }
 
-html[data-eink="true"].eink-reader-enabled header {
+html.eink.eink-reader-enabled header {
   padding-top: 6px;
   padding-bottom: 6px;
   margin-bottom: 12px;
 }
 
-html[data-eink="true"].eink-reader-enabled .header-container {
+html.eink.eink-reader-enabled .header-container {
   min-height: 36px;
 }
 
-html[data-eink="true"].eink-reader-enabled .site-title {
+html.eink.eink-reader-enabled .site-title {
   min-height: 36px;
 }
 
-html[data-eink="true"].eink-reader-enabled .site-title__prompt {
+html.eink.eink-reader-enabled .site-title__prompt {
   font-size: 18px;
 }
 
-html[data-eink="true"].eink-reader-enabled .header-links {
+html.eink.eink-reader-enabled .header-links {
   gap: 8px;
   font-size: 13px;
 }
 
-html[data-eink="true"].eink-reader-enabled .header-link {
+html.eink.eink-reader-enabled .header-link {
   min-height: 36px;
   line-height: 36px;
 }
 
-html[data-eink="true"].eink-reader-enabled main {
+html.eink.eink-reader-enabled main {
   padding-bottom: 0;
 }
 
-html[data-eink="true"] .eink-reader__pages {
+html.eink .eink-reader__pages {
   width: 100%;
   max-width: 100%;
   margin: 0;
@@ -1389,38 +1389,38 @@ html[data-eink="true"] .eink-reader__pages {
   -webkit-column-fill: auto;
 }
 
-html[data-eink="true"] .eink-reader__pages .post-header,
-html[data-eink="true"] .eink-reader__pages .code-space-doc__header,
-html[data-eink="true"] .eink-reader__pages pre,
-html[data-eink="true"] .eink-reader__pages table,
-html[data-eink="true"] .eink-reader__pages img,
-html[data-eink="true"] .eink-reader__pages video,
-html[data-eink="true"] .eink-reader__pages iframe {
+html.eink .eink-reader__pages .post-header,
+html.eink .eink-reader__pages .code-space-doc__header,
+html.eink .eink-reader__pages pre,
+html.eink .eink-reader__pages table,
+html.eink .eink-reader__pages img,
+html.eink .eink-reader__pages video,
+html.eink .eink-reader__pages iframe {
   break-inside: avoid;
   -webkit-column-break-inside: avoid;
 }
 
-html[data-eink="true"] .eink-reader__pages h1,
-html[data-eink="true"] .eink-reader__pages h2,
-html[data-eink="true"] .eink-reader__pages h3,
-html[data-eink="true"] .eink-reader__pages h4,
-html[data-eink="true"] .eink-reader__pages h5,
-html[data-eink="true"] .eink-reader__pages h6 {
+html.eink .eink-reader__pages h1,
+html.eink .eink-reader__pages h2,
+html.eink .eink-reader__pages h3,
+html.eink .eink-reader__pages h4,
+html.eink .eink-reader__pages h5,
+html.eink .eink-reader__pages h6 {
   break-after: avoid;
   -webkit-column-break-after: avoid;
 }
 
-html[data-eink="true"] .eink-reader__pages pre,
-html[data-eink="true"] .eink-reader__pages .highlight,
-html[data-eink="true"] .eink-reader__pages table {
+html.eink .eink-reader__pages pre,
+html.eink .eink-reader__pages .highlight,
+html.eink .eink-reader__pages table {
   overflow: auto;
 }
 
-html[data-eink="true"] .eink-reader__pages img {
+html.eink .eink-reader__pages img {
   object-fit: contain;
 }
 
-html[data-eink="true"] .eink-reader {
+html.eink .eink-reader {
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -1438,7 +1438,7 @@ html[data-eink="true"] .eink-reader {
   line-height: 1;
 }
 
-html[data-eink="true"] .eink-reader__button {
+html.eink .eink-reader__button {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 0;
   flex: 1 1 0;
@@ -1455,28 +1455,28 @@ html[data-eink="true"] .eink-reader__button {
   letter-spacing: 0;
 }
 
-html[data-eink="true"] .eink-reader__button--previous {
+html.eink .eink-reader__button--previous {
   border-right: 1px solid #000000;
   text-align: left;
 }
 
-html[data-eink="true"] .eink-reader__button--next {
+html.eink .eink-reader__button--next {
   border-left: 1px solid #000000;
   text-align: right;
 }
 
-html[data-eink="true"] .eink-reader__button:focus {
+html.eink .eink-reader__button:focus {
   outline: 2px solid #000000;
   outline-offset: -4px;
 }
 
-html[data-eink="true"] .eink-reader__button:disabled {
+html.eink .eink-reader__button:disabled {
   color: #000000;
   cursor: default;
   text-decoration: line-through;
 }
 
-html[data-eink="true"] .eink-reader__status {
+html.eink .eink-reader__status {
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 118px;
   flex: 0 0 118px;
@@ -1490,8 +1490,8 @@ html[data-eink="true"] .eink-reader__status {
   white-space: nowrap;
 }
 
-html[data-eink="true"].eink-reader-enabled body > footer,
-html[data-eink="true"].eink-reader-enabled .pagination {
+html.eink.eink-reader-enabled body > footer,
+html.eink.eink-reader-enabled .pagination {
   display: none;
 }
 

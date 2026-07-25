@@ -23,6 +23,7 @@
       }
 
       if (isEink) {
+        root.className += (root.className ? " " : "") + "eink";
         root.setAttribute("data-eink", "true");
         root.setAttribute("data-theme", "light");
         if (colorScheme) {
@@ -53,7 +54,7 @@
       }
     }());
   </script>
-  <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}?v={{ site.time | date: "%s" }}">
   <link href="{{ "/atom.xml" | relative_url }}" type="application/atom+xml" rel="alternate" title="{{ site.title }} Atom Feed">
   {% seo %}
 </head>
