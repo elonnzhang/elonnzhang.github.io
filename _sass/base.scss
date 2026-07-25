@@ -1495,6 +1495,12 @@ html.eink.eink-reader-enabled .pagination {
   display: none;
 }
 
+@media (max-width: 720px) {
+  html.eink .post-list__item {
+    grid-template-columns: 12px minmax(0, 1fr) 112px;
+  }
+}
+
 @media (monochrome) {
   :root {
     color-scheme: only light;
