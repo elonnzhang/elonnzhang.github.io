@@ -1338,6 +1338,163 @@ html[data-eink="true"] header {
   border-color: #000000;
 }
 
+html[data-eink="true"].eink-reader-enabled,
+html[data-eink="true"].eink-reader-enabled body {
+  height: 100%;
+  overflow: hidden;
+}
+
+html[data-eink="true"].eink-reader-enabled #wrapper {
+  min-height: 0;
+}
+
+html[data-eink="true"].eink-reader-enabled header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+html[data-eink="true"].eink-reader-enabled .header-container {
+  min-height: 36px;
+}
+
+html[data-eink="true"].eink-reader-enabled .site-title {
+  min-height: 36px;
+}
+
+html[data-eink="true"].eink-reader-enabled .site-title__prompt {
+  font-size: 18px;
+}
+
+html[data-eink="true"].eink-reader-enabled .header-links {
+  gap: 8px;
+  font-size: 13px;
+}
+
+html[data-eink="true"].eink-reader-enabled .header-link {
+  min-height: 36px;
+  line-height: 36px;
+}
+
+html[data-eink="true"].eink-reader-enabled main {
+  padding-bottom: 0;
+}
+
+html[data-eink="true"] .eink-reader__pages {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  column-fill: auto;
+  -webkit-column-fill: auto;
+}
+
+html[data-eink="true"] .eink-reader__pages .post-header,
+html[data-eink="true"] .eink-reader__pages .code-space-doc__header,
+html[data-eink="true"] .eink-reader__pages pre,
+html[data-eink="true"] .eink-reader__pages table,
+html[data-eink="true"] .eink-reader__pages img,
+html[data-eink="true"] .eink-reader__pages video,
+html[data-eink="true"] .eink-reader__pages iframe {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+html[data-eink="true"] .eink-reader__pages h1,
+html[data-eink="true"] .eink-reader__pages h2,
+html[data-eink="true"] .eink-reader__pages h3,
+html[data-eink="true"] .eink-reader__pages h4,
+html[data-eink="true"] .eink-reader__pages h5,
+html[data-eink="true"] .eink-reader__pages h6 {
+  break-after: avoid;
+  -webkit-column-break-after: avoid;
+}
+
+html[data-eink="true"] .eink-reader__pages pre,
+html[data-eink="true"] .eink-reader__pages .highlight,
+html[data-eink="true"] .eink-reader__pages table {
+  overflow: auto;
+}
+
+html[data-eink="true"] .eink-reader__pages img {
+  object-fit: contain;
+}
+
+html[data-eink="true"] .eink-reader {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  display: grid;
+  grid-template-columns: minmax(88px, 1fr) minmax(118px, max-content) minmax(88px, 1fr);
+  align-items: stretch;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  border-top: 2px solid #000000;
+  border-bottom: 1px solid #000000;
+  color: #000000;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-size: 14px;
+  line-height: 1;
+}
+
+html[data-eink="true"] .eink-reader__button {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 10px;
+  border: 0;
+  background: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+html[data-eink="true"] .eink-reader__button--previous {
+  border-right: 1px solid #000000;
+  text-align: left;
+}
+
+html[data-eink="true"] .eink-reader__button--next {
+  border-left: 1px solid #000000;
+  text-align: right;
+}
+
+html[data-eink="true"] .eink-reader__button:focus {
+  outline: 2px solid #000000;
+  outline-offset: -4px;
+}
+
+html[data-eink="true"] .eink-reader__button:disabled {
+  color: #000000;
+  cursor: default;
+  text-decoration: line-through;
+}
+
+html[data-eink="true"] .eink-reader__status {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 118px;
+  flex: 0 0 118px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 8px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+html[data-eink="true"].eink-reader-enabled body > footer,
+html[data-eink="true"].eink-reader-enabled .pagination {
+  display: none;
+}
+
 @media (monochrome) {
   :root {
     color-scheme: only light;
