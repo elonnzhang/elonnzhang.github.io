@@ -5,6 +5,29 @@
   var button = document.getElementById("theme-toggle");
   var storageKey = "elonnzhang-theme";
 
+  if (root.getAttribute("data-eink") === "true") {
+    var switcher = document.getElementsByClassName("space-switcher")[0];
+    var fallback = document.getElementsByClassName("space-switcher-fallback")[0];
+    var summary;
+
+    root.setAttribute("data-theme", "light");
+    if (switcher) {
+      switcher.removeAttribute("open");
+      summary = switcher.getElementsByTagName("summary")[0];
+      if (summary) {
+        summary.setAttribute("aria-label", "当前空间");
+        summary.setAttribute("aria-disabled", "true");
+        summary.setAttribute("tabindex", "-1");
+      }
+    }
+    if (fallback) {
+      fallback.removeAttribute("href");
+      fallback.setAttribute("aria-disabled", "true");
+      fallback.setAttribute("tabindex", "-1");
+    }
+    return;
+  }
+
   if (!button) {
     return;
   }

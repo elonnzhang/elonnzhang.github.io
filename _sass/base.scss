@@ -1225,6 +1225,14 @@ html[data-eink="true"] body {
   -webkit-font-smoothing: auto;
 }
 
+html[data-eink="true"] *,
+html[data-eink="true"] *::before,
+html[data-eink="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
 html[data-eink="true"] header,
 html[data-eink="true"] .post-header {
   position: static;
@@ -1285,27 +1293,19 @@ html[data-eink="true"] .reading-progress {
   display: none;
 }
 
+html[data-eink="true"] .space-switcher > .site-title,
+html[data-eink="true"] .space-switcher-fallback {
+  pointer-events: none;
+  cursor: default;
+}
+
+html[data-eink="true"] .site-title__caret,
+html[data-eink="true"] .space-switcher__menu {
+  display: none !important;
+}
+
 html[data-eink="true"] .header-container {
   padding-right: 0;
-}
-
-html[data-eink="true"] .space-switcher__menu {
-  border-color: #000000;
-  background: #ffffff;
-  box-shadow: 3px 3px 0 #000000;
-}
-
-html[data-eink="true"] .space-switcher__menu a,
-html[data-eink="true"] .space-switcher__menu a[aria-current="page"],
-html[data-eink="true"] .space-switcher__command,
-html[data-eink="true"] .space-switcher__cwd {
-  color: #000000;
-}
-
-html[data-eink="true"] .space-switcher__menu a:focus {
-  outline-color: #000000;
-  background: #ffffff;
-  color: #000000;
 }
 
 html[data-eink="true"] img {

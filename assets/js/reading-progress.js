@@ -1,6 +1,10 @@
 (function () {
   "use strict";
 
+  if (document.documentElement.getAttribute("data-eink") === "true") {
+    return;
+  }
+
   var progress = document.getElementById("reading-progress");
   var value = progress && progress.getElementsByClassName("reading-progress__value")[0];
   var label = progress && progress.getElementsByClassName("reading-progress__label")[0];

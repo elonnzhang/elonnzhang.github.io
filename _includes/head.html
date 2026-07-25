@@ -10,15 +10,28 @@
       var root = document.documentElement;
       var ua = navigator.userAgent || "";
       var theme = "";
+      var isKindleEink = /\bKindle(?:\/|\s(?!Fire))/i.test(ua) &&
+        !/\bSilk\//i.test(ua);
+      var isEinkPreview = /(?:\?|&)eink=1(?:&|$)/.test(window.location.search);
+      var isEink = isKindleEink || isEinkPreview;
+      var colorScheme = document.getElementsByName("color-scheme")[0];
+      var themeColor = document.getElementById("theme-color");
 
       root.className += (root.className ? " " : "") + "js";
       if (!("open" in document.createElement("details"))) {
         root.className += " no-details";
       }
 
-      if (/Kindle(?! Fire)/i.test(ua) ||
-          /(?:\?|&)eink=1(?:&|$)/.test(window.location.search)) {
+      if (isEink) {
         root.setAttribute("data-eink", "true");
+        root.setAttribute("data-theme", "light");
+        if (colorScheme) {
+          colorScheme.setAttribute("content", "light");
+        }
+        if (themeColor) {
+          themeColor.setAttribute("content", "#ffffff");
+        }
+        return;
       }
 
       try {
@@ -32,10 +45,12 @@
           : "light";
       }
       root.setAttribute("data-theme", theme);
-      document.getElementById("theme-color").setAttribute(
-        "content",
-        theme === "dark" ? "#111210" : "#f7f7f2"
-      );
+      if (themeColor) {
+        themeColor.setAttribute(
+          "content",
+          theme === "dark" ? "#111210" : "#f7f7f2"
+        );
+      }
     }());
   </script>
   <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}">
