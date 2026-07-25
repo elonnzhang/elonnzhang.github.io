@@ -1293,6 +1293,10 @@ html.eink .reading-progress {
   display: none;
 }
 
+html.eink .eink-mode-entry {
+  display: none;
+}
+
 html.eink .space-switcher > .site-title,
 html.eink .space-switcher-fallback {
   pointer-events: none;
