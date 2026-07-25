@@ -1009,6 +1009,10 @@ html.js .reading-progress {
   cursor: default;
 }
 
+.eink-list-pagination {
+  display: none;
+}
+
 footer {
   width: calc(100% - 32px);
   max-width: 760px;
@@ -1297,6 +1301,10 @@ html.eink .eink-mode-entry {
   display: none;
 }
 
+html.eink #static-pagination {
+  display: none;
+}
+
 html.eink .space-switcher > .site-title,
 html.eink .space-switcher-fallback {
   pointer-events: none;
@@ -1477,6 +1485,24 @@ html.eink .eink-reader__button:focus {
 html.eink .eink-reader__button:disabled {
   color: #000000;
   cursor: default;
+  text-decoration: line-through;
+}
+
+html.eink .eink-list-pagination .eink-reader__button {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+html.eink .eink-list-pagination .eink-reader__button--previous {
+  justify-content: flex-start;
+}
+
+html.eink .eink-list-pagination .eink-reader__button--next {
+  justify-content: flex-end;
+}
+
+html.eink .eink-list-pagination .eink-reader__button.is-disabled {
   text-decoration: line-through;
 }
 

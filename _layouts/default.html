@@ -34,6 +34,28 @@
     <span class="page-item is-disabled" aria-hidden="true">&raquo;</span>
     {% endif %}
   </nav>
+  <nav class="eink-list-pagination eink-reader" aria-label="E-Ink 文章列表翻页">
+    {% if paginator.previous_page == 1 %}
+    <a href="{{ '/' | relative_url }}?eink=1"
+      class="eink-reader__button eink-reader__button--previous">&lt; PREV</a>
+    {% elsif paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}?eink=1"
+      class="eink-reader__button eink-reader__button--previous">&lt; PREV</a>
+    {% else %}
+    <span class="eink-reader__button eink-reader__button--previous is-disabled"
+      aria-disabled="true">&lt; PREV</span>
+    {% endif %}
+    <span class="eink-reader__status" aria-current="page">
+      PAGE {{ paginator.page }}/{{ paginator.total_pages }}
+    </span>
+    {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}?eink=1"
+      class="eink-reader__button eink-reader__button--next">NEXT &gt;</a>
+    {% else %}
+    <span class="eink-reader__button eink-reader__button--next is-disabled"
+      aria-disabled="true">NEXT &gt;</span>
+    {% endif %}
+  </nav>
   {% endif %} {% include footer.html %}
 
   {% if site.google_analytics %}
