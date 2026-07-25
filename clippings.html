@@ -9,9 +9,9 @@ permalink: /clippings/
 
 <p class="clippings-intro">~/Clippings $ ls -t</p>
 
-<ol class="clippings-list">
+<ol class="clippings-list" id="collection-list">
   {% for clipping in clippings %}
-  <li>
+  <li class="collection-page-item">
     <time datetime="{{ clipping.created | date_to_xmlschema }}">{{ clipping.created | date: "%Y-%m-%d" }}</time>
     <a href="{{ clipping.url | relative_url | escape }}">{{ clipping.title | escape }}</a>
     {% if clipping.description %}
@@ -22,3 +22,5 @@ permalink: /clippings/
   <li>No clippings yet.</li>
   {% endfor %}
 </ol>
+
+{% include collection-pagination.html storage_key="clippings-page-size" label="Clippings 分页" %}

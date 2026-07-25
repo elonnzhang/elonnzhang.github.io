@@ -603,6 +603,15 @@ th {
   margin: 0;
 }
 
+.collection-list-footer {
+  border-top: 1px dashed #b9bdb4;
+  border-top-color: var(--rule);
+}
+
+.collection-page-group[hidden] {
+  display: none;
+}
+
 .post-list__item {
   position: relative;
   display: grid;
@@ -1011,6 +1020,10 @@ html.js .reading-progress {
 
 .eink-list-pagination {
   display: none;
+}
+
+.eink-list-pagination[hidden] {
+  display: none !important;
 }
 
 footer {

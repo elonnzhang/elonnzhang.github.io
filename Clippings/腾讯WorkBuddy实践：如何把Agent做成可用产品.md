@@ -3,8 +3,8 @@ title: "腾讯WorkBuddy实践：如何把Agent做成可用产品"
 source: "https://mp.weixin.qq.com/s?src=11&timestamp=1784966270&ver=6863&signature=7xpYriprOWpPcWzrWK1OG3rRGXilTlCteTfUeYCgnJxlmWdwohTClM2RG6*-G-jPJrBcZhHB-ucJLuyaXfvQyyDF9pNtnqalxWO5-JzAvckXZS2e8RCEMgQkOolFF1Pa&new=1"
 author:
   - "[[Anne]]"
-published:
-created: 2026-07-25
+published: 2026-07-24
+created: 2026-07-24
 description: "如何设计好Agent的上下文与运行机制"
 tags:
   - "clippings"
@@ -47,7 +47,7 @@ WorkBuddy如何把Agent做成可用产品
 
 输出 = 模型 (系统提示词 + 工具 + 会话历史 + 其他上下文 + 用户指令)
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/u0lmmJTuFHhBibY9hc0usmd9lqQyousGiae5jgib7PPjicaz4utVNSR7iauBIdpLaH7ia38t8iaq5IDtFufCnPyBZl20MicettXKIjGxhRhicSzzaUoQ/640?wx_fmt=png&from=appmsg#imgIndex=1)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-01.png)
 
 图：模型调用抽象
 
@@ -67,20 +67,20 @@ WorkBuddy如何把Agent做成可用产品
 
 工具调用（也常叫 function call、Tool Call）是模型与外部系统之间的结构化协议：模型负责生成调用请求，Agent 负责执行。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHiapEofjqVRFpDn07IUbso7OV9WaAy52Pto79K3sbwYd0eiazrLDVG1Y8hAKYxvqzJDRzr4Ewt4TciaX6fZiahVaG21VicYNCbgqYpM/640?wx_fmt=jpeg&from=appmsg#imgIndex=2)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-02.jpg)
 
 图：工具调用流程
 
 完整流程：
 
 > 1\. 产品把可用工具的名称、用途和参数 Schema 提供给模型；
-> 
+>
 > 2\. 模型根据用户目标，输出一个结构化的调用请求；
-> 
+>
 > 3\. Agent 校验参数、检查权限，执行 API、脚本或本地函数；
-> 
+>
 > 4\. Agent 把执行结果作为 tool result 放回上下文；
-> 
+>
 > 5\. 模型读取结果，决定直接回答还是继续调用其他工具。
 
 一个示例工具定义如下，它作为上下文提供给模型：
@@ -91,7 +91,7 @@ WorkBuddy如何把Agent做成可用产品
 
 下图展示了一次工具调用的完整执行过程：用户提出查询请求后，模型根据工具定义生成工具调用；Agent 收到请求后校验参数和权限，再去获取实时的数据；工具返回结果后，模型读取工具执行结果，并基于结果生成最终回答。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHgLlPcyCbaiaXpYM6zla7OyK26KWkYJnE7MJhTvXzib9Se27ceGMCHIMwFTfKRCLLRsOm4DDAVziciabOia6LremzscPb68aE1TuIeo/640?wx_fmt=jpeg&from=appmsg#imgIndex=3)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-03.jpg)
 
 图：工具执行过程示例
 
@@ -101,7 +101,7 @@ WorkBuddy如何把Agent做成可用产品
 
 有了工具调用，Agent 具备执行能力，但还缺少稳定的工作角色。同一个模型既能写诗也能改代码、查数据；WorkBuddy 需要它在每次运行中都明确：自己是什么产品、能做什么、按什么原则工作、什么情况必须停下来询问用户。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHhgGS5Sfb8GxiblhmFCwB6edRYPM8VHMOeoa9iamvMmZEjwjVMOFW2wtMicmp3P590x9ia2hNv6tXpTKWkOnmhhMicciaiaHcsicADKJMA/640?wx_fmt=jpeg&from=appmsg#imgIndex=4)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-04.jpg)
 
 图：System Prompt 的作用
 
@@ -133,7 +133,7 @@ MCP 试图解决的是外部能力接入的标准化问题。
 
 Anthropic 在 2024 年底发布了开放协议 **Model Context Protocol（MCP）** ，用统一方式连接 AI 应用和外部数据源、工具。它为 AI 应用接入外部能力提供统一接口，Agent 不需要分别适配每个系统的调用方式。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHia2CFjffbLCDC5cwJq1gV726ibLwOYeawfAgolwuNd7zCqVTfO4FsWibHco7JqKWSRX4ELSKZicTpPLCAagELz1ibDib2ZaxDqVbmnY/640?wx_fmt=jpeg&from=appmsg#imgIndex=5)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-05.jpg)
 
 图：MCP 统一接入
 
@@ -151,7 +151,7 @@ Anthropic 在 2024 年底发布了开放协议 **Model Context Protocol（MCP）
 
 运行结构上，MCP 有三个角色：承载 Agent 的产品（如 WorkBuddy）、负责建连和发请求的 MCP Client、对外暴露能力的 MCP Server。MCP 统一的是连接协议，Server 背后仍可以是 REST、数据库、SDK，Agent 不需要理解这些差异。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHh2GPcclcUf8RHzZDg6Pc61EiaE0mxbEhhbN4nkeU9Ct6F1VcHiaZr7QPspU9t2xfa1yhTIE7ozzXbAsu4ny4pI1qaR4bzsVYUfU/640?wx_fmt=jpeg&from=appmsg#imgIndex=6)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-06.jpg)
 
 图：MCP 运行结构
 
@@ -173,7 +173,7 @@ Karpathy 在《Software Is Changing (Again)》里指出，Agent 是一类新的�
 
 **Tool 负责“一个动作”，Skill 负责“一类任务的做法”。**
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHjV1nNfUMopS8gicQTqoSEKUEBSh1GpaD6J2wianf8yKEIJCEgJWhxrriaibq4bwMSBMNFj8O6y8siceDr08urRIchXria8er2cdRNyQ/640?wx_fmt=jpeg&from=appmsg#imgIndex=7)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-07.jpg)
 
 图：Skill 的作用
 
@@ -185,7 +185,7 @@ MCP 负责连接外部系统，Skill 负责保存任务流程。但真实场景�
 
 Plugin 解决的是“能力组合如何安装和分发”的问题。它把多种相关能力组合成可安装、可分发的单位。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHhJbvUXrU3tXniay3uKDJZIntLxkUPc4A5moXeFRFHcgKjGd7nRqGiclE5xHOteNCAhU4NEopGbowsZuph4hiaZiaLbqEUWk0IKAa0/640?wx_fmt=jpeg&from=appmsg#imgIndex=8)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-08.jpg)
 
 图：Plugin 打包
 
@@ -212,7 +212,7 @@ Plugin: team-dev-workflow├─ MCP：读写 Issue、MR、构建结果和内部�
 
 因此，设计一个外接能力时，不能只问“能不能接进来”，还要判断它更适合哪种产品形态。不同能力的边界、更新频率、权限风险、上下文成本和复用方式不同，适合的接入方式也不同。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHgNu2pOZh80ShOuWM4tTG9Lkrrtz1Z3CTEQuweicyn5Izo6wdMnARY82iarZrAG2Nj1WY3sut8lvcic2knvjS8JRyBDDJ0NCLfxzQ/640?wx_fmt=jpeg&from=appmsg#imgIndex=9)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-09.jpg)
 
 图：外接能力形态选择
 
@@ -234,20 +234,20 @@ Plugin: team-dev-workflow├─ MCP：读写 Issue、MR、构建结果和内部�
 WorkBuddy 大致会进行以下步骤：
 
 > → 检查已有资料
-> 
+>
 > → 读取 Memory 和 Skill
-> 
+>
 > → 查询内部问题
-> 
+>
 > → 分配 Sub-agent 并行调研
-> 
+>
 > → 汇总观点和证据
-> 
+>
 > → 补充缺口
-> 
+>
 > → 生成大纲
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHgS35icGuKnE8iaXvoILjNiacSdLMhdu9zjGv1ic1eaP9G0DJk2V82aMWkuy6MsOtBzGmjdIHgFRFMbTVriasWTJWXKUM4gApZ8iaJ4I/640?wx_fmt=jpeg&from=appmsg#imgIndex=10)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-10.jpg)
 
 图：一次完整任务的信息流
 
@@ -273,7 +273,7 @@ WorkBuddy 大致会进行以下步骤：
 
 整个过程中，每次观察到的结果都被放到了模型的上下文里，主上下文的长度逐渐增大。所以我们必须要进行上下文管理，也就是 context engineering。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/u0lmmJTuFHgFVP4XrbH55nMS37Jh6sPfoFENOPSZCm7XIc4GNT2qSicIicibBlxJZHrLhWULIoPiaGXzD4Iyw2xcF4EgGxWc3wrJMF7uMOibEDD0/640?wx_fmt=png&from=appmsg#imgIndex=11)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-11.png)
 
 图：ReAct 多轮循环
 
@@ -283,7 +283,7 @@ WorkBuddy 大致会进行以下步骤：
 
 在一次模型决策前，设计哪些信息进入上下文、以什么形式进入、放在什么位置、何时更新或移出，以提高模型做出正确下一步决策的概率。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHh9xzhOMkvsPfazrplDXVtBN0FlAfC6sRLpgcvGg0JomhKtpkBWFKdR53uC20ibTWApZD5oFC9feOVfhnvH6DIDLmtj5OdOyhvU/640?wx_fmt=jpeg&from=appmsg#imgIndex=12)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-12.jpg)
 
 图：Context Engineering 的五类动作
 
@@ -305,7 +305,7 @@ WorkBuddy 大致会进行以下步骤：
 
 ## Prompt Cache：上下文管理的第一要义
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/u0lmmJTuFHh2ZNsg9Haft9HUqqOw1JFJ0TcAv4R9XwAVrRfFXCbiavq8ibTZg8y3qkKwfUMq3IEu3MaNuVQ8cuknXqydJJLxmhOWTdN9x6bEo/640?wx_fmt=png&from=appmsg#imgIndex=13)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-13.png)
 
 图：Prompt Cache 前缀复用
 
@@ -314,20 +314,20 @@ WorkBuddy 大致会进行以下步骤：
 它按前缀匹配，所以 WorkBuddy 在上下文组织上遵循几条规则：
 
 > ·System Prompt、基础工具定义、长期规则放前面，保持内容与顺序稳定；
-> 
+>
 > ·对话历史采用追加方式保存，不修改已发送过的消息；
-> 
+>
 > ·当前文件、任务进度、时间、工具结果、新加载的 Skill 等动态内容追加到后面；
-> 
+>
 > ·工具和 Skill 按需加载，避免每轮重新生成并排列完整能力列表；
-> 
+>
 > ·只在上下文过长需要压缩、或纠正错误信息时，才接受前缀变化和缓存重算。
 
 随着用户对积分（成本）越来越敏感，缓存命中率正在成为被普遍关注的工程指标。
 
 ## 渐进式加载：长结果和大工具集
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHiaaiatHWtf9BXDiagJEPUL44o6bREicXa7Rb1DG78bdadGib1XYcrrDoFF3m24J6XKiaFrCMV0ClS8ubePsw6PpXhiaoH7PiaAiczfbzxk/640?wx_fmt=jpeg&from=appmsg#imgIndex=14)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-14.jpg)
 
 图：渐进式加载
 
@@ -373,7 +373,7 @@ Skill 也用同样机制，先看名称和描述，确认适用后再读完整 S
 
 ## 为什么没有把 Procedural Memory 放进长期记忆
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/u0lmmJTuFHgqswZTQA3jE3Ybf95y2IKEBibTZynAwTbqfPxDOcYYjCSj27gicvhXWnSHvYicMfyW3DbkTPKgy3Fpzywib6nkKcV60OFulO5SHQo/640?wx_fmt=png&from=appmsg#imgIndex=15)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-15.png)
 
 图：陈述性记忆 vs 程序性记忆
 
@@ -397,7 +397,7 @@ Skill 也用同样机制，先看名称和描述，确认适用后再读完整 S
 
 ## Memory 的作用域分层与注入时机
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHjRD4aodRea14frDsIibCpUmLwOvurrDUAxbATiaCuUe1JqmHqZUaDPW3OfHL89ERpmt9VlhY2kA8ezG5taEO6juq5MricibjmBDibE/640?wx_fmt=jpeg&from=appmsg#imgIndex=16)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-16.jpg)
 
 图：记忆作用域分层
 
@@ -429,7 +429,7 @@ Skill 也用同样机制，先看名称和描述，确认适用后再读完整 S
 
 这些是 Harness Engineering 要解决的问题。Harness 可以按构建者和使用者分成两层：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/u0lmmJTuFHhWiaadiaoAicOwpJXf8HJT45qxG2ak12iaWMB2OibljhCapHxmntg8H8Mgu2xbHf4qic6e778ia1CnOsQ2wzasQR2VLEvN0oZQJ6IxkU/640?wx_fmt=png&from=appmsg#imgIndex=17)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-17.png)
 
 图：Harness 的两层同心圆
 
@@ -439,7 +439,7 @@ Skill 也用同样机制，先看名称和描述，确认适用后再读完整 S
 
 Harness 一词原指套在马身上的整套装备。从词源出发可以拆出三类能力，对应 Harness 要解决的三个方面：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHhMXpFu0nR9VibJSQdVCjq6ibgOquEACnlrIx9USicFq2FPibwwy8tC64TtUjia07l7r8Nx5xKmCcW0doaeJ0P8icibFdXIoHYBUgfylg/640?wx_fmt=jpeg&from=appmsg#imgIndex=18)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-18.jpg)
 
 图：驾驭 / 约束 / 整合
 
@@ -455,7 +455,7 @@ Harness 一词原指套在马身上的整套装备。从词源出发可以拆出
 
 ## 在讨论 WorkBuddy 的做法之前，先看三家有代表性的实践：OpenAI、Anthropic 和 LangChain。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHj4lqKeTjVlmUkUHRMVYn1MnLCicYrY73NMo5t9W4Tr2sicc5UibiaW7zA7MNpvWrC8nHIdJmNIWOy2XHV2A3BuhpK2qXEJ3VMtX1U/640?wx_fmt=jpeg&from=appmsg#imgIndex=19)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-19.jpg)
 
 图：OpenAI 实践
 
@@ -467,7 +467,7 @@ Harness 一词原指套在马身上的整套装备。从词源出发可以拆出
 
 WorkBuddy 的 Agent 在这一点上做了类似设计：执行较大任务时，先把目标拆解成结构化任务清单，并在推进过程中持续更新状态。它同时处理“一次承担过多 / 过早判定完成”和“上下文遗忘”两类问题——显式任务状态可以让 Agent 在长对话里恢复进度，也让用户更容易判断任务是否真的完成。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHh6I7BN1Xb5QiaG1trOKpy05dertQuB1jicTNYia1c5mS7lrF1oMyDzSoEEdFFgukEHJVjYODyWicn02LBFvhN1Kiamnsx66EsS9ZGA/640?wx_fmt=jpeg&from=appmsg#imgIndex=20)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-20.jpg)
 
 图：跨会话任务交接
 
@@ -475,7 +475,7 @@ WorkBuddy 的 Agent 在这一点上做了类似设计：执行较大任务时，
 
 方案借鉴 GAN 的对抗评估思路，用 Claude Agent SDK 构建三个角色：Planner（把一句话需求展开成完整规格，定范围但不指定实现细节）、Generator（按 sprint 逐功能实现、用 git 版本控制、提交前先自检）、Evaluator（独立验收 Agent，用 Playwright 像真实用户一样操作运行中的应用，逐条核查、把 bug 定位到行号和原因后打回）。普通用户可以借鉴的点：分离执行和验收（验收角色可用不同模型，或在 WorkBuddy 里用 Teams 分工）、把标准写进规则文件、先确认需求再执行、随模型升级精简约束。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHjM6RwbzK1wrpoyby1VIghLbjib3fsYaUJAcs5utIoA3Hico36Z7SFnlJdu4S5PibT6uNCFUrbnQic9bZDVnzOFHKMzQoibklibC2gtY/640?wx_fmt=jpeg&from=appmsg#imgIndex=21)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-21.jpg)
 
 图：Planner / Generator / Evaluator
 
@@ -495,7 +495,7 @@ WorkBuddy 构建良好的 Harness 有两个目标： **提高 Agent 首次执行
 
 WorkBuddy 的原则是： **能用计算型信号解决的问题，优先交给确定性程序；需要语义判断的问题，再交给审查 Agent。** 反馈也要按时机分层：快速检查尽量左移到编辑后、提交前或 Agent 自我纠正循环中；更昂贵的架构审查、详细代码审查、端到端验证放到集成前后；持续漂移和运行时健康则交给周期性传感器，例如死代码扫描、覆盖率质量分析、依赖风险、延迟、错误率、可用性 SLO 和日志异常。这样 Harness 不只是一组规则，而是一套持续运行的控制系统。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHhB1Y6ibdJxZibhz8rcHPp4ucvkGEKmedCZT7YfvJP7AXsprXibzoJMLMlWwSOGEqqvd2hZ2t5MVB19uGouJiakGsk4qwkotibkchgI/640?wx_fmt=jpeg&from=appmsg#imgIndex=22)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-22.jpg)
 
 图：Harness 五层结构
 
@@ -503,13 +503,13 @@ WorkBuddy 的原则是： **能用计算型信号解决的问题，优先交给�
 
 **1\. 运行环境层：Agent 在哪里执行。** 文件系统、Shell / Bash、Sandbox、Browser、MCP / Connectors、权限边界 / Approval Gate、Allowlist/ denylist。这一层用户通常感知不到，但缺少任何一项，上面几层都难以稳定运行。LangChain 指出，文件系统是 Agent 最基础的运行环境，它支撑了持久状态、跨会话工作和多 Agent 协作。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHiaoUEQfM7AicIH1EBVxw9Swq9M3sKVXH4iaKDdFRTtpwIBm6KDgySnbHVIGsj3iclGcdw2GlMJRXldjDtic1NljicIzxhgI7TBiaZzaY/640?wx_fmt=jpeg&from=appmsg#imgIndex=23)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-23.jpg)
 
 图：引导层
 
 **2\. 引导层（Feedforward）：Agent 开始前掌握什么。** 在执行前提供必要信息和约束，提高首次正确率。包括：项目上下文（项目概况、目录层级、关键依赖——早期模型不会主动探索代码库，可能在根目录写错文件）、环境上下文（操作系统、Shell、时间、时区、地理位置、IDE 主题、产品语言、已装 Skills、已连 Connectors）、规则与风格（不同模型不同倾向）、工具使用规则（独立的搜索 / 读取可并行、改文件前先读、路径不明先搜、长任务先拆 Todo）、Skills 和规则文件（把隐性知识保存成 Agent 能读到的内容）、上下文结构与 Prompt Cache（保持稳定前缀、追加动态内容、按需加载工具）。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHj3uhY98N2IicLafKp0ZIxE97KaJ0Z9r2U4SOKbricibGE0KV7gXZ0aa96LBCTIlyx93QctDrgWYbkU23ia3Zb4Dy1nOiap4lWdiasY0/640?wx_fmt=jpeg&from=appmsg#imgIndex=24)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-24.jpg)
 
 图：反馈层
 
@@ -533,7 +533,7 @@ WorkBuddy 的原则是： **能用计算型信号解决的问题，优先交给�
 
 借用 OpenAI Codex 实验总结的四类组件，可以把 WorkBuddy 团队的现有实践归入同一框架。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHh3c0XcUx6DVWmPLJWSKiabVe6ZibJmAhOicvQicVE80ZqTxK1negbbGliaCqmeguzUPA9BtvBlpPqs7hoicwagsLiccaTz9hkoxD6ia4w/640?wx_fmt=jpeg&from=appmsg#imgIndex=25)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-25.jpg)
 
 图：使用者视角的四类组件
 
@@ -566,7 +566,7 @@ Harness 定义 Agent 的环境、权限、反馈和纠正机制；Loop 定义任
 
 一个可用的 Loop 至少需要这些组件：触发器（Trigger / Automation）、独立执行环境（Isolated Workspace / Worktree）、Skills、Tools / Connectors / MCP、Sub-agents、Memory / Durable Artifacts、Sensors / Evals、Stop Conditions / Budget。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/u0lmmJTuFHia3RhBAWjdrWo4W4LqibyiccgX3MrwCaB0OITTBVIeROQkDF0XZdPd9ymoDJgCSkKARCRCOyC1SV9EzfnGuldhnz0n5DPkyp6IJM/640?wx_fmt=jpeg&from=appmsg#imgIndex=26)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-26.jpg)
 
 图：一个完整的 Loop
 
@@ -587,7 +587,7 @@ Harness 定义 Agent 的环境、权限、反馈和纠正机制；Loop 定义任
 
 ## 功能和业务正确性的验证缺口
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_jpg/u0lmmJTuFHiaMBG0CpLshFylx6CuKfDxy6tBSUTZslBafhtfpXicC4Chh3icibqvN68wZ0RMvEGjJC9o7ULroWibgjzwcL3yibVrsQHnsbvVgiaEbQ/640?wx_fmt=jpeg&from=appmsg#imgIndex=27)
+![Image](/assets/clippings/wechat/workbuddy-agent/image-27.jpg)
 
 图：业务正确性验证缺口
 

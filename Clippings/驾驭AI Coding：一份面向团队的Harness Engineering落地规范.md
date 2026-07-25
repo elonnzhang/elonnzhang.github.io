@@ -3,8 +3,8 @@ title: "驾驭AI Coding：一份面向团队的Harness Engineering落地规范"
 source: "https://mp.weixin.qq.com/s/g4nTfxm7ebzRwkAVIGdIbg"
 author:
   - "[[腾讯程序员]]"
-published:
-created: 2026-07-25
+published: 2026-07-17
+created: 2026-07-17
 description: "把\x26quot;好代码\x26quot;标准写进系统里，让 AI 在约束下自己干活"
 tags:
   - "clippings"
@@ -54,7 +54,7 @@ MCP、Skills、Rules、SDD、知识库这些概念，网上和司内已经有大
 Harness 这个词来自马术，本意是"马具"——缰绳、马鞍、马镫。一匹没驯服的马力量很大，但你没法让它耕地、运货、上战场。AI 也一样：
 
 > Agent = Model + Harness
-> 
+>
 > 模型提供智能，Harness 让智能变成生产力。
 
 LLM 本身没有状态、没有工具、没有记忆。Harness 层就是给模型装上"手脚和记忆"的工程基础设施。你写的所有代码、配的所有规则，都是 Harness 的一部分。
@@ -95,7 +95,7 @@ Harness Engineering 就是来解决这些问题的：
 
 Harness Engineering 把 Agent 的运行环境拆成 6 个支柱，每个支柱在我们的开发规范中都有对应的工具和实践。下面逐个说明。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz904uTpMdPQUWpUKoPsWPtIpQSV2LCrcMUwic1GIJfyVsTIs6H4xEa90thJ1qQ5LSEnicKSoq33wK9g1AkicuZbqn6a2eMyyjvcIpDk/640?wx_fmt=png&from=appmsg#imgIndex=1)
+![Image](/assets/clippings/wechat/harness-engineering/image-01.png)
 
 上图来自于公众号文章: https://mp.weixin.qq.com/s/gs5ndvlMqM-Y4jg1\_D2aFw 该文对Harness做了详细的讲解，本文不过多赘述;
 
@@ -129,7 +129,7 @@ OpenAI 自己踩过坑：早期试过"一个巨大的 AGENTS.md"，失败了。�
 
 工具系统由三部分组成：MCP（连接外部世界）、Skills（封装专家经验）和知识库（注入业务上下文），三者配合构成 AI Agent 的完整能力体系。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz906gCtmqej0wuEQFxDRalviaP1lJWia6qUoviahXjra3KFibKOCr0icyATiaZqAnG8z6IEwVf18Mibsvnac0BickCf2VqLU0LXauEHO2FtI/640?wx_fmt=png&from=appmsg#imgIndex=2)
+![Image](/assets/clippings/wechat/harness-engineering/image-02.png)
 
 **MCP（Model Context Protocol）—— 连接外部数据源**
 
@@ -176,7 +176,7 @@ Skills 是业务逻辑、领域知识和执行 SOP 的封装，让 AI 从"什么
 
 执行编排不只是选模式（Plan vs Agent），而是一套多 Agent 协作的标准化工作流。团队应该遵循“3+1 Phase”流程，每个阶段由不同角色的 Agent 负责：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz907MASxwdB5lPft6eZcRBTCCpGpvtOoE2KldVVEAdnqogmNoqOFp6UlGb0aMwoMaUwD1xiaDUy2Be9DppEI1RxicAmHcCy1Hy26no/640?wx_fmt=png&from=appmsg#imgIndex=3)
+![Image](/assets/clippings/wechat/harness-engineering/image-03.png)
 
 **"3+1 Phase" 标准化工作流** ：
 
@@ -189,7 +189,7 @@ Skills 是业务逻辑、领域知识和执行 SOP 的封装，让 AI 从"什么
 
 **多 Agent 角色定义** ：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz905VPT3UVTVjbvBW0Utpia4ou7JNWpTBdKXYXxpqsKEzkZop2aCYEjZQqTzZP4vjB2mQWkp7vBINwxCFCplkz0AuO1jMlPTjm9Cw/640?wx_fmt=png&from=appmsg#imgIndex=4)
+![Image](/assets/clippings/wechat/harness-engineering/image-04.png)
 
 | Agent 角色 | 职责 | 加载的 Harness |
 | --- | --- | --- |
@@ -227,7 +227,7 @@ Skills 是业务逻辑、领域知识和执行 SOP 的封装，让 AI 从"什么
 
 > 问题：怎么验证 AI 生成的代码是不是靠谱的？
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz905exfWeHSL3hQwfcLEbIoV0wwibISUVQ8hmU6oA0BGP8uyOR7P6n7wmV9YUFfic6fooBqiaUibyAn8kvObNZlDur99laibHSHnmeIkg/640?wx_fmt=png&from=appmsg#imgIndex=5)
+![Image](/assets/clippings/wechat/harness-engineering/image-05.png)
 
 评估分四层：
 
@@ -299,7 +299,7 @@ Skills 是业务逻辑、领域知识和执行 SOP 的封装，让 AI 从"什么
 
 在开发实践过程中,我们整理了一个AI编码的整体架构图，从上到下分五层：输入层 → 工作台（CodeBuddy）→ 底层支撑（MCP）→ 输出层 → 度量层，数据自上而下流动，形成闭环：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz904ia4F3DicQlWgZzmhImy4gDqiaBrDYJuatXicz2gQoYz3V0tnSWQVDS3lJbRoGZpkoLjibUpjRuvV4QYE6970BKNaP8ELKx6ILovxU/640?wx_fmt=png&from=appmsg#imgIndex=6)
+![Image](/assets/clippings/wechat/harness-engineering/image-06.png)
 
 **各层职责**
 
@@ -336,7 +336,7 @@ Skills 是业务逻辑、领域知识和执行 SOP 的封装，让 AI 从"什么
 ### 第二部分：落地实操
 
 > 以上两章阐述了 Harness Engineering 的核心理念和 AI Coding 一体化架构的设计蓝图。理解了"为什么"和"是什么"之后，接下来最关键的问题就是"怎么做"。
-> 
+>
 > 本部分聚焦于 **如何一步步把规范落地到团队日常开发中** 。每一节都包含具体的操作步骤、配置示例和验收标准，确保团队成员照着做就能跑通。
 
 #### 三、实施路线图（3 阶段渐进式）
@@ -554,7 +554,7 @@ Rules 是 AI 在每次交互中必须加载的全局约束，相当于 AI 必须
 
 ###### 4.3.1 Rules 分层体系
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz9041B6fr0ic6x9SibmkmIpAF74h23lOCa7BITUhY8JA1NqL4ibT8xiaibJVteRDafHunVAWVhTrX4JjDGEOQgA72S5gF4ibRibfMGXDCvU/640?wx_fmt=png&from=appmsg#imgIndex=7)
+![Image](/assets/clippings/wechat/harness-engineering/image-07.png)
 
 | 层级 | 作用域 | 配置方式 | 加载方式 |
 | --- | --- | --- | --- |
@@ -646,7 +646,7 @@ alwaysApply: true
 
 ###### 4.3.5 Rules 的保存与复用流程
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz907tM272ODf0g3uCS8g1UVtntvbF5C2et42zpZGgNSrft5c9Rtr6mQPDzhWgGRDWB6nqq5phKsjLHLG9PgwVzpoV37NXQ4QRGXI/640?wx_fmt=png&from=appmsg#imgIndex=8)
+![Image](/assets/clippings/wechat/harness-engineering/image-08.png)
 
 业务项目team-harness 仓库开发者业务项目team-harness 仓库开发者AI 下次交互自动加载新规则1. 提交 Rules 变更 PR2. 团队 Review & 合并3. 自动同步到各业务项目4..codebuddy/rules/ 更新
 
@@ -799,7 +799,7 @@ MCP（Model Context Protocol）是 AI 的"感知触手"，让 AI 能触达代码
 
 ###### 5.1.1 MCP 接入决策
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz904sv7V02s4SFDJwnJD3exQSJoV4KkkAhGFGuodkWyOicAAtKAIj7ic5iaBwN88Qoibxz45B4U2IKS5WqrE2GRgWQ6NKz6u3Kmuw9icA/640?wx_fmt=png&from=appmsg#imgIndex=9)
+![Image](/assets/clippings/wechat/harness-engineering/image-09.png)
 
 **⚠️ 何时不该用 MCP** ：
 
@@ -874,7 +874,7 @@ MCP 支持三种协议类型：
 ```
 
 > ⚠️ 注意事项：
-> 
+>
 > - `timeout` 单位是 ms，默认 10s，最大 300s
 > - stdio 类型的 `args` 必须拆开，不能合并为一个字符串
 > - MCP 只在 Agent 模式下生效，提问时需要打开 Agent
@@ -1126,9 +1126,9 @@ description: "七彩石（Rainbow）配置中心的连接、查询和更新操�
 
 ###### 5.4.2 Skills 创建与复用流程
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz907CdKHWicNtUiapT3AyYLtcHqTTV6opmicribWAz0u0ET4ibC3foffFlPFl0uXU1DnEm9w5qZOZDldfbP1lpJNicoNibz8G6vIsP62PrU/640?wx_fmt=png&from=appmsg#imgIndex=10)
+![Image](/assets/clippings/wechat/harness-engineering/image-10.png)
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz905iaAxnocxCuWnVPibYevzAlv7oVZCdrGLbIlic7tboNBLSaF5wvLq0EicicH59j6hUtX9dIoiblQBeone5YZBTrZHzYibA5brloAMGtU/640?wx_fmt=png&from=appmsg#imgIndex=11)
+![Image](/assets/clippings/wechat/harness-engineering/image-11.png)
 
 ###### 5.4.3 Skill 创建实操
 
@@ -1177,7 +1177,7 @@ Plan 模式是实现规范驱动开发的核心手段：在 AI 动手写代码�
 
 #### 5.5.1 Plan 模式开发流程（4 Stage）
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz906SialeEd83hChsVcokY7zpBMHo8sUSia2BnJviagrpoR8WCkNsOlo4cLj41EJ6AuPOQlFPdEdMr0ZAd2RYwIfuH53U5TIWGGghV0/640?wx_fmt=png&from=appmsg#imgIndex=12)
+![Image](/assets/clippings/wechat/harness-engineering/image-12.png)
 
 | 阶段 | 操作 | 模式 | 产出 |
 | --- | --- | --- | --- |
@@ -1234,9 +1234,9 @@ mv .codebuddy/plan/feat-operation-log .codebuddy/plan/archive/feat-operation-log
 
 ##### 6.1 SOP-A：新需求开发
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz904ia4nh6ZkjXEy2rEp4YFBtnQ8fwag7ylZ9ZNpDOBKA9VSoLROHzPVRrF5nwLE6cREzMPuXBngAUt06IvA66PtS3lzZFXBibib6uk/640?wx_fmt=png&from=appmsg#imgIndex=13)
+![Image](/assets/clippings/wechat/harness-engineering/image-13.png)
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz905RHx5feOoTW18j4lpotsehXc9c3BqiauyetM4bHS7N5N6djR4ibm27166h4f85rmy5Kl04KKMZrcOY0Eviaicgg9WyfDpx5rFqRibE/640?wx_fmt=png&from=appmsg#imgIndex=14)
+![Image](/assets/clippings/wechat/harness-engineering/image-14.png)
 
 **简单需求的快捷流程** （< 半天工作量）：
 
@@ -1254,9 +1254,9 @@ mv .codebuddy/plan/feat-operation-log .codebuddy/plan/archive/feat-operation-log
 
 ##### 6.2 SOP-B：Bug 修复
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz905d4iabJwA1Z4uOqzlniaxr9NVMZXUic8oAJ0fe2KGAw8P9uialv3PPKBoyhVtM00LxGazvma8yVy8bY8yxTDPa6WibRIxprYC8YyWM/640?wx_fmt=png&from=appmsg#imgIndex=15)
+![Image](/assets/clippings/wechat/harness-engineering/image-15.png)
 
-![image-20260707143742383](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz9040XUDU5snMfq5wI5Dh2KThyHWUPMe4mzSrtbJibPV9opjPI4jzdQwXOR6tqSPMMqoe8f8S3IVr8wzdJEarOMgF11Fd4GSvibj7A/640?wx_fmt=png&from=appmsg#imgIndex=16)
+![image-20260707143742383](/assets/clippings/wechat/harness-engineering/image-16.png)
 
 image-20260707143742383
 
@@ -1483,7 +1483,7 @@ Harness 合规性各维度得分率AGENTS.mdRulesSkillsMCPPlan工程Commit100908
 
 ##### 📈 成熟度路线图
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz904q1IYf5AzyPQRXJ2ia2v7BmB2OsxCbJ3uSqNpNcs5zznjia2nbxl6Y1SiaHhuRCAsYXSf9Qwt8EBWpfm3ysKibAvPGXQzFUfHluibQ/640?wx_fmt=png&from=appmsg#imgIndex=17)
+![Image](/assets/clippings/wechat/harness-engineering/image-17.png)
 
 \> **当前阶段** ：第二阶段（工具接入）
 
@@ -1516,8 +1516,8 @@ AI Agent 工具能在代码质量的各个方面帮不少忙，但最终的质�
 成本降低了，标准不能降低。工具变强了，人的判断力要跟着变强。
 
 ```
-让各类工具适配规范，                             
-而不是靠个人去适配各类工具。                                
+让各类工具适配规范，
+而不是靠个人去适配各类工具。
 这就是从"人驱动 AI"到"AI 自驱动"的转变。
 ```
 

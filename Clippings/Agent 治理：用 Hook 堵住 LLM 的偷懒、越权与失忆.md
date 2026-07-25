@@ -3,8 +3,8 @@ title: "Agent 治理：用 Hook 堵住 LLM 的偷懒、越权与失忆"
 source: "https://mp.weixin.qq.com/s/ISwjIw5lj7JlcQJV7BOx5g"
 author:
   - "[[腾讯程序员]]"
-published:
-created: 2026-07-25
+published: 2026-07-16
+created: 2026-07-16
 description: "prompt 管不住的，框架来堵"
 tags:
   - "clippings"
@@ -14,7 +14,7 @@ tags:
 作者：xiangnzhang
 
 > 本文是 DECO（一个跑在生产上的数仓 Agent 引擎）实践系列之一，聚焦 **护栏层** ：怎么用 Agent 框架的 Hook 切面，把 LLM 处理长文本时的"偷懒"（截断、略写、残缺）、对生产环境的"越权"（未确认发布、回刷）以及上下文传递中的"失忆"（改了表不查风险、产出了物不知汇报），在代码层确定性兜底——prompt 管不住的，框架来堵。
-> 
+>
 > DECO 作为腾讯一站式数据工程 Agent 智能协作平台，以业务数仓知识库为基础，致力于解决从需求到数据交付全过程，主要聚焦于数据问询、开发、同步、分析、运维五大环节。希望帮助更多同学更轻松地获取数据、理解数据、应用数据，助力数据平权。
 
 引子：从两个真实案例说起
@@ -28,7 +28,7 @@ tags:
 1. **LLM 偷懒** ：处理长脚本（动辄上千行的 SQL / Python ETL）时，模型会截断、占位略写（输出 `-- 其他字段...`）、跳步骤、把长 SQL "复印"式重写到 token 耗尽，最后剩一堆残缺、不可执行的脚本。
 2. **越权操作** ：发布、回刷、冻结/解冻、终止实例这些写生产或不可逆的动作，模型无法区分操作的可逆性——它把发布和查询视为同一类"完成任务的步骤"，可能不打招呼就直接调了。
 3. **上下文失忆** ：模型改完表不去分析下游风险、Python 产出图表不知告诉用户——「需要查的就不查」。模型被训练成用最短路径完成任务——额外一次 tool call 意味着多一步推理，模型倾向于跳过"看起来不必要"的检查步骤。（此处风险分析为事后下游影响评估，非改表前拦截——事前拦截由 HITL Guard 负责。）
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz905hBq2gOZfzr1VcYYibRaUmqFnWPt6oXA8ROIRm92AI2W2ibialf8iajia2ECibdBx1QPEK2PHNA38K3UE9Noibia4RW5wbiaPdI9IzuVsA/640?wx_fmt=png&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1#imgIndex=1)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-01.png)
 
 **"在 prompt 里多写几句 ⚠️ 禁止"根本管不住。** 这不是 prompt engineering（通过提示词约束模型行为）能解决的问题——长 SQL 是物理上超出 token 预算，危险操作是模型无法区分"查询"和"发布"的可逆性差异，被动探测是模型追求最短完成路径的自然倾向。唯一的解法是在 Agent 框架层，让偷懒和越权的路径 **代码级强制走不通** ，让失忆的已知盲区 **确定性补齐** 。
 
@@ -38,7 +38,7 @@ tags:
 
 DECO 的数仓开发 Agent 帮用户把数据需求落成 US 平台上可运行的任务。先约定几个关键名词：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz9070YdSLgoLFhBAncrzbA7cx5aUp5T6qg1ibCcDGjqqX5WyvibeA5Y175G4KytyzkVSQBmYPLDtPSO7pRTbmibvqMujQicetUJojVj8/640?wx_fmt=png&from=appmsg#imgIndex=2)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-02.png)
 
 二、Hook 链：在关键切面挂载护栏逻辑
 
@@ -85,7 +85,7 @@ DECO 的数仓开发 Agent 帮用户把数据需求落成 US 平台上可运行�
 
 > 下文为可读性将盘路径统称 `/sandbox/` ，实际代码中只读快照在 `/mnt/chat-offload/` ，可编辑工作副本在 `/mnt/user-data/` 。
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz906uFo4lNkqd9tzUFicgMjtEoVWArCxxH3rl3hrSnZZqIyQP4EHFasyRaB8qTDb4B4Kye7lOVfhuxFYCmM03DLPxzucibhQFBhNFI/640?wx_fmt=png&from=appmsg#imgIndex=3)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-03.png)
 
 #### 拉取侧：Offload Hook（afterTool）
 
@@ -118,7 +118,7 @@ SELECT ... FROM dwd_b
 
 #### 写回侧：Onload Hook（beforeTool）
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz907wHHKeneA6XauljYBd6boSKkBff2XiaQHDUEvO9FSff5JwDb88j2MZwf0hxPLpdXSS7kZasq6FyrZicbmA3ZpNtibZ50Ygicdkuyo/640?wx_fmt=png&from=appmsg#imgIndex=4)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-04.png)
 
 #### 同模式延展：表侧 Offload
 
@@ -139,18 +139,18 @@ scriptFilePath :脚本的沙箱路径（强烈推荐）。框架OnloadHook会从
 
 **效果** ：修改任务时，模型不用再"吐"那几千行 SQL——它只输出脚本路径，全文由框架在后台对齐。「长文本走文件路径，修改任务的工具调用输出 token 直接降约 90%」的落地机制；长 SQL 从此彻底从对话历史和 token 消耗里"隐身"。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz907Sl4akfetY0dMrKia4cprS3iaM4OlTiaEjyGRiaBic0JDx15De57CV8zOEoKolL7TKpa1ZxicDtJTial1JHYEaws4kjn7V7fyl9ncTts/640?wx_fmt=png&from=appmsg#imgIndex=5)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-05.png)
 
 3.3 多重防线全景（对应数仓四阶段）
 
 这套护栏不是单点，而是贯穿 Skills 编排篇那条流水线的多重防线：
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz905BMqicbVVMybF7a5HUh5ZHJ2KHMs3kfU0sKdlWX1YeHvdjxnnAYVq4icUENT5ibVKpjoicUOsBOHNjWUUCBExxXqFLibjEd2QErPZ4/640?wx_fmt=png&from=appmsg#imgIndex=6)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-06.png)
 
 每一阶段的防线，正好对应 Skills 编排篇里那条数仓开发流水线（设计→拆解→执行→验证四阶段）的各个阶段—— **Hook 在框架层做物理兜底** 。
 
 > 图中隐含了两条关键分支，未直接绘出以保持主线清晰：
-> 
+>
 > - **Onload 阻断** （红线）：「⑤ → Onload Hook 加载工作副本」环节，若 `scriptFilePath` 不在白名单路径、身份缺失、文件不存在或内容为空 → 抛异常阻断工具调用，不进入 C1 后续。
 > - **Offload 降级** （橙线）：「① Offload Hook 落只读快照」环节，若 COS 落盘失败 → 该条原 `scriptContent` 透传给 LLM（承担自截断风险），不阻塞主流程。
 
@@ -223,7 +223,7 @@ deco:
 
 **守门流程** ——Agent 每次要调工具，框架都会先过一道「门卫」：
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz905JkrusYWCycLW50Bf7ra9WKQk5DNThiaNwia8yUyxSfPtSdLj9uy7kQBs13XBYYSYI2sWaMEN3CVHibkbVicmtC309UNxFt6SSfhI/640?wx_fmt=png&from=appmsg#imgIndex=7)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-07.png)
 
 无论 Agent 是自作主张还是被诱导，只要没有人工确认这一步， `packCommit` / `deployCommit` 在框架层就 **物理走不通** 。§4.3 配图展开与用户握手的完整时序。
 
@@ -285,7 +285,7 @@ DECO 的 HITL 是在 ADK 较早版本上自研的。如今 HITL 已是主流 Age
 
 这个范式的核心是把「副作用采集」和「上下文注入」解耦成两段，各管各的：
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz904bicicdTGeqcsT1kL7t8BVSboFdJJc7l7E8C8uffeicWbOZ2pCFWkGLxIgJGDvBbcnjRQTMp7cNPJ3a6coIR9hI0aibaD5C7YPjw4/640?wx_fmt=png&from=appmsg#imgIndex=9)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-08.png)
 
 这样做的好处是双重的：
 
@@ -308,7 +308,7 @@ DECO 的 HITL 是在 ADK 较早版本上自研的。如今 HITL 已是主流 Age
 
 **治理做法** ：
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/KVER9adz907a21icu97b8Dj4gCOFHES4Y8khGcpPh6n6wO3Enmbe8K4nse2BjKHPpia8DVm29AK1ljMY1Pl12RaFtrDONVRXPJCAZ4Z8OFxUQ/640?wx_fmt=png&from=appmsg#imgIndex=10)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-09.png)
 
 判定「改表」语义： `RiskAnalysisHook` 挂在 `afterTool` 上，不从工具名硬判断——它看工具调用入参： **带了 `tableId` 参数的 `upsertTable` 就是改表** （新建表不带 `tableId` ）。新建表语义直接跳过，不触发风险分析。
 
@@ -334,7 +334,7 @@ DECO 的 HITL 是在 ADK 较早版本上自研的。如今 HITL 已是主流 Age
 
 **治理做法** ：
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz905xHdMDywCic6c9jw6CrvQjickIubcOp5Yp4DACVLrNOmvxvlPB5g1phFZEOCCSZianZCswwmouzuNJQqYDdxnrEHFuuJA2A0EQkw/640?wx_fmt=png&from=appmsg#imgIndex=11)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-10.png)
 
 前端渲染：Attachment 注入的不只是文本——预签名 URL 被写成结构化 JSON，前端据此渲染内联图片。用户无需点按钮、不必翻沙箱目录， **图直接出现在对话流里** 。
 
@@ -365,7 +365,7 @@ DECO 的 HITL 是在 ADK 较早版本上自研的。如今 HITL 已是主流 Age
 
 DECO 这套机制的特殊之处： **它不是「存储 → 读取」的被动模式，而是「事件 → 采集 → 注入」的主动流水线** 。Hook 不是等着 LLM 来查 state，而是主动把结论 push 进下一轮 prompt——这意味着即使 LLM 完全不知道 state 里有风险分析结果，Attachment 也会让它「看到」。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz904EWXtCLGFo103pIOKmLic5ZEcIeibrqEgAn8rYg50jiazRqyY0eGT7zeeeibOPBos8H3rJsySyyl03HS2qYyqlHgvLAn2cSia0NNJE/640?wx_fmt=png&from=appmsg#imgIndex=12)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-11.png)
 
 一句话：Hook → state → Attachment 闭环，把「LLM 需要主动查」的操作降维为「框架主动 push」——LLM 不再是「需要查的就不查」，而是「不管想不想查都会被喂到嘴边」。
 
@@ -373,7 +373,7 @@ DECO 这套机制的特殊之处： **它不是「存储 → 读取」的被动�
 
 三、四两节纵深拆解了两个深度案例——长文本读写两侧 offload 和 HITL 门禁。但同一套 Hook 链（ `beforeModel` / `afterModel` / `beforeTool` / `afterTool` / `onRunEvent` 等切面）上，DECO 实际挂了 **十余个 Hook** ，覆盖可观测、前端实时刷新、上下文联动、业务事件、沙箱环境等横切关注点。这一节从纵深拉回横展，展现 Hook 体系的完整生态。它们都遵循同一条原则： **不改业务循环、不动工具实现，把横切逻辑挂在切面上** 。
 
-![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/KVER9adz906o7ibWCEHXib5QTpHfziaWicpia0sq0VKYuzR1tOibS7PPuz4ddfqb4WUcsbu7kZrr0QUsnrUhoU4LCiadgyGbTv7VQoZI4K8qFc9icA8/640?wx_fmt=png&from=appmsg#imgIndex=13)
+![Image](/assets/clippings/wechat/agent-governance-hooks/image-12.png)
 
 | 分类 | Hook | 挂载点 | 职责 |
 | --- | --- | --- | --- |

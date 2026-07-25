@@ -4,7 +4,7 @@ source: "https://x.com/leerob/status/2080467752897146898?s=46"
 author:
   - "[[@leerob]]"
 published: 2026-07-24
-created: 2026-07-25
+created: 2026-07-24
 description: "How do AI models learn new skills and behaviors?The process is surprisingly human and easy to understand, even if you don’t have a machine l..."
 tags:
   - "clippings"

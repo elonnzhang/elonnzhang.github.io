@@ -4,7 +4,7 @@ source: "https://x.com/mem0ai/status/2079585032587694582?s=46"
 author:
   - "[[@mem0ai]]"
 published: 2026-07-21
-created: 2026-07-25
+created: 2026-07-21
 description: "In April 2026, Andrej Karpathy wrote a GitHub Gist. He describes a method in it. He calls the method the LLM Wiki.Four teams built the same ..."
 tags:
   - "clippings"

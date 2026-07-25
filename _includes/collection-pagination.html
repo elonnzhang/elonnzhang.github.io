@@ -1,0 +1,24 @@
+<div class="post-list-footer collection-list-footer" id="collection-list-footer" hidden>
+  <div class="post-list-controls">
+    <span class="post-list-controls__env" aria-hidden="true">ENV</span>
+    <label for="collection-page-size">PAGE_SIZE =</label>
+    <select id="collection-page-size" aria-label="每页条目数量">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+    </select>
+    <output id="collection-list-range" aria-live="polite"></output>
+  </div>
+  <nav class="pagination pagination--client" id="collection-pagination"
+    aria-label="{{ include.label | default: '列表分页' }}" hidden></nav>
+</div>
+
+<nav class="eink-list-pagination eink-reader" id="collection-eink-pagination"
+  aria-label="E-Ink {{ include.label | default: '列表分页' }}" hidden></nav>
+
+<script
+  id="collection-pagination-script"
+  src="{{ "/assets/js/collection-pagination.js" | relative_url }}"
+  data-root-url="{{ page.url | relative_url }}"
+  data-storage-key="{{ include.storage_key | default: 'collection-page-size' }}"
+  defer></script>

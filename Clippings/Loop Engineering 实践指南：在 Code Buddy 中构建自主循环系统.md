@@ -3,8 +3,8 @@ title: "Loop Engineering 实践指南：在 Code Buddy 中构建自主循环系�
 source: "https://mp.weixin.qq.com/s/YqIyL7uW4EV2r5HLDW7wcA"
 author:
   - "[[腾讯程序员]]"
-published:
-created: 2026-07-25
+published: 2026-06-22
+created: 2026-06-22
 description: "AI 编程第三次革命"
 tags:
   - "clippings"

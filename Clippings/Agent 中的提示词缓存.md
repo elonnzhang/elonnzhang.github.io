@@ -3,7 +3,7 @@ title: "Agent 中的提示词缓存"
 source: "https://earendil.com/posts/prompt-caching/"
 author:
 published: 2026-07-22
-created: 2026-07-25
+created: 2026-07-22
 description: "提示词缓存如何影响编码 Agent 的成本、延迟、工具设计和系统架构，以及 Pi 如何让缓存行为变得可观测。"
 tags:
   - "clippings"

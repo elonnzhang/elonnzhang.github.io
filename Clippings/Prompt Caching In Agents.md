@@ -3,7 +3,7 @@ title: "Prompt Caching In Agents"
 source: "https://earendil.com/posts/prompt-caching/"
 author:
 published: 2026-07-22
-created: 2026-07-25
+created: 2026-07-22
 description: "How prompt caching shapes the cost, latency, tools, and architecture of coding agents, and what Pi does to keep cache behavior visible."
 tags:
   - "clippings"
