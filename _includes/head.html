@@ -13,7 +13,12 @@
       var isKindleEink = /\bKindle(?:\/|\s(?!Fire))/i.test(ua) &&
         !/\bSilk\//i.test(ua);
       var isEinkPreview = /(?:\?|&)eink=1(?:&|$)/.test(window.location.search);
-      var isEink = isKindleEink || isEinkPreview;
+      var isWebPreview = /(?:\?|&)web=1(?:&|$)/.test(window.location.search);
+      var isForcedEink =
+        {% if page.force_eink %}true{% else %}false{% endif %} &&
+        !isWebPreview;
+      var isEink = isKindleEink || isEinkPreview || isForcedEink;
+      var spaceArrival = "";
       var colorScheme = document.getElementsByName("color-scheme")[0];
       var themeColor = document.getElementById("theme-color");
 
@@ -22,9 +27,26 @@
         root.className += " no-details";
       }
 
+      try {
+        spaceArrival = window.sessionStorage.getItem(
+          "elonnzhang-space-arrival"
+        ) || "";
+        window.sessionStorage.removeItem("elonnzhang-space-arrival");
+      } catch (error) {}
+
+      if (spaceArrival === "ink-reader" && !isKindleEink) {
+        root.className += " space-arrival-ink-reader";
+      }
+
       if (isEink) {
         root.className += (root.className ? " " : "") + "eink";
         root.setAttribute("data-eink", "true");
+        if (isEinkPreview) {
+          root.setAttribute("data-eink-preview", "true");
+        }
+        if (isKindleEink) {
+          root.setAttribute("data-kindle", "true");
+        }
         root.setAttribute("data-theme", "light");
         if (colorScheme) {
           colorScheme.setAttribute("content", "light");

@@ -292,6 +292,199 @@ html.no-details .space-switcher-fallback {
   font-weight: 400;
 }
 
+.space-ink-transition {
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  visibility: hidden;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.space-ink-transition.is-active {
+  visibility: visible;
+}
+
+.space-ink-transition__drop-scene {
+  display: none;
+}
+
+.space-ink-transition.is-ink-reader {
+  background: #ffffff;
+}
+
+.space-ink-transition.is-ink-reader .space-ink-transition__drop-scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 210px;
+  height: 180px;
+  transform: translate(-50%, -50%);
+}
+
+.space-ink-transition__drop {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 75% 55% 75% 12%;
+  background: #050605;
+  opacity: 0;
+  transform: translate(-50%, -48vh) rotate(-45deg);
+}
+
+.space-ink-transition.is-ink-reader .space-ink-transition__drop {
+  animation: space-ink-drop 430ms cubic-bezier(0.58, 0, 0.92, 0.72) forwards;
+}
+
+.space-ink-transition__bloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 68vw;
+  max-width: 540px;
+  height: auto;
+  margin: 0;
+  opacity: 0;
+  outline: 0;
+  transform: translate(-50%, -50%) scale(0.04) rotate(-2deg);
+}
+
+.space-ink-transition.is-ink-reader .space-ink-transition__bloom {
+  animation:
+    space-ink-bloom 360ms cubic-bezier(0.1, 0.78, 0.2, 1) 370ms forwards,
+    space-ink-settle 260ms ease-in 780ms forwards;
+}
+
+.space-ink-transition__command {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: calc(100% - 48px);
+  max-width: 760px;
+  margin: 0;
+  color: #ffffff;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.5;
+  opacity: 0;
+  overflow-wrap: anywhere;
+  transform: translate(-50%, -50%);
+}
+
+.space-ink-transition.is-ink-reader .space-ink-transition__command {
+  top: auto;
+  bottom: 7vh;
+  color: #050605;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+  animation:
+    space-ink-command 160ms steps(2, end) 620ms forwards,
+    space-ink-command-out 140ms ease-in 900ms forwards;
+  transform: translateX(-50%);
+}
+
+html.space-transition-running {
+  overflow: hidden;
+}
+
+@keyframes space-ink-command {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes space-ink-drop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -48vh) rotate(-45deg) scale(0.75);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  86% {
+    opacity: 1;
+    transform: translate(-50%, -8px) rotate(-45deg) scale(0.9, 1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 0) rotate(-45deg) scale(1.45, 0.3);
+  }
+}
+
+@keyframes space-ink-bloom {
+  0% {
+    filter: blur(7px);
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(0.04) rotate(-2deg);
+  }
+
+  62% {
+    filter: blur(1.5px);
+    opacity: 0.84;
+    transform: translate(-50%, -50%) scale(1.035) rotate(0.6deg);
+  }
+
+  100% {
+    filter: blur(0);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0);
+  }
+}
+
+@keyframes space-ink-settle {
+  from {
+    filter: blur(0);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0);
+  }
+
+  to {
+    filter: blur(4px);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.025) rotate(0);
+  }
+}
+
+@keyframes space-ink-command-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes space-ink-arrival {
+  from {
+    filter: blur(2px);
+    opacity: 0;
+  }
+
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
 .header-links {
   display: flex;
   align-items: center;
@@ -1205,6 +1398,197 @@ footer {
   .theme-toggle__glow {
     transition: none;
   }
+
+  .space-ink-transition {
+    display: none;
+  }
+
+}
+
+.ink-reader-app {
+  min-height: calc(100vh - 220px);
+}
+
+.ink-reader-launch {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-height: calc(100vh - 250px);
+}
+
+.ink-reader-app.is-reading .ink-reader-launch {
+  min-height: 0;
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+  border-bottom: 1px dashed #000000;
+}
+
+.ink-reader-shell-label,
+.ink-reader-form,
+.ink-reader-status,
+.ink-reader-document-kind,
+.ink-reader-document-meta {
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+}
+
+.ink-reader-shell-label {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ink-reader-form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) 82px;
+  align-items: stretch;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #000000;
+  background: #ffffff;
+  color: #000000;
+}
+
+.ink-reader-form label {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-right: 1px solid #000000;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ink-reader-form input,
+.ink-reader-form button {
+  min-width: 0;
+  min-height: 48px;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  color: #000000;
+  font: inherit;
+  letter-spacing: 0;
+}
+
+.ink-reader-form input {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 0 12px;
+}
+
+.ink-reader-form button {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 82px;
+  flex: 0 0 82px;
+  border-left: 1px solid #000000;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ink-reader-form input:focus,
+.ink-reader-form button:focus {
+  outline: 2px solid #000000;
+  outline-offset: -4px;
+}
+
+.ink-reader-form button:active {
+  background: #000000;
+  color: #ffffff;
+}
+
+.ink-reader-form input:disabled,
+.ink-reader-form button:disabled {
+  color: #000000;
+  cursor: wait;
+  opacity: 1;
+}
+
+.ink-reader-status {
+  min-height: 24px;
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 24px;
+}
+
+.ink-reader-status.is-error {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.ink-reader-article[hidden] {
+  display: none;
+}
+
+.ink-reader-document-header {
+  padding-bottom: 22px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #000000;
+}
+
+.ink-reader-document-kind {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ink-reader-document-header h1 {
+  margin: 0 0 12px;
+  font-size: 30px;
+  line-height: 1.28;
+}
+
+.ink-reader-document-meta {
+  margin: 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.ink-reader-content {
+  overflow-wrap: break-word;
+}
+
+.ink-reader-content.is-plain-text {
+  white-space: pre-wrap;
+}
+
+.ink-reader-restriction {
+  padding: 14px 16px;
+  border: 2px solid #000000;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-size: 14px;
+}
+
+.ink-reader-restriction p {
+  margin: 0;
+}
+
+.ink-reader-restriction p + p {
+  margin-top: 12px;
+}
+
+.ink-reader-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.ink-reader-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 /*
@@ -1248,6 +1632,18 @@ html.eink *::after {
   animation: none !important;
   transition: none !important;
   scroll-behavior: auto !important;
+}
+
+html.eink.space-arrival-ink-reader:not([data-kindle="true"]) #wrapper,
+html.eink.space-arrival-ink-reader:not([data-kindle="true"]) body > footer {
+  animation: space-ink-arrival 280ms ease-out 40ms both !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.eink.space-arrival-ink-reader #wrapper,
+  html.eink.space-arrival-ink-reader body > footer {
+    animation: none !important;
+  }
 }
 
 html.eink header,
@@ -1314,6 +1710,15 @@ html.eink .eink-mode-entry {
   display: none;
 }
 
+.eink-web-mode-entry {
+  display: none;
+}
+
+html[data-eink-preview="true"]:not([data-kindle="true"])
+  .eink-web-mode-entry {
+  display: inline;
+}
+
 html.eink #static-pagination {
   display: none;
 }
@@ -1327,6 +1732,10 @@ html.eink .space-switcher-fallback {
 html.eink .site-title__caret,
 html.eink .space-switcher__menu {
   display: none !important;
+}
+
+html.eink .space-ink-transition {
+  display: none;
 }
 
 html.eink .header-container {
@@ -1416,6 +1825,7 @@ html.eink .eink-reader__pages {
 
 html.eink .eink-reader__pages .post-header,
 html.eink .eink-reader__pages .code-space-doc__header,
+html.eink .eink-reader__pages .ink-reader-document-header,
 html.eink .eink-reader__pages pre,
 html.eink .eink-reader__pages table,
 html.eink .eink-reader__pages img,
@@ -1539,6 +1949,34 @@ html.eink.eink-reader-enabled .pagination {
 }
 
 @media (max-width: 720px) {
+  .ink-reader-app {
+    min-height: calc(100vh - 180px);
+  }
+
+  .ink-reader-launch {
+    min-height: calc(100vh - 210px);
+  }
+
+  .ink-reader-app.is-reading .ink-reader-launch {
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+  }
+
+  .ink-reader-form {
+    grid-template-columns: minmax(0, 1fr) 76px;
+  }
+
+  .ink-reader-form label {
+    grid-column: 1 / -1;
+    min-height: 36px;
+    border-right: 0;
+    border-bottom: 1px solid #000000;
+  }
+
+  .ink-reader-document-header h1 {
+    font-size: 25px;
+  }
+
   html.eink .post-list__item {
     grid-template-columns: 12px minmax(0, 1fr) 112px;
   }
@@ -1565,6 +2003,10 @@ html.eink.eink-reader-enabled .pagination {
   body {
     background: #ffffff !important;
     color: #000000 !important;
+  }
+
+  .space-ink-transition {
+    display: none;
   }
 
   body {

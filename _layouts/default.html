@@ -61,7 +61,20 @@
   {% if site.google_analytics %}
   {% include analytics.html %}
   {% endif %}
+  <div class="space-ink-transition" id="space-ink-transition" aria-hidden="true">
+    <div class="space-ink-transition__drop-scene" aria-hidden="true">
+      <span class="space-ink-transition__drop"></span>
+      <img
+        class="space-ink-transition__bloom"
+        data-src="{{ "/assets/images/ink-splash.png" | relative_url }}"
+        alt="">
+    </div>
+    <p class="space-ink-transition__command">
+      <span id="space-ink-transition-prefix" aria-hidden="true">$ entering </span><span id="space-ink-transition-target"></span>
+    </p>
+  </div>
   <script src="{{ "/assets/js/eink-reader.js" | relative_url }}?v={{ site.time | date: "%s" }}" defer></script>
+  <script src="{{ "/assets/js/space-transition.js" | relative_url }}?v={{ site.time | date: "%s" }}" defer></script>
   <script src="{{ "/assets/js/theme.js" | relative_url }}" defer></script>
 </body>
 

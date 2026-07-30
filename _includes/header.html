@@ -15,20 +15,25 @@
       </summary>
       <nav class="space-switcher__menu" aria-label="空间">
         <span class="space-switcher__command" aria-hidden="true">$ cd ~/</span>
-        <a href="{{ "/" | relative_url }}"{% if current_space == "home" %} aria-current="page"{% endif %}>
+        <a href="{{ "/" | relative_url }}" data-space-link="home"{% if current_space == "home" %} aria-current="page"{% endif %}>
           <span aria-hidden="true">{% if current_space == "home" %}&gt;{% else %}&nbsp;{% endif %}</span>
           <span>home/</span>
           {% if current_space == "home" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
         </a>
-        <a href="{{ "/code-space/" | relative_url }}"{% if current_space == "code-space" %} aria-current="page"{% endif %}>
+        <a href="{{ "/code-space/" | relative_url }}" data-space-link="code-space"{% if current_space == "code-space" %} aria-current="page"{% endif %}>
           <span aria-hidden="true">{% if current_space == "code-space" %}&gt;{% else %}&nbsp;{% endif %}</span>
           <span>code-space/</span>
           {% if current_space == "code-space" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
         </a>
-        <a href="{{ "/clippings/" | relative_url }}"{% if current_space == "clippings" %} aria-current="page"{% endif %}>
+        <a href="{{ "/clippings/" | relative_url }}" data-space-link="clippings"{% if current_space == "clippings" %} aria-current="page"{% endif %}>
           <span aria-hidden="true">{% if current_space == "clippings" %}&gt;{% else %}&nbsp;{% endif %}</span>
           <span>clippings/</span>
           {% if current_space == "clippings" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
+        </a>
+        <a href="{{ "/ink-reader/" | relative_url }}" data-space-link="ink-reader" data-eink-native="true"{% if current_space == "ink-reader" %} aria-current="page"{% endif %}>
+          <span aria-hidden="true">{% if current_space == "ink-reader" %}&gt;{% else %}&nbsp;{% endif %}</span>
+          <span>ink-reader/</span>
+          {% if current_space == "ink-reader" %}<span class="space-switcher__cwd">[cwd]</span>{% endif %}
         </a>
       </nav>
     </details>

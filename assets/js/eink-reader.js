@@ -53,6 +53,7 @@
 
       if (!href ||
           href.charAt(0) === "#" ||
+          link.getAttribute("data-eink-native") === "true" ||
           /^(?:mailto|tel|javascript|data):/i.test(href) ||
           (link.host && link.host !== currentHost)) {
         continue;
@@ -75,6 +76,38 @@
     }
   }
 
+  function configureWebModeLink() {
+    var links = document.getElementsByTagName("a");
+    var query = window.location.search.replace(/^\?/, "");
+    var parameters = query ? query.split("&") : [];
+    var kept = [];
+    var index;
+    var parameterIndex;
+    var key;
+
+    for (parameterIndex = 0;
+      parameterIndex < parameters.length;
+      parameterIndex += 1) {
+      key = parameters[parameterIndex].split("=")[0].toLowerCase();
+      if (parameters[parameterIndex] &&
+          key !== "eink" &&
+          key !== "web") {
+        kept.push(parameters[parameterIndex]);
+      }
+    }
+    kept.push("web=1");
+
+    for (index = 0; index < links.length; index += 1) {
+      if (links[index].getAttribute("data-web-mode-link") === "true") {
+        links[index].setAttribute(
+          "href",
+          window.location.pathname + "?" + kept.join("&") +
+            window.location.hash
+        );
+      }
+    }
+  }
+
   function hasColumnSupport() {
     var style = document.createElement("div").style;
 
@@ -93,7 +126,12 @@
   function findReader() {
     var posts = document.getElementsByClassName("post");
     var docs = document.getElementsByClassName("code-space-doc");
+    var remoteDocs = document.getElementsByClassName("ink-reader-article");
+    var remoteDoc = remoteDocs[0];
 
+    if (remoteDoc && remoteDoc.className.indexOf("is-ready") !== -1) {
+      return remoteDoc;
+    }
     return posts[0] || docs[0] || null;
   }
 
@@ -108,6 +146,18 @@
   }
 
   function startReader(reader) {
+    if (!reader || reader.getAttribute("data-eink-reader-started") === "true") {
+      return;
+    }
+
+    if (reader.className.indexOf("ink-reader-article") !== -1 &&
+        root.getAttribute("data-kindle") !== "true" &&
+        (window.innerWidth || document.documentElement.clientWidth) <= 720) {
+      return;
+    }
+
+    reader.setAttribute("data-eink-reader-started", "true");
+
     var controls = document.createElement("nav");
     var previous = createButton("< PREV", "eink-reader__button--previous", "previous");
     var next = createButton("NEXT >", "eink-reader__button--next", "next");
@@ -283,21 +333,51 @@
       event.returnValue = false;
     }
 
+    function scheduleMeasure() {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(measure, 100);
+    }
+
     addEvent(previous, "click", changePage);
     addEvent(next, "click", changePage);
     addEvent(document, "keydown", handleKey);
-    addEvent(window, "resize", function () {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(measure, 100);
-    });
+    addEvent(window, "resize", scheduleMeasure);
     addEvent(window, "orientationchange", measure);
     addEvent(window, "load", measure);
+
+    var readerImages = reader.getElementsByTagName("img");
+    var readerImageIndex;
+    for (readerImageIndex = 0;
+        readerImageIndex < readerImages.length;
+        readerImageIndex += 1) {
+      addEvent(readerImages[readerImageIndex], "load", scheduleMeasure);
+      addEvent(readerImages[readerImageIndex], "error", scheduleMeasure);
+    }
 
     measure();
   }
 
   forceCodeColors();
+  configureWebModeLink();
   carryEinkParameter();
+
+  window.EinkReader = {
+    start: function (reader) {
+      if (!hasColumnSupport()) {
+        return;
+      }
+      forceCodeColors();
+      startReader(reader);
+    }
+  };
+
+  addEvent(document, "inkreader:contentready", function () {
+    var dynamicReader = findReader();
+
+    if (dynamicReader) {
+      window.EinkReader.start(dynamicReader);
+    }
+  });
 
   var reader = findReader();
   if (reader && hasColumnSupport()) {
