@@ -20,7 +20,7 @@ images:
     alt: 奥森向日葵
     width: 3000
     height: 1536
-  - src: /assets/gallery/IMG_0343.jpg
+  - src: /assets/gallery/IMG_0343.JPG
     title: note
     alt: 妹妹偷玩 iPad 留下的纸条
     width: 1024
