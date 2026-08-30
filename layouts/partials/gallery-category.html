@@ -1,0 +1,17 @@
+{{ $category := .Params.category }}
+{{ $albums := where site.RegularPages "Section" "gallery" }}
+<section class="gallery-shell gallery-intro gallery-intro--compact" aria-labelledby="category-title">
+  <p class="gallery-kicker">category / {{ $category }}</p>
+  <h1 id="category-title">{{ .Title }}<span>.</span></h1>
+  <p>{{ .Description }}</p>
+</section>
+<section class="gallery-shell gallery-section-head" aria-labelledby="category-albums-title"><div><p class="gallery-section-kicker">selected albums</p><h2 id="category-albums-title">{{ .Title }}</h2></div></section>
+<section class="gallery-shell gallery-album-grid" aria-label="分类相册列表">
+  {{ range $albums.ByDate.Reverse }}
+    {{ if and (eq .Params.galleryKind "album") (in .Params.categories $category) }}
+      {{ $image := index .Params.images 0 }}
+      <a class="gallery-album-card" href="{{ .RelPermalink }}"><figure><img src="{{ $image.src | relURL }}" alt="{{ $image.alt }}" loading="lazy"></figure><div><div><h2>{{ .Title }}</h2><p>{{ .Description }}</p></div><span class="gallery-album-card__arrow" aria-hidden="true">↗</span></div><small>{{ len .Params.images }} photos · {{ .Date.Format "2006.01" }}</small></a>
+    {{ end }}
+  {{ end }}
+</section>
+<section class="gallery-shell gallery-home-link"><a href="{{ "/gallery/categories/" | relURL }}">All categories <span aria-hidden="true">→</span></a></section>

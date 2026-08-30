@@ -5,6 +5,9 @@ spaces:
   - name: blog
     label: blog/
     url: /blog/
+  - name: gallery
+    label: gallery/
+    url: /gallery/
   - name: code-space
     label: code-space/
     url: /code-space/

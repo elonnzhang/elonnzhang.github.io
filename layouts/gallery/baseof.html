@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN" data-gallery-theme="light">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="{{ .Description | default "Kindle 截图、网页快照和个人精选照片。" }}">
+    <meta name="theme-color" content="#f4f2ee">
+    <title>{{ .Title }} · Gallery / jiabin.dev</title>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var eink = /(?:^|[?&])eink=(?:1|true|yes)(?:&|$)/i.test(window.location.search);
+        var web = /(?:^|[?&])web=1(?:&|$)/i.test(window.location.search);
+        var saved = "";
+        try { saved = window.localStorage.getItem("gallery-theme") || ""; } catch (error) {}
+        var theme = saved === "dark" || saved === "light" ? saved : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        root.setAttribute("data-gallery-theme", eink && !web ? "light" : theme);
+        if (eink && !web) root.setAttribute("data-gallery-eink", "true");
+      }());
+    </script>
+    {{ $style := resources.Get "css/gallery.scss" | toCSS | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+  </head>
+  <body>
+    <a class="gallery-skip" href="#gallery-main">跳到主要内容</a>
+    <header class="gallery-header">
+      <div class="gallery-shell gallery-header__inner">
+        <a class="gallery-brand" href="{{ "/gallery/" | relURL }}" aria-label="Gallery 首页">
+          <span class="gallery-brand__glyph" aria-hidden="true">◒</span><span>
+            <strong>Gallery</strong>
+            <small>jiabin.dev / visual index</small>
+          </span>
+        </a>
+        <nav class="gallery-nav" aria-label="图库导航">
+          <a href="{{ "/gallery/" | relURL }}">Albums</a>
+          <a href="{{ "/gallery/categories/" | relURL }}">Categories</a>
+          <a href="{{ "/" | relURL }}">Notes <span aria-hidden="true">↗</span></a>
+          <button class="gallery-theme" type="button" data-gallery-theme-toggle aria-label="切换深色模式" title="切换深色模式">◐</button>
+        </nav>
+      </div>
+    </header>
+    <main id="gallery-main" class="gallery-main">{{ block "main" . }}{{ end }}</main>
+    <footer class="gallery-footer"><div class="gallery-shell"><span>© {{ now.Format "2006" }} elonnzhang</span><span>photos, screenshots, things worth keeping</span></div></footer>
+    {{ block "scripts" . }}{{ end }}
+  </body>
+</html>

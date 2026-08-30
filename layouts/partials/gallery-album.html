@@ -1,0 +1,22 @@
+<section class="gallery-shell gallery-intro gallery-intro--compact" aria-labelledby="album-title">
+  <p class="gallery-kicker">album / {{ .Date.Format "2006.01.02" }}</p>
+  <h1 id="album-title">{{ .Title }}<span>.</span></h1>
+  <p>{{ .Description }}</p>
+</section>
+<section class="gallery-shell gallery-album-toolbar"><a href="{{ "/gallery/" | relURL }}">← Albums</a><span>{{ len .Params.images }} photos / click to expand</span></section>
+<section class="gallery-grid" data-gallery-grid aria-label="{{ .Title }} 图片">
+  {{ range $index, $image := .Params.images }}
+    <a class="gallery-item" href="{{ $image.src | relURL }}" data-gallery-item data-gallery-index="{{ $index }}" data-gallery-width="{{ $image.width }}" data-gallery-height="{{ $image.height }}" data-gallery-title="{{ $image.title }}" data-gallery-alt="{{ $image.alt }}" data-gallery-album="{{ $.Title }}" data-gallery-category="{{ delimit $.Params.categories ", " }}" aria-label="打开：{{ $image.title }}">
+      <figure><img src="{{ $image.src | relURL }}" alt="{{ $image.alt }}" width="{{ $image.width }}" height="{{ $image.height }}" loading="lazy"><span class="gallery-item__overlay"><strong>{{ $image.title }}</strong><small>{{ delimit $.Params.categories " · " }}</small><i>{{ printf "%02d" (add $index 1) }}</i></span></figure>
+    </a>
+  {{ end }}
+</section>
+<div class="gallery-lightbox" data-gallery-lightbox hidden>
+  <div class="gallery-lightbox__backdrop" data-gallery-close></div>
+  <div class="gallery-lightbox__dialog" role="dialog" aria-modal="true" aria-labelledby="gallery-lightbox-title">
+    <button type="button" class="gallery-lightbox__close" data-gallery-close aria-label="关闭" title="关闭">×</button>
+    <button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--prev" data-gallery-prev aria-label="上一张" title="上一张">←</button>
+    <figure><img data-gallery-lightbox-image src="" alt=""><figcaption><div><p data-gallery-lightbox-album></p><h2 id="gallery-lightbox-title" data-gallery-lightbox-title></h2><span data-gallery-lightbox-category></span></div><span data-gallery-lightbox-count></span></figcaption></figure>
+    <button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--next" data-gallery-next aria-label="下一张" title="下一张">→</button>
+  </div>
+</div>
