@@ -1,8 +1,8 @@
 {
   "showUnsupportedFiles": true,
-  "attachmentFolderPath": "assets/img",
+  "attachmentFolderPath": "static/assets/img",
   "newFileLocation": "folder",
-  "newFileFolderPath": "_posts",
+  "newFileFolderPath": "content",
   "alwaysUpdateLinks": true,
   "propertiesInDocument": "source",
   "useMarkdownLinks": true,

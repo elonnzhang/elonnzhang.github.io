@@ -1,0 +1,14 @@
+<article class="page">
+  <div class="blog-index__intro">
+    {{ partial "page-command.html" "clippings" }}
+    <h1>{{ .Title }}</h1>
+    <p>剪藏。</p>
+  </div>
+  <ul class="unified-list">
+    {{ range .Paginator.Pages.ByParam "published" }}
+    {{ $date := .Params.published | default .Params.created }}
+    {{ partial "unified-list-item.html" (dict "page" . "date" $date "meta" "" "showSummary" true "summary" .Params.description) }}
+    {{ else }}<li class="unified-list__empty">No clippings yet.</li>{{ end }}
+  </ul>
+  {{ partial "pagination.html" . }}
+</article>

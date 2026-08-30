@@ -1,0 +1,116 @@
+{{ define "main" }}
+{{ $posts := where site.RegularPages "Section" "posts" }}
+{{ $latest := first 7 ($posts.ByDate.Reverse) }}
+{{ partial "page-command.html" "home" }}
+<section class="landing-hero" aria-labelledby="landing-title">
+  <div class="landing-hero__copy">
+    <p class="landing-kicker">jiabin.dev / engineering notebook</p>
+    <h1 id="landing-title">Systems, code,<br><span>and things worth understanding.</span></h1>
+    <p class="landing-lede">记录 Go、分布式系统、数据库和 AI 工具实践。这里不追逐热点，只把真正值得复盘的东西写清楚。</p>
+    <div class="landing-actions">
+      <a class="landing-action landing-action--primary" href="#notes">阅读最新笔记 <span aria-hidden="true">→</span></a>
+      <a class="landing-action" href="{{ "/blog/" | relURL }}">浏览 Blog <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+  <div class="landing-terminal" aria-label="博客内容概览">
+    <div class="landing-terminal__bar"><span></span><span></span><span></span><strong>~/elonnzhang</strong></div>
+    <div class="landing-terminal__body">
+      <p><span class="terminal-prompt">$</span> cat focus.txt</p>
+      <p class="terminal-output">go / systems / databases<br>agents / tools / learning</p>
+      <p><span class="terminal-prompt">$</span> ls spaces/</p>
+      <ul>
+        <li><a href="#notes">notes/</a><span>{{ len $posts }} posts</span></li>
+        <li><a href="{{ "/clippings/" | relURL }}">clippings/</a><span>{{ len (where site.RegularPages "Section" "clippings") }} saved</span></li>
+        <li><a href="{{ "/code-space/" | relURL }}">code-space/</a><span>go</span></li>
+        <li><a href="#pages">pages/</a><span>{{ len hugo.Data.site.pages }} sites</span></li>
+      </ul>
+      <p class="terminal-cursor"><span class="terminal-prompt">$</span> <span aria-hidden="true">_</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="landing-section" id="notes" aria-labelledby="notes-title">
+  <div class="landing-section__heading">
+    <div><p class="landing-section__eyebrow">01 / notes</p><h2 id="notes-title">最近写了什么</h2></div>
+    <a href="{{ "/archive/" | relURL }}">查看全部文章 <span aria-hidden="true">→</span></a>
+  </div>
+  <ul class="post-list landing-post-list">
+    {{ range $latest }}
+    <li class="post-list__item">
+      <time class="post-list__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      <span class="post-list__prompt" aria-hidden="true">&gt;</span>
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      {{ $category := "note" }}
+      {{ with .Params.categories }}
+        {{ if reflect.IsSlice . }}
+          {{ with index . 0 }}{{ $category = . }}{{ end }}
+        {{ else }}
+          {{ $category = . }}
+        {{ end }}
+      {{ end }}
+      <span class="post-list__category">[{{ $category }}]</span>
+      <span class="post-list__description">— {{ .Summary | plainify | htmlUnescape | truncate 140 }}</span>
+    </li>
+    {{ end }}
+  </ul>
+</section>
+
+<section class="landing-section landing-section--spaces" aria-labelledby="spaces-title">
+  <div class="landing-section__heading"><div><p class="landing-section__eyebrow">02 / spaces</p><h2 id="spaces-title">把知识放在合适的地方</h2></div></div>
+  <div class="landing-space-grid">
+    <a class="landing-space" href="{{ "/clippings/" | relURL }}"><span class="landing-space__index">A</span><span><strong>Clippings</strong><small>值得留下的文章与观点</small></span><span aria-hidden="true">↗</span></a>
+    <a class="landing-space" href="{{ "/code-space/" | relURL }}"><span class="landing-space__index">B</span><span><strong>Code Space</strong><small>工具、配置和可复用的实践</small></span><span aria-hidden="true">↗</span></a>
+    <a class="landing-space" href="{{ "/ink-reader/" | relURL }}"><span class="landing-space__index">C</span><span><strong>Ink Reader</strong><small>把长文变成适合阅读的页面</small></span><span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+<section class="landing-section landing-section--pages" id="pages" aria-labelledby="pages-title">
+  <div class="landing-section__heading">
+    <div><p class="landing-section__eyebrow">03 / PAGES</p><h2 id="pages-title">页面预览</h2></div>
+    <div class="landing-pages-tools">
+      <span class="landing-section__hint">pages</span>
+      <div class="landing-pages-controls" aria-label="页面轮播控制">
+        <button class="landing-pages-control" type="button" data-pages-prev aria-label="查看上一个页面" title="上一个">←</button>
+        <span class="landing-pages-status" data-pages-status aria-live="polite">01 / {{ printf "%02d" (len hugo.Data.site.pages) }}</span>
+        <button class="landing-pages-control" type="button" data-pages-next aria-label="查看下一个页面" title="下一个">→</button>
+      </div>
+    </div>
+  </div>
+  <div class="landing-pages-viewport">
+    <div class="landing-pages-grid" data-pages-carousel tabindex="0" aria-label="独立页面横向轮播">
+    {{ range hugo.Data.site.pages }}
+      {{ $src := "" }}
+      {{ $sourceLabel := "URL" }}
+      {{ if eq .source "static" }}
+        {{ $src = .path | relURL }}
+        {{ $sourceLabel = "STATIC" }}
+      {{ else }}
+        {{ $src = .url }}
+      {{ end }}
+      <article class="landing-page-card">
+        <div class="landing-page-card__head">
+          <div>
+            <p class="landing-page-card__source">{{ $sourceLabel }} / PAGE</p>
+            <h3>{{ .name }}</h3>
+          </div>
+          <a class="landing-page-card__open" href="{{ $src }}" target="_blank" rel="noopener noreferrer" aria-label="在新窗口打开 {{ .name }}" title="在新窗口打开">↗</a>
+        </div>
+        <p class="landing-page-card__description">{{ .description }}</p>
+        <div class="landing-page-card__frame">
+          <iframe src="{{ $src }}" title="{{ .name }} 预览" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </article>
+    {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="landing-note" aria-label="站点说明">
+  <p><span aria-hidden="true">//</span> written from the terminal, published for the future.</p>
+  <a href="{{ "/about/" | relURL }}">关于我 <span aria-hidden="true">→</span></a>
+</section>
+{{ end }}
+
+{{ define "scripts" }}
+  <script src="{{ "/assets/js/pages-carousel.js" | relURL }}" defer></script>
+{{ end }}

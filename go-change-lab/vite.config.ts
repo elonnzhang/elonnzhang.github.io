@@ -6,7 +6,7 @@ const projectPath = (path: string) =>
   fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig({
-  base: "/go-change-lab/dist/",
+  base: "/go-change-lab/",
   root: projectPath("./src"),
   publicDir: projectPath("./public"),
   plugins: [react()],

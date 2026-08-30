@@ -1,0 +1,35 @@
+spaces:
+  - name: home
+    label: home/
+    url: /
+  - name: blog
+    label: blog/
+    url: /blog/
+  - name: code-space
+    label: code-space/
+    url: /code-space/
+  - name: clippings
+    label: clippings/
+    url: /clippings/
+  - name: archive
+    label: archive/
+    url: /archive/
+  - name: about
+    label: about/
+    url: /about/
+  - name: ink-reader
+    label: ink-reader/
+    url: /ink-reader/
+pages:
+  - name: Go Change Lab
+    source: static
+    path: /go-change-lab/
+    description: 用交互方式记录 Go 版本演进。
+  - name: Cloudflare × Caddy
+    source: static
+    path: /cloudflare-caddy/
+    description: 从边缘到本机，拆解一条真实请求链路。
+  - name: time.is
+    source: url
+    url: https://time.is/
+    description: 看时间就来这里。

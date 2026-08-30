@@ -1,0 +1,13 @@
+<article class="page blog-index">
+  <div class="blog-index__intro">
+    {{ partial "page-command.html" "blog" }}
+    <h1>{{ .Title }}</h1>
+    <p>关于 Go、系统、数据库和 AI 工具的工程笔记。按时间倒序，持续更新。</p>
+  </div>
+  {{ $posts := .RegularPagesRecursive }}
+  <ul class="unified-list">
+    {{ range $posts.ByDate.Reverse }}
+    {{ partial "unified-list-item.html" (dict "page" . "showSummary" true "summary" .Summary) }}
+    {{ end }}
+  </ul>
+</article>

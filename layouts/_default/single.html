@@ -1,0 +1,33 @@
+{{ define "main" }}
+  {{ if eq .Params.pageKind "archive" }}
+    {{ partial "archive.html" . }}
+  {{ else if eq .Params.pageKind "blog-index" }}
+    {{ partial "blog-index.html" . }}
+  {{ else if eq .Params.pageKind "code-space-index" }}
+    {{ partial "code-space-index.html" . }}
+  {{ else if eq .Params.pageKind "code-space-doc" }}
+    {{ partial "code-space-doc.html" . }}
+  {{ else if eq .Params.pageKind "ink-reader" }}
+    {{ partial "ink-reader.html" . }}
+  {{ else if eq .Section "posts" }}
+    {{ partial "post.html" . }}
+  {{ else if eq .Section "clippings" }}
+    {{ partial "post.html" . }}
+  {{ else }}
+    <article class="page">
+      {{ partial "page-command.html" (cond (eq .Params.pageKind "about") "about" "page") }}
+      <h1>{{ .Title }}</h1>
+      <div class="post-content">{{ .Content }}</div>
+    </article>
+  {{ end }}
+{{ end }}
+
+{{ define "scripts" }}
+  {{ if or (eq .Section "posts") (eq .Section "clippings") (eq .Params.pageKind "code-space-doc") }}
+    <script src="{{ "/assets/js/reading-progress.js" | relURL }}" defer></script>
+  {{ else if eq .Params.pageKind "ink-reader" }}
+    <script src="{{ "/assets/js/vendor/marked.min.js" | relURL }}" defer></script>
+    <script src="{{ "/assets/js/vendor/purify.min.js" | relURL }}" defer></script>
+    <script src="{{ "/assets/js/ink-reader-page.js" | relURL }}" defer></script>
+  {{ end }}
+{{ end }}

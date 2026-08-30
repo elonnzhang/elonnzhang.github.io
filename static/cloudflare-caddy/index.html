@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="用一条真实的请求链路，理解 Caddy 与 Cloudflare Tunnel 如何协作。">
+    <meta name="theme-color" content="#17140f">
+    <title>Caddy × Cloudflare Tunnel｜从边缘到本机</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --canvas: #17140f;
+            --canvas: oklch(0.16 0.012 72);
+            --surface: #211d16;
+            --surface: oklch(0.205 0.014 72);
+            --surface-raised: #29241b;
+            --surface-raised: oklch(0.245 0.018 72);
+            --text: #eee7d7;
+            --text: oklch(0.92 0.025 82);
+            --muted: #aaa28f;
+            --muted: oklch(0.69 0.025 82);
+            --faint: #8c8370;
+            --faint: oklch(0.60 0.025 82);
+            --cloudflare: #f5a53a;
+            --cloudflare: oklch(0.78 0.15 66);
+            --caddy: #86d49a;
+            --caddy: oklch(0.79 0.13 145);
+            --line: rgb(238 231 215 / 12%);
+            --line-strong: rgb(238 231 215 / 22%);
+            --radius-xs: 3px;
+            --radius-sm: 10px;
+            --radius-lg: 18px;
+            --radius-pill: 999px;
+            --page: 1180px;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --display: Charter, "Iowan Old Style", Baskerville, "Songti SC", serif;
+            --body: "Avenir Next", Avenir, "PingFang SC", "Hiragino Sans GB", sans-serif;
+            --mono: "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--canvas);
+        }
+
+        body {
+            min-width: 320px;
+            margin: 0;
+            background: var(--canvas);
+            color: var(--text);
+            font-family: var(--body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        button,
+        a {
+            touch-action: manipulation;
+        }
+
+        a {
+            color: inherit;
+            text-underline-offset: 0.24em;
+            text-decoration-thickness: 1px;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cloudflare);
+            outline-offset: 4px;
+        }
+
+        .skip-link {
+            position: fixed;
+            z-index: 20;
+            top: 12px;
+            left: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-xs);
+            background: var(--text);
+            color: var(--canvas);
+            transform: translateY(-160%);
+            transition: transform 180ms var(--ease-out);
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
+        }
+
+        .shell {
+            width: min(100%, var(--page));
+            margin-inline: auto;
+            padding-inline: clamp(20px, 4vw, 54px);
+        }
+
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 78px;
+            padding-top: env(safe-area-inset-top);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .wordmark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .wordmark__mark {
+            display: grid;
+            width: 32px;
+            height: 32px;
+            place-items: center;
+            border-radius: var(--radius-sm);
+            background: var(--surface-raised);
+            color: var(--caddy);
+            font-size: 0.95rem;
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .live-state {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 40px;
+            padding: 0 13px;
+            border-radius: var(--radius-pill);
+            background: var(--surface);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-variant-numeric: tabular-nums;
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .live-state__dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--caddy);
+            box-shadow: 0 0 0 5px rgb(134 212 154 / 10%);
+            animation: breathe 2.6s ease-in-out infinite;
+        }
+
+        .intro {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(380px, 0.92fr);
+            gap: clamp(42px, 7vw, 94px);
+            align-items: center;
+            min-height: calc(100svh - 79px);
+            padding-block: clamp(58px, 8vw, 112px);
+        }
+
+        .intro__copy {
+            align-self: start;
+            padding-top: clamp(18px, 4vw, 64px);
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 24px;
+            color: var(--cloudflare);
+            font-family: var(--mono);
+            font-size: 0.73rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 28px;
+            height: 1px;
+            background: currentColor;
+            content: "";
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            max-width: 760px;
+            margin-bottom: 30px;
+            font-family: var(--display);
+            font-size: clamp(3.4rem, 7.6vw, 7.3rem);
+            font-weight: 400;
+            letter-spacing: -0.042em;
+            line-height: 0.88;
+            text-wrap: balance;
+        }
+
+        h1 span {
+            display: block;
+            color: var(--cloudflare);
+            font-style: italic;
+        }
+
+        .lede {
+            max-width: 620px;
+            margin-bottom: 34px;
+            color: var(--muted);
+            font-size: clamp(1.04rem, 1.8vw, 1.28rem);
+            line-height: 1.75;
+            text-wrap: pretty;
+        }
+
+        .lede strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .route-facts {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            justify-content: start;
+            gap: 0;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .route-facts li {
+            padding: 0 20px;
+            border-right: 1px solid var(--line);
+        }
+
+        .route-facts li:first-child {
+            padding-left: 0;
+        }
+
+        .route-facts li:last-child {
+            border-right: 0;
+        }
+
+        .route-facts b,
+        .route-facts span {
+            display: block;
+        }
+
+        .route-facts b {
+            margin-bottom: 5px;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .route-facts span {
+            color: var(--faint);
+            font-size: 0.72rem;
+        }
+
+        .topology {
+            position: relative;
+            min-height: 650px;
+            padding: clamp(22px, 3vw, 34px);
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow:
+                inset 0 0 0 1px var(--line),
+                0 28px 80px rgb(0 0 0 / 20%);
+        }
+
+        .topology::after {
+            position: absolute;
+            right: 24px;
+            bottom: 20px;
+            color: var(--faint);
+            content: "BINX / EDGE MAP 01";
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.08em;
+            writing-mode: vertical-rl;
+        }
+
+        .topology__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .topology__header h2 {
+            margin: 0;
+            font-family: var(--mono);
+            font-size: 0.73rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .topology__header span {
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 0.67rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .flow {
+            position: relative;
+            display: grid;
+            gap: 18px;
+            margin-inline: auto;
+            padding-bottom: 22px;
+        }
+
+        .flow::before {
+            position: absolute;
+            z-index: 0;
+            top: 25px;
+            bottom: 25px;
+            left: 23px;
+            width: 1px;
+            background: var(--line-strong);
+            content: "";
+        }
+
+        .packet {
+            position: absolute;
+            z-index: 1;
+            top: 25px;
+            left: 20px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--cloudflare);
+            box-shadow: 0 0 0 4px rgb(245 165 58 / 12%);
+            animation: travel 4.2s linear infinite;
+        }
+
+        .stage {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            width: 100%;
+            min-height: 68px;
+            padding: 10px 12px 10px 0;
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition-property: transform;
+            transition-duration: 180ms;
+            transition-timing-function: var(--ease-out);
+        }
+
+        .stage:active {
+            transform: scale(0.98);
+        }
+
+        .stage[aria-pressed="true"] {
+            background: var(--surface-raised);
+            color: var(--text);
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .stage__node {
+            display: grid;
+            width: 48px;
+            height: 48px;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--canvas);
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 0.67rem;
+            font-variant-numeric: tabular-nums;
+            box-shadow: inset 0 0 0 1px var(--line-strong);
+        }
+
+        .stage[aria-pressed="true"] .stage__node {
+            color: var(--canvas);
+            background: var(--cloudflare);
+            box-shadow: none;
+        }
+
+        .stage[data-accent="caddy"][aria-pressed="true"] .stage__node {
+            background: var(--caddy);
+        }
+
+        .stage__name,
+        .stage__meta {
+            display: block;
+        }
+
+        .stage__name {
+            margin-bottom: 4px;
+            color: inherit;
+            font-size: 0.93rem;
+            font-weight: 600;
+        }
+
+        .stage__meta {
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 0.64rem;
+        }
+
+        .stage__arrow {
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 0.86rem;
+        }
+
+        .stage-detail {
+            min-height: 146px;
+            margin-top: 8px;
+            padding: 20px 22px;
+            border-radius: var(--radius-sm);
+            background: var(--canvas);
+            box-shadow: inset 0 0 0 1px var(--line);
+            transition-property: transform, opacity;
+            transition-duration: 180ms;
+            transition-timing-function: var(--ease-out);
+        }
+
+        .stage-detail.is-switching {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        .stage-detail__label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--cloudflare);
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .stage-detail h3 {
+            margin-bottom: 8px;
+            font-family: var(--display);
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.012em;
+        }
+
+        .stage-detail p {
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.65;
+            text-wrap: pretty;
+        }
+
+        .section {
+            padding-block: clamp(82px, 12vw, 156px);
+            border-top: 1px solid var(--line);
+        }
+
+        .section-heading {
+            display: grid;
+            grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+            gap: clamp(34px, 7vw, 90px);
+            align-items: start;
+            margin-bottom: clamp(54px, 8vw, 96px);
+        }
+
+        .section-number {
+            color: var(--cloudflare);
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .section-heading h2 {
+            margin-bottom: 22px;
+            font-family: var(--display);
+            font-size: clamp(2.7rem, 5.8vw, 5.5rem);
+            font-weight: 400;
+            letter-spacing: -0.038em;
+            line-height: 0.98;
+            text-wrap: balance;
+        }
+
+        .section-heading p {
+            max-width: 680px;
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 1.02rem;
+            line-height: 1.75;
+            text-wrap: pretty;
+        }
+
+        .roles {
+            display: grid;
+            grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+            gap: 1px;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            background: var(--line-strong);
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .role {
+            min-height: 400px;
+            padding: clamp(28px, 5vw, 58px);
+            background: var(--surface);
+        }
+
+        .role--caddy {
+            background: var(--surface-raised);
+        }
+
+        .role__tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            margin-bottom: 42px;
+            padding-inline: 10px;
+            border-radius: var(--radius-pill);
+            color: var(--canvas);
+            background: var(--cloudflare);
+            font-family: var(--mono);
+            font-size: 0.63rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .role--caddy .role__tag {
+            background: var(--caddy);
+        }
+
+        .role h3 {
+            margin-bottom: 22px;
+            font-family: var(--display);
+            font-size: clamp(2.1rem, 4vw, 3.8rem);
+            font-weight: 400;
+            letter-spacing: -0.025em;
+            line-height: 1;
+        }
+
+        .role>p {
+            max-width: 540px;
+            margin-bottom: 38px;
+            color: var(--muted);
+            line-height: 1.75;
+            text-wrap: pretty;
+        }
+
+        .role ul {
+            display: grid;
+            gap: 13px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .role li {
+            display: grid;
+            grid-template-columns: 18px minmax(0, 1fr);
+            gap: 10px;
+            color: var(--text);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .role li::before {
+            color: var(--faint);
+            content: "↳";
+            font-family: var(--mono);
+        }
+
+        .journey {
+            display: grid;
+            grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+            gap: clamp(48px, 8vw, 110px);
+            align-items: start;
+        }
+
+        .journey__sticky {
+            position: sticky;
+            top: 38px;
+        }
+
+        .journey__sticky h2 {
+            max-width: 520px;
+            margin: 18px 0 24px;
+            font-family: var(--display);
+            font-size: clamp(2.7rem, 5vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -0.038em;
+            line-height: 0.98;
+            text-wrap: balance;
+        }
+
+        .journey__sticky p {
+            max-width: 460px;
+            color: var(--muted);
+            line-height: 1.75;
+            text-wrap: pretty;
+        }
+
+        .steps {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            counter-reset: request-step;
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 54px minmax(0, 1fr);
+            gap: 22px;
+            min-height: 170px;
+            padding-block: 34px;
+            border-bottom: 1px solid var(--line);
+            counter-increment: request-step;
+        }
+
+        .step:first-child {
+            border-top: 1px solid var(--line);
+        }
+
+        .step::before {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--surface-raised);
+            color: var(--cloudflare);
+            content: "0" counter(request-step);
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            font-variant-numeric: tabular-nums;
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .step h3 {
+            margin: 1px 0 10px;
+            font-family: var(--display);
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.012em;
+        }
+
+        .step p {
+            max-width: 620px;
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.7;
+            text-wrap: pretty;
+        }
+
+        .local-map {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+            gap: clamp(34px, 7vw, 86px);
+            align-items: center;
+        }
+
+        .local-map__copy h2 {
+            margin: 16px 0 24px;
+            font-family: var(--display);
+            font-size: clamp(2.7rem, 5.4vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -0.038em;
+            line-height: 0.98;
+            text-wrap: balance;
+        }
+
+        .local-map__copy>p {
+            max-width: 580px;
+            color: var(--muted);
+            line-height: 1.75;
+            text-wrap: pretty;
+        }
+
+        .port {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-top: 28px;
+            color: var(--caddy);
+            font-family: var(--mono);
+            font-size: clamp(2.4rem, 5vw, 4.5rem);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.04em;
+        }
+
+        .port small {
+            color: var(--faint);
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+        }
+
+        .routes {
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .routes__header,
+        .route {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .routes__header {
+            min-height: 58px;
+            padding-inline: 22px;
+            border-bottom: 1px solid var(--line);
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 0.64rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .route {
+            min-height: 82px;
+            padding: 14px 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .route:last-child {
+            border-bottom: 0;
+        }
+
+        .route__path,
+        .route__target {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .route__path {
+            color: var(--text);
+        }
+
+        .route__path small {
+            display: block;
+            margin-top: 6px;
+            color: var(--faint);
+            font-family: var(--body);
+            font-size: 0.73rem;
+        }
+
+        .route__target {
+            color: var(--caddy);
+            text-align: right;
+        }
+
+        .note {
+            display: grid;
+            grid-template-columns: 12px minmax(0, 1fr);
+            gap: 16px;
+            max-width: 860px;
+            margin-top: 52px;
+            padding: 24px 0;
+            border-block: 1px solid var(--line);
+        }
+
+        .note__signal {
+            width: 8px;
+            height: 8px;
+            margin-top: 7px;
+            border-radius: 50%;
+            background: var(--cloudflare);
+        }
+
+        .note p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            text-wrap: pretty;
+        }
+
+        .site-footer {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 36px;
+            align-items: end;
+            min-height: 240px;
+            padding-block: 62px max(42px, env(safe-area-inset-bottom));
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-mark {
+            margin: 0 0 14px;
+            font-family: var(--display);
+            font-size: clamp(2rem, 4vw, 4rem);
+            letter-spacing: -0.03em;
+        }
+
+        .footer-copy {
+            margin: 0;
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 0.69rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 12px 22px;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                opacity: 0.48;
+                transform: scale(0.9);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes travel {
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+
+            8% {
+                opacity: 1;
+            }
+
+            92% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(344px);
+            }
+        }
+
+        @media (hover: hover) {
+            .stage:hover {
+                background: rgb(238 231 215 / 4%);
+                color: var(--text);
+                transform: translateX(3px);
+            }
+
+            .footer-links a:hover {
+                color: var(--text);
+            }
+        }
+
+        @media (max-width: 900px) {
+
+            .intro,
+            .section-heading,
+            .roles,
+            .journey,
+            .local-map {
+                grid-template-columns: 1fr;
+            }
+
+            .intro {
+                min-height: auto;
+            }
+
+            .intro__copy {
+                padding-top: 0;
+            }
+
+            .topology {
+                width: min(100%, 620px);
+                min-height: 620px;
+            }
+
+            .role {
+                min-height: auto;
+            }
+
+            .journey__sticky {
+                position: static;
+            }
+
+            .site-footer {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .site-header {
+                min-height: 68px;
+            }
+
+            .wordmark__label {
+                display: none;
+            }
+
+            .live-state {
+                font-size: 0.65rem;
+            }
+
+            h1 {
+                font-size: clamp(3.05rem, 17vw, 4.6rem);
+            }
+
+            .route-facts {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .route-facts li,
+            .route-facts li:first-child {
+                padding: 0;
+                border-right: 0;
+            }
+
+            .route-facts b,
+            .route-facts span {
+                display: inline;
+            }
+
+            .route-facts span {
+                margin-left: 8px;
+            }
+
+            .topology {
+                min-height: 590px;
+                padding: 20px 16px;
+                border-radius: var(--radius-sm);
+            }
+
+            .topology::after {
+                display: none;
+            }
+
+            .stage {
+                grid-template-columns: 48px minmax(0, 1fr);
+                padding-right: 8px;
+            }
+
+            .stage__arrow {
+                display: none;
+            }
+
+            .stage-detail {
+                min-height: 166px;
+            }
+
+            .role,
+            .routes__header,
+            .route {
+                padding-inline: 20px;
+            }
+
+            .routes__header,
+            .route {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .routes__header span:last-child {
+                display: none;
+            }
+
+            .route__target {
+                text-align: left;
+            }
+
+            .step {
+                grid-template-columns: 46px minmax(0, 1fr);
+                gap: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .packet {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="site-header shell">
+        <div class="wordmark" aria-label="domain infrastructure note">
+            <span class="wordmark__mark" aria-hidden="true">↯</span>
+            <span class="wordmark__label">domain / infrastructure note</span>
+        </div>
+        <div class="live-state" aria-label="Caddy 正在本机 {port} 端口运行">
+            <span class="live-state__dot" aria-hidden="true"></span>
+            localhost:{port}
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="intro shell" aria-labelledby="page-title">
+            <div class="intro__copy">
+                <p class="eyebrow">一条请求，两层职责</p>
+                <h1 id="page-title">Caddy 遇见<span>Cloudflare</span></h1>
+                <p class="lede">
+                    Cloudflare 站在互联网边缘，Caddy 留在你的机器里。两者之间由
+                    <strong>Cloudflare Tunnel</strong> 连成一条不暴露源站端口的请求路径。
+                </p>
+                <ul class="route-facts" aria-label="当前部署摘要">
+                    <li><b>domain</b><span>公网主机名</span></li>
+                    <li><b>127.0.0.1</b><span>仅本机监听</span></li>
+                    <li><b>{port}</b><span>Caddy 入口</span></li>
+                </ul>
+            </div>
+
+            <div class="topology" aria-labelledby="topology-title">
+                <div class="topology__header">
+                    <h2 id="topology-title">Request topology</h2>
+                    <span>HTTPS / HTTP</span>
+                </div>
+
+                <div class="flow" aria-label="从浏览器到本地服务的请求链路">
+                    <span class="packet" aria-hidden="true"></span>
+
+                    <button class="stage" type="button" data-stage="browser" aria-pressed="true">
+                        <span class="stage__node">01</span>
+                        <span>
+                            <span class="stage__name">访客浏览器</span>
+                            <span class="stage__meta">HTTPS · domain</span>
+                        </span>
+                        <span class="stage__arrow" aria-hidden="true">↘</span>
+                    </button>
+
+                    <button class="stage" type="button" data-stage="edge" aria-pressed="false">
+                        <span class="stage__node">02</span>
+                        <span>
+                            <span class="stage__name">Cloudflare Edge</span>
+                            <span class="stage__meta">DNS · TLS · SECURITY</span>
+                        </span>
+                        <span class="stage__arrow" aria-hidden="true">↘</span>
+                    </button>
+
+                    <button class="stage" type="button" data-stage="tunnel" aria-pressed="false">
+                        <span class="stage__node">03</span>
+                        <span>
+                            <span class="stage__name">Cloudflare Tunnel</span>
+                            <span class="stage__meta">OUTBOUND CONNECTOR</span>
+                        </span>
+                        <span class="stage__arrow" aria-hidden="true">↘</span>
+                    </button>
+
+                    <button class="stage" type="button" data-stage="caddy" data-accent="caddy" aria-pressed="false">
+                        <span class="stage__node">04</span>
+                        <span>
+                            <span class="stage__name">Caddy</span>
+                            <span class="stage__meta">127.0.0.1:{port}</span>
+                        </span>
+                        <span class="stage__arrow" aria-hidden="true">↘</span>
+                    </button>
+
+                    <button class="stage" type="button" data-stage="service" data-accent="caddy" aria-pressed="false">
+                        <span class="stage__node">05</span>
+                        <span>
+                            <span class="stage__name">静态文件 / 本地服务</span>
+                            <span class="stage__meta">FILE · API · APP</span>
+                        </span>
+                        <span class="stage__arrow" aria-hidden="true">✓</span>
+                    </button>
+                </div>
+
+                <div class="stage-detail" id="stage-detail" aria-live="polite">
+                    <span class="stage-detail__label" id="stage-label">Stage 01 · Client</span>
+                    <h3 id="stage-title">请求从一个域名开始</h3>
+                    <p id="stage-copy">访客只知道 https://domain。你的公网 IP、Caddy 端口和本地服务地址都不会直接出现在浏览器里。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section shell" aria-labelledby="roles-title">
+            <div class="section-heading">
+                <span class="section-number">01 / 分工</span>
+                <div>
+                    <h2 id="roles-title">不是重复代理，<br>而是内外分工。</h2>
+                    <p>Cloudflare 管理互联网边缘，Caddy 管理主机内部。边界清楚之后，TLS、安全策略、静态文件和多个本地端口都各归其位。</p>
+                </div>
+            </div>
+
+            <div class="roles">
+                <article class="role" aria-labelledby="cloudflare-role">
+                    <span class="role__tag">Public edge</span>
+                    <h3 id="cloudflare-role">Cloudflare<br>负责“外面”</h3>
+                    <p>它是访客首先抵达的公网入口。域名解析和用户侧 HTTPS 在边缘完成，再把经过检查的请求送入 Tunnel。</p>
+                    <ul>
+                        <li>托管 DNS 与公网主机名</li>
+                        <li>终止用户侧 HTTPS，并提供可选 WAF/CDN</li>
+                        <li>把请求路由到指定的 Named Tunnel</li>
+                        <li>隐藏源站公网 IP，减少绕过边缘的入口</li>
+                    </ul>
+                </article>
+
+                <article class="role role--caddy" aria-labelledby="caddy-role">
+                    <span class="role__tag">Local router</span>
+                    <h3 id="caddy-role">Caddy<br>负责“里面”</h3>
+                    <p>它只在本机接收 cloudflared 交付的请求，然后根据域名与路径决定返回静态文件，还是转给其他应用。</p>
+                    <ul>
+                        <li>服务 HTML、CSS、图片等静态资源</li>
+                        <li>按 Host 或 URL 路径反向代理</li>
+                        <li>统一压缩、日志与响应头</li>
+                        <li>让多个服务共用一个本机入口</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="section shell journey" aria-labelledby="journey-title">
+            <div class="journey__sticky">
+                <span class="section-number">02 / 行程</span>
+                <h2 id="journey-title">一次访问，<br>经过五站。</h2>
+                <p>从浏览器输入域名到页面出现，请求始终沿着一条明确的单向入口前进。每一站只做自己擅长的事。</p>
+            </div>
+
+            <ol class="steps">
+                <li class="step">
+                    <div>
+                        <h3>浏览器连接 Cloudflare</h3>
+                        <p>DNS 将 domain 指向 Cloudflare。访客与边缘节点建立 HTTPS 连接，而不是直接连接你的 Mac。</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div>
+                        <h3>边缘完成公网处理</h3>
+                        <p>Cloudflare 处理 TLS，并根据已开启的规则执行缓存、安全检查或访问控制，再识别这个域名关联的 Tunnel。</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div>
+                        <h3>请求沿 Tunnel 回到本机</h3>
+                        <p>cloudflared 预先从本机向 Cloudflare 主动建立出站连接，因此源站无需为网站开放公网入站 80 或 443。</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div>
+                        <h3>Caddy 在 {port} 接手</h3>
+                        <p>cloudflared 把请求交给 127.0.0.1:{port}。Caddy 检查 Host 与路径，选择对应的 file_server 或 reverse_proxy。</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div>
+                        <h3>内容沿原路返回</h3>
+                        <p>静态页面或应用响应回到 Caddy，再经过 Tunnel 和 Cloudflare 返回浏览器。对访客而言，这仍然只是一次普通的 HTTPS 访问。</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="section shell" aria-labelledby="local-title">
+            <div class="local-map">
+                <div class="local-map__copy">
+                    <span class="section-number">03 / 当前实例</span>
+                    <h2 id="local-title">一个入口，<br>分发多个服务。</h2>
+                    <p>Cloudflare 只需要记住 Caddy 的入口。真正的静态目录和应用端口都留在主机内部，由 Caddyfile 集中管理。</p>
+                    <div class="port" aria-label="Caddy 监听 127.0.0.1 端口 {port}">
+                        :{port} <small>LOOPBACK</small>
+                    </div>
+                </div>
+
+                <div class="routes" aria-label="当前 Caddy 路由示例">
+                    <div class="routes__header" aria-hidden="true">
+                        <span>Incoming request</span>
+                        <span>Local target</span>
+                    </div>
+                    <div class="route">
+                        <span class="route__path">domain/*<small>主站与静态资源</small></span>
+                        <span class="route__target">www/index.html</span>
+                    </div>
+                    <div class="route">
+                        <span class="route__path">domain/api/*<small>保留 /api 前缀</small></span>
+                        <span class="route__target">127.0.0.1:8080</span>
+                    </div>
+                    <div class="route">
+                        <span class="route__path">domain/admin/*<small>移除 /admin 前缀</small></span>
+                        <span class="route__target">127.0.0.1:9000</span>
+                    </div>
+                    <div class="route">
+                        <span class="route__path">app.domain/*<small>独立应用子域名</small></span>
+                        <span class="route__target">127.0.0.1:3000</span>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="note" aria-label="安全说明">
+                <span class="note__signal" aria-hidden="true"></span>
+                <p><strong>为什么本机这一跳可以使用 HTTP？</strong> cloudflared 与 Caddy 位于同一台机器，最后一跳只经过 loopback；用户到 Cloudflare 以及
+                    Cloudflare Tunnel 本身仍然是加密连接。如果两者跨主机部署，则应改用经过证书校验的 HTTPS。</p>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="site-footer shell">
+        <div>
+            <p class="footer-mark">边缘在外，路由在内。</p>
+            <p class="footer-copy">domain · served through Caddy on localhost</p>
+        </div>
+        <nav class="footer-links" aria-label="官方文档">
+            <a href="https://caddyserver.com/docs/" target="_blank" rel="noreferrer">Caddy Docs ↗</a>
+            <a href="https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/"
+                target="_blank" rel="noreferrer">Tunnel Docs ↗</a>
+        </nav>
+    </footer>
+
+    <script>
+        (() => {
+            const details = {
+                browser: {
+                    label: "Stage 01 · Client",
+                    title: "请求从一个域名开始",
+                    copy: "访客只知道 https://domain。你的公网 IP、Caddy 端口和本地服务地址都不会直接出现在浏览器里。"
+                },
+                edge: {
+                    label: "Stage 02 · Public edge",
+                    title: "公网 HTTPS 在边缘完成",
+                    copy: "Cloudflare 接收用户请求，处理 DNS、TLS，并按你的套餐与规则执行缓存、安全检查或访问控制。"
+                },
+                tunnel: {
+                    label: "Stage 03 · Connector",
+                    title: "连接由本机主动发起",
+                    copy: "cloudflared 建立出站 Tunnel。外部请求沿这条已认证的连接返回，因此网站不需要直接暴露源站的 80 或 443 端口。"
+                },
+                caddy: {
+                    label: "Stage 04 · Local router",
+                    title: "Caddy 决定请求去哪里",
+                    copy: "在 127.0.0.1:{port}，Caddy 根据 Host 和路径服务静态文件，或把请求反向代理给 8080、9000、3000 等本地端口。"
+                },
+                service: {
+                    label: "Stage 05 · Response",
+                    title: "多个服务，共用一个入口",
+                    copy: "静态页面、API 和应用保持各自独立；Caddy 将它们组织成统一的域名与路径结构，再把响应沿原路送回访客。"
+                }
+            };
+
+            const buttons = [...document.querySelectorAll(".stage")];
+            const panel = document.querySelector("#stage-detail");
+            const label = document.querySelector("#stage-label");
+            const title = document.querySelector("#stage-title");
+            const copy = document.querySelector("#stage-copy");
+
+            const activate = (button) => {
+                const next = details[button.dataset.stage];
+                if (!next || button.getAttribute("aria-pressed") === "true") return;
+
+                buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+                panel.classList.add("is-switching");
+
+                window.setTimeout(() => {
+                    label.textContent = next.label;
+                    title.textContent = next.title;
+                    copy.textContent = next.copy;
+                    panel.classList.remove("is-switching");
+                }, 130);
+            };
+
+            buttons.forEach((button) => button.addEventListener("click", () => activate(button)));
+        })();
+    </script>
+</body>
+
+</html>

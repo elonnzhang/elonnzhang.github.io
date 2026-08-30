@@ -1,0 +1,15 @@
+<article class="page archive">
+  <div>
+    {{ partial "page-command.html" "archive" }}
+    <h1>{{ .Title }}</h1>
+  </div>
+  {{ $pages := where site.RegularPages "Section" "posts" }}
+  {{ range $pages.ByDate.Reverse.GroupByDate "2006" }}
+    <h3>{{ .Key }}</h3>
+    <ul class="unified-list">
+      {{ range .Pages }}
+      {{ partial "unified-list-item.html" (dict "page" . "meta" "") }}
+      {{ end }}
+    </ul>
+  {{ end }}
+</article>

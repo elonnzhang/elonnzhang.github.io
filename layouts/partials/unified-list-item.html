@@ -1,0 +1,18 @@
+{{ $page := .page }}
+{{ $dateValue := time.AsTime (.date | default $page.Date) }}
+{{ $showSummary := false }}
+{{ if isset . "showSummary" }}{{ $showSummary = .showSummary }}{{ end }}
+{{ $summary := .summary }}
+{{ $meta := .meta }}
+{{ if not (isset . "meta") }}
+  {{ with $page.Params.categories }}
+    {{ if reflect.IsSlice . }}{{ $meta = index . 0 }}{{ else }}{{ $meta = . }}{{ end }}
+  {{ end }}
+{{ end }}
+<li class="unified-list__item">
+  <time class="unified-list__date" datetime="{{ $dateValue.Format "2006-01-02" }}">{{ $dateValue.Format "2006-01-02" }}</time>
+  <span class="unified-list__prompt" aria-hidden="true">&gt;</span>
+  <a class="unified-list__title" href="{{ $page.RelPermalink }}">{{ $page.Title }}</a>
+  <span class="unified-list__meta">{{ with $meta }}[{{ . }}]{{ end }}</span>
+  <span class="unified-list__summary">{{ if and $showSummary $summary }}— {{ $summary | plainify | htmlUnescape | truncate 140 }}{{ end }}</span>
+</li>

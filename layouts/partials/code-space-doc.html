@@ -1,0 +1,5 @@
+<article class="code-space-doc">
+  <div class="code-space-doc__header"><p class="code-space-prompt">~/code-space/{{ .Params.tool | default "tools" }} $ cat {{ .File.TranslationBaseName }}</p><h1>{{ .Title }}</h1><div class="code-space-doc__meta"><span>[{{ .Params.tool | default "guide" }}]</span><span aria-hidden="true">/</span><span>{{ .Params.kind | default "guide" }}</span></div></div>
+  <div class="post-content">{{ .Content }}</div>
+</article>
+

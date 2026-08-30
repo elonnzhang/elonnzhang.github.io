@@ -1,0 +1,51 @@
+baseURL: https://jiabin.dev/
+defaultContentLanguage: zh
+timeZone: Asia/Shanghai
+languages:
+  zh:
+    locale: zh-CN
+    label: Chinese
+    weight: 1
+title: elonnzhang
+enableRobotsTXT: true
+ignoreFiles:
+  - (^|/)AGENTS\.md$
+paginate: 10
+permalinks:
+  posts: /blog/:slug
+  clippings: /clippings/:slug
+  code-space: /code-space/:slug
+taxonomies:
+  category: categories
+  tag: tags
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    codeFences: true
+outputs:
+  home: [HTML, RSS]
+  section: [HTML, RSS]
+  page: [HTML]
+outputFormats:
+  RSS:
+    mediaType: application/rss+xml
+    baseName: index
+    isHTML: false
+    isPlainText: true
+    rel: alternate
+params:
+  owner: elonnzhang
+  authorEmail: elonnzhang@gmail.com
+  description: BLOG / engineering notes on Go, systems, databases and AI tools.
+  siteTagline: Systems, code, and things worth understanding.
+  customDomain: jiabin.dev
+  defaultDomain: elonnzhang.github.io
+  social:
+    github: https://github.com/elonnzhang
+    email: mailto:elonnzhang@gmail.com
+services:
+  rss:
+    limit: 20

@@ -1,0 +1,8 @@
+{{ if gt .Paginator.TotalPages 1 }}
+<nav class="pagination" aria-label="文章分页">
+  {{ if .Paginator.HasPrev }}<a href="{{ .Paginator.Prev.URL }}" class="page-item" aria-label="上一页">&laquo;</a>{{ else }}<span class="page-item is-disabled" aria-hidden="true">&laquo;</span>{{ end }}
+  {{ range .Paginator.Pagers }}{{ if eq .PageNumber $.Paginator.PageNumber }}<span class="page-item is-current" aria-current="page">{{ .PageNumber }}</span>{{ else }}<a href="{{ .URL }}" class="page-item">{{ .PageNumber }}</a>{{ end }}{{ end }}
+  {{ if .Paginator.HasNext }}<a href="{{ .Paginator.Next.URL }}" class="page-item" aria-label="下一页">&raquo;</a>{{ else }}<span class="page-item is-disabled" aria-hidden="true">&raquo;</span>{{ end }}
+</nav>
+{{ end }}
+

@@ -1,0 +1,5 @@
+<section class="ink-reader-app" id="ink-reader-app">
+  {{ partial "page-command.html" "ink-reader" }}
+  <div class="ink-reader-launch"><p class="ink-reader-shell-label" aria-hidden="true">~/ink-reader $ read</p><form class="ink-reader-form" id="ink-reader-form" novalidate><label for="ink-reader-url">URL =</label><input id="ink-reader-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com/article" maxlength="2048" required><button id="ink-reader-submit" type="submit">READ</button></form><p class="ink-reader-status" id="ink-reader-status" role="status" aria-live="polite">$ waiting for URL</p></div>
+  <article class="ink-reader-article" id="ink-reader-article" hidden><div class="ink-reader-document-header"><p class="ink-reader-document-kind">REMOTE DOCUMENT</p><h1 id="ink-reader-title"></h1><p class="ink-reader-document-meta"><a id="ink-reader-source" href="#" target="_blank" rel="noopener noreferrer">SOURCE</a><span id="ink-reader-published" hidden></span></p></div><div class="ink-reader-content" id="ink-reader-content"></div></article>
+</section>

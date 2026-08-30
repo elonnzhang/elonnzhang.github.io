@@ -1,0 +1,16 @@
+<section class="code-space-index">
+  <div>
+    {{ partial "page-command.html" "code-space" }}
+  <h1>{{ .Title }}</h1> </div>
+
+  {{ $entries := .Pages.ByParam "order" }}
+  {{ $groups := $entries.GroupByParam "tool_label" }}
+  <div class="code-space-groups">
+    {{ range $groups }}
+    <section class="code-space-group"><h2>{{ .Key | default "Guides" }}</h2><ul class="code-space-list">{{ range .Pages }}<li><span class="code-space-list__kind">[{{ .Params.kind | default "guide" }}]</span><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with .Params.description }}<span class="code-space-list__description">{{ . }}</span>{{ end }}</li>{{ end }}</ul></section>
+    {{ else }}<p class="code-space-empty">0 entries</p>{{ end }}
+    {{ with hugo.Data.code_space.links }}
+    <section class="code-space-group"><h2>Links</h2><ul class="code-space-list">{{ range . }}<li><span class="code-space-list__kind">[{{ .kind | default "link" }}]</span><a href="{{ .url | relURL }}">{{ .title }}</a>{{ with .description }}<span class="code-space-list__description">{{ . }}</span>{{ end }}</li>{{ end }}</ul></section>
+    {{ end }}
+  </div>
+</section>

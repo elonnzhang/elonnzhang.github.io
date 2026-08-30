@@ -1,0 +1,13 @@
+<div class="reading-progress" id="reading-progress" role="progressbar" aria-label="文章阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="reading-progress__value"></span><span class="reading-progress__label" aria-hidden="true">[0%]</span></div>
+<article class="post">
+  <header class="post-header">
+    <h1>{{ .Title }}</h1>
+    <div class="post-meta">
+      {{ if .Date }}<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>{{ end }}
+      {{ with .Params.categories }}<span aria-hidden="true">/</span><span>{{ . }}</span>{{ end }}
+      {{ with .Params.tags }}<span aria-hidden="true">/</span><span>{{ delimit . " · " }}</span>{{ end }}
+      {{ with .Params.source }}<span aria-hidden="true">/</span><a href="{{ . }}" rel="noopener noreferrer">Source</a>{{ end }}
+    </div>
+  </header>
+  <div class="post-content">{{ .Content }}</div>
+</article>

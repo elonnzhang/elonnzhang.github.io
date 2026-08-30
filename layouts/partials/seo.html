@@ -1,0 +1,8 @@
+{{ $description := .Description | default .Site.Params.description }}
+<title>{{ if .IsHome }}{{ .Site.Title }} | {{ .Site.Params.siteTagline }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+<meta name="description" content="{{ $description | plainify | htmlEscape }}">
+<meta property="og:title" content="{{ .Title | htmlEscape }}">
+<meta property="og:description" content="{{ $description | plainify | htmlEscape }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+

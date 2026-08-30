@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale | default "zh-CN" }}">
+  {{ partial "head.html" . }}
+  <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div id="wrapper">
+      {{ partial "header.html" . }}
+      <div class="container{{ if .IsHome }} container--post-index{{ end }}">
+        <main id="main-content">{{ block "main" . }}{{ end }}</main>
+      </div>
+    </div>
+    {{ partial "footer.html" . }}
+    <div class="space-ink-transition" id="space-ink-transition" aria-hidden="true">
+      <div class="space-ink-transition__drop-scene" aria-hidden="true">
+        <span class="space-ink-transition__drop"></span>
+        <img class="space-ink-transition__bloom" data-src="{{ "/assets/images/ink-splash.png" | relURL }}" alt="">
+      </div>
+      <p class="space-ink-transition__command"><span id="space-ink-transition-prefix" aria-hidden="true">$ entering </span><span id="space-ink-transition-target"></span></p>
+    </div>
+    <script src="{{ "/assets/js/eink-reader.js" | relURL }}" defer></script>
+    <script src="{{ "/assets/js/space-transition.js" | relURL }}" defer></script>
+    <script src="{{ "/assets/js/theme.js" | relURL }}" defer></script>
+    {{ block "scripts" . }}{{ end }}
+  </body>
+</html>

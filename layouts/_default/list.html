@@ -1,0 +1,20 @@
+{{ define "main" }}
+{{ if eq .Params.pageKind "blog-index" }}
+  {{ partial "blog-index.html" . }}
+{{ else if eq .Section "clippings" }}
+  {{ partial "clippings-index.html" . }}
+{{ else if eq .Section "code-space" }}
+  {{ partial "code-space-index.html" . }}
+{{ else }}
+<article class="page">
+  <h1>{{ .Title }}</h1>
+  {{ with .Content }}<div class="post-content">{{ . }}</div>{{ end }}
+  <ul class="unified-list">
+    {{ range .Paginator.Pages }}
+    {{ partial "unified-list-item.html" (dict "page" . "showSummary" true "summary" .Summary) }}
+    {{ end }}
+  </ul>
+  {{ partial "pagination.html" . }}
+</article>
+{{ end }}
+{{ end }}

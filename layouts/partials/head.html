@@ -1,0 +1,37 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Hugo">
+  <meta name="color-scheme" content="light dark">
+  <meta id="theme-color" name="theme-color" content="#f7f7f2">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var ua = navigator.userAgent || "";
+      var preview = /(?:^|[?&])eink=(?:1|true|yes)(?:&|$)/i.test(window.location.search);
+      var web = /(?:\?|&)web=1(?:&|$)/.test(window.location.search);
+      var kindle = /\bKindle(?:\/|\s(?!Fire))/i.test(ua) && !/\bSilk\//i.test(ua);
+      var forced = {{ if eq .Params.force_eink true }}true{{ else }}false{{ end }} && !web;
+      var isEink = !web && (kindle || preview || forced);
+      root.className += (root.className ? " " : "") + "js";
+      if (!("open" in document.createElement("details"))) root.className += " no-details";
+      if (isEink) {
+        root.className += " eink";
+        root.setAttribute("data-eink", "true");
+        root.setAttribute("data-theme", "light");
+        if (preview) root.setAttribute("data-eink-preview", "true");
+        if (kindle) root.setAttribute("data-kindle", "true");
+        return;
+      }
+      var theme = "";
+      try { theme = window.localStorage.getItem("elonnzhang-theme") || ""; } catch (error) {}
+      if (theme !== "light" && theme !== "dark") theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      root.setAttribute("data-theme", theme);
+      document.getElementById("theme-color").setAttribute("content", theme === "dark" ? "#111210" : "#f7f7f2");
+    }());
+  </script>
+  {{ $style := resources.Get "css/main.scss" | toCSS | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+  {{ with .OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }} RSS">{{ end }}
+  {{ partial "seo.html" . }}
+</head>

@@ -11,12 +11,18 @@ Gemfile.lock
 .jekyll-metadata
 _site
 
+# Hugo output and lock files
+public
+resources/_gen
+.hugo_build.lock
+
 # RubyGems
 *.gem
 
 # NPM dependencies
 node_modules
 package-lock.json
+!go-change-lab/package-lock.json
 
 # IDE configurations
 .idea

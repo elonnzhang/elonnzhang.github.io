@@ -1,7 +1,0 @@
-- title: "VS Code Custom UI CSS 配置"
-  tool: "vscode"
-  tool_label: "VS Code"
-  kind: "config"
-  order: 10
-  url: "/vscode-custom-ui"
-  description: "VS Code 自定义样式配置与亮暗主题适配"

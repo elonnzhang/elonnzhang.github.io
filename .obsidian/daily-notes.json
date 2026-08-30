@@ -1,5 +1,5 @@
 {
-  "folder": "_posts",
+  "folder": "content/posts",
   "autorun": true,
-  "template": "_posts/2025-xx-xx-title"
+  "template": "content/posts/draft-title.md"
 }
