@@ -1,0 +1,293 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="5220" viewBox="0 0 2400 5220" role="img" aria-labelledby="title desc">
+  <title id="title">Attention 背后的数学：从输入到 Output 的完整流程图</title>
+  <desc id="desc">用 I love AI 的数值例子，展示输入向量 X 如何经过 Q、K、V、点积、缩放、Softmax 和加权求和，得到上下文输出。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#eef4f8"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0f3d56"/>
+      <stop offset="1" stop-color="#176b72"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#17324d" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L14,7 L0,14 z" fill="#237b8a"/>
+    </marker>
+    <marker id="arrow-dark" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L14,7 L0,14 z" fill="#23435b"/>
+    </marker>
+    <style>
+      .font { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; fill: #17324d; }
+      .mono { font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace; fill: #17324d; }
+      .title { font-size: 60px; font-weight: 800; fill: #ffffff; }
+      .subtitle { font-size: 29px; fill: #d9f2f0; }
+      .section { font-size: 40px; font-weight: 800; fill: #17324d; }
+      .section-no { font-size: 26px; font-weight: 800; fill: #ffffff; }
+      .body { font-size: 29px; }
+      .small { font-size: 24px; }
+      .tiny { font-size: 21px; }
+      .formula { font-size: 35px; font-weight: 700; fill: #0f5e70; }
+      .matrix { font-size: 31px; font-weight: 600; }
+      .matrix-small { font-size: 27px; font-weight: 600; }
+      .label { font-size: 27px; font-weight: 700; }
+      .muted { fill: #587083; }
+      .teal { fill: #0d7180; }
+      .blue { fill: #2063a1; }
+      .orange { fill: #b8661e; }
+      .green { fill: #24734e; }
+      .purple { fill: #70438f; }
+      .white { fill: #ffffff; }
+      .panel { fill: #ffffff; stroke: #d8e4ea; stroke-width: 3; }
+      .box-blue { fill: #eef6ff; stroke: #8db9e6; stroke-width: 3; }
+      .box-teal { fill: #eaf8f7; stroke: #83c9c3; stroke-width: 3; }
+      .box-orange { fill: #fff5e9; stroke: #e1b47f; stroke-width: 3; }
+      .box-green { fill: #eef8f1; stroke: #9bc7a7; stroke-width: 3; }
+      .box-purple { fill: #f7f0fb; stroke: #c4a5d5; stroke-width: 3; }
+      .pill { fill: #e2f1f1; stroke: #93c6c2; stroke-width: 2; }
+      .arrow { fill: none; stroke: #237b8a; stroke-width: 6; marker-end: url(#arrow); }
+      .arrow-dark { fill: none; stroke: #23435b; stroke-width: 5; marker-end: url(#arrow-dark); }
+      .dashed { fill: none; stroke: #9ab2bf; stroke-width: 3; stroke-dasharray: 10 10; }
+    </style>
+  </defs>
+
+  <rect width="2400" height="5220" fill="#eef4f8"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="2400" height="225" fill="#0f3d56"/>
+  <circle cx="145" cy="100" r="38" fill="#f3b562"/>
+  <text x="145" y="113" text-anchor="middle" class="font" style="font-size:34px;font-weight:800;fill:#0f3d56">A</text>
+  <text x="225" y="98" class="font title">Attention 背后的数学</text>
+  <text x="225" y="153" class="font subtitle">从 “I love AI” 到最终 Output：Q、K、V 的完整计算路径</text>
+  <text x="2260" y="93" text-anchor="end" class="font subtitle">给初学者的视觉版</text>
+  <text x="2260" y="143" text-anchor="end" class="font subtitle">Self-Attention · 单头示例</text>
+
+  <!-- Formula ribbon -->
+  <rect x="100" y="260" width="2200" height="135" rx="22" fill="#17324d" filter="url(#shadow)"/>
+  <text x="1200" y="317" text-anchor="middle" class="mono" style="font-size:39px;font-weight:800;fill:#ffffff">Attention(Q, K, V) = softmax(Q × K^T / √dₖ) × V</text>
+  <text x="1200" y="365" text-anchor="middle" class="font small" style="fill:#d9f2f0">先找“应该参考谁”，再按比例取回“真正的信息”</text>
+
+  <!-- Flow arrow from formula to section 1 -->
+  <path d="M1200 395 L1200 455" class="arrow"/>
+
+  <!-- Section 1 -->
+  <rect x="100" y="455" width="2200" height="565" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="525" r="30" fill="#237b8a"/>
+  <text x="165" y="534" text-anchor="middle" class="font section-no">1</text>
+  <text x="220" y="540" class="font section">输入：把文字变成数字向量 X</text>
+  <text x="220" y="588" class="font body muted">神经网络不能直接计算单词，先把每个词表示成一行数字。</text>
+
+  <rect x="190" y="650" width="430" height="105" rx="18" class="pill"/>
+  <text x="405" y="715" text-anchor="middle" class="mono" style="font-size:37px;font-weight:800;fill:#0f5e70">I   love   AI</text>
+  <path d="M650 703 L790 703" class="arrow-dark"/>
+  <text x="720" y="672" text-anchor="middle" class="font small muted">编码</text>
+
+  <rect x="825" y="625" width="720" height="260" rx="18" class="box-blue"/>
+  <text x="875" y="680" class="font label blue">输入矩阵 X（3 × 4）</text>
+  <text x="875" y="735" class="mono matrix">[ 1  0  1  0 ]   ← I</text>
+  <text x="875" y="790" class="mono matrix">[ 0  1  0  1 ]   ← love</text>
+  <text x="875" y="845" class="mono matrix">[ 1  1  0  0 ]   ← AI</text>
+  <text x="1615" y="665" class="font small teal">3 行 = 3 个词</text>
+  <text x="1615" y="716" class="font small teal">4 列 = 每词 4 个数字</text>
+  <text x="1615" y="786" class="font small muted">这些数字是教学用的简化示例。</text>
+  <text x="1615" y="830" class="font small muted">真实模型通常使用数百或上千维。</text>
+
+  <rect x="190" y="915" width="2040" height="65" rx="14" fill="#f4f8fa"/>
+  <text x="1210" y="958" text-anchor="middle" class="font small">此时每个词只有自己的向量，还没有融合上下文。</text>
+
+  <path d="M1200 1020 L1200 1080" class="arrow"/>
+
+  <!-- Section 2 -->
+  <rect x="100" y="1080" width="2200" height="665" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="1150" r="30" fill="#237b8a"/>
+  <text x="165" y="1159" text-anchor="middle" class="font section-no">2</text>
+  <text x="220" y="1165" class="font section">从 X 生成 Q、K、V</text>
+  <text x="220" y="1212" class="font body muted">三个不同的权重矩阵把同一个词投影成三种“角色”。</text>
+  <text x="220" y="1275" class="mono formula">Q = X × W_Q  、   K = X × W_K   、   V = X × W_V</text>
+
+  <rect x="175" y="1320" width="640" height="330" rx="18" class="box-blue"/>
+  <text x="220" y="1370" class="font label blue">Q：Query，提问</text>
+  <text x="220" y="1415" class="font small">“我现在想找什么信息？”</text>
+  <text x="220" y="1470" class="font small muted">Q = X × W_Q</text>
+  <text x="220" y="1530" class="mono matrix-small">[ 2  0  1 ]   ← I</text>
+  <text x="220" y="1585" class="mono matrix-small">[ 0  2  1 ]   ← love</text>
+  <text x="220" y="1640" class="mono matrix-small">[ 1  1  1 ]   ← AI</text>
+
+  <rect x="880" y="1320" width="640" height="330" rx="18" class="box-teal"/>
+  <text x="925" y="1370" class="font label teal">K：Key，匹配标签</text>
+  <text x="925" y="1415" class="font small">“我这里有什么特征可供匹配？”</text>
+  <text x="925" y="1470" class="font small muted">K = X × W_K</text>
+  <text x="925" y="1530" class="mono matrix-small">[ 0  1  1 ]   ← I</text>
+  <text x="925" y="1585" class="mono matrix-small">[ 2  1  1 ]   ← love</text>
+  <text x="925" y="1640" class="mono matrix-small">[ 1  1  1 ]   ← AI</text>
+
+  <rect x="1585" y="1320" width="640" height="330" rx="18" class="box-orange"/>
+  <text x="1630" y="1370" class="font label orange">V：Value，实际内容</text>
+  <text x="1630" y="1415" class="font small">“匹配成功后，真正提供什么？”</text>
+  <text x="1630" y="1470" class="font small muted">V = X × W_V</text>
+  <text x="1630" y="1530" class="mono matrix-small">[ 1  0  1 ]   ← I</text>
+  <text x="1630" y="1585" class="mono matrix-small">[ 1  2  0 ]   ← love</text>
+  <text x="1630" y="1640" class="mono matrix-small">[ 1  1  0 ]   ← AI</text>
+
+  <rect x="190" y="1680" width="2040" height="45" rx="12" fill="#fff8ed"/>
+  <text x="1210" y="1711" text-anchor="middle" class="font tiny orange">类比搜索：Q 是搜索问题，K 是关键词/标签，V 是文章真正的内容。</text>
+
+  <path d="M1200 1745 L1200 1805" class="arrow"/>
+
+  <!-- Section 3 -->
+  <rect x="100" y="1805" width="2200" height="650" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="1875" r="30" fill="#237b8a"/>
+  <text x="165" y="1884" text-anchor="middle" class="font section-no">3</text>
+  <text x="220" y="1890" class="font section">Q × K^T：计算“应该关注谁”</text>
+  <text x="220" y="1937" class="font body muted">把每个词的 Query 和所有词的 Key 做点积，得到相关性分数。</text>
+
+  <rect x="190" y="1990" width="585" height="350" rx="18" class="box-blue"/>
+  <text x="235" y="2042" class="font label blue">当前词的 Query</text>
+  <text x="235" y="2110" class="mono matrix">Q_I = [ 2  0  1 ]</text>
+  <text x="235" y="2175" class="mono matrix">Q_love = [ 0  2  1 ]</text>
+  <text x="235" y="2240" class="mono matrix">Q_AI = [ 1  1  1 ]</text>
+  <text x="235" y="2310" class="font small muted">每一行都在提出自己的“问题”。</text>
+
+  <path d="M815 2165 L940 2165" class="arrow-dark"/>
+  <text x="878" y="2125" text-anchor="middle" class="font tiny muted">逐一比较</text>
+
+  <rect x="980" y="1990" width="585" height="350" rx="18" class="box-teal"/>
+  <text x="1025" y="2042" class="font label teal">所有词的 Key</text>
+  <text x="1025" y="2110" class="mono matrix">K^T =</text>
+  <text x="1025" y="2165" class="mono matrix">[ 0  2  1 ]</text>
+  <text x="1025" y="2220" class="mono matrix">[ 1  1  1 ]</text>
+  <text x="1025" y="2275" class="mono matrix">[ 1  1  1 ]</text>
+  <text x="1025" y="2330" class="font small muted">转置：把 K 的行列互换。</text>
+
+  <path d="M1605 2165 L1730 2165" class="arrow-dark"/>
+  <text x="1668" y="2125" text-anchor="middle" class="font tiny muted">点积</text>
+
+  <rect x="1770" y="1990" width="455" height="350" rx="18" class="box-purple"/>
+  <text x="1815" y="2042" class="font label purple">Scores（相关性分数）</text>
+  <text x="1815" y="2110" class="mono matrix-small">[ 1  5  3 ] ← I</text>
+  <text x="1815" y="2165" class="mono matrix-small">[ 3  3  3 ] ← love</text>
+  <text x="1815" y="2220" class="mono matrix-small">[ 2  4  3 ] ← AI</text>
+  <text x="1815" y="2290" class="font small purple">数字越大，匹配越强</text>
+
+  <rect x="190" y="2380" width="2040" height="45" rx="12" fill="#f5f0fa"/>
+  <text x="1210" y="2411" text-anchor="middle" class="font tiny purple">例如：I → love = 2×2 + 0×1 + 1×1 = 5，所以在这组简化数字里，I 最关注 love。</text>
+
+  <path d="M1200 2455 L1200 2515" class="arrow"/>
+
+  <!-- Section 4 -->
+  <rect x="100" y="2515" width="2200" height="660" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="2585" r="30" fill="#237b8a"/>
+  <text x="165" y="2594" text-anchor="middle" class="font section-no">4</text>
+  <text x="220" y="2600" class="font section">缩放 + Softmax：把分数变成比例</text>
+  <text x="220" y="2647" class="font body muted">缩放负责稳定数值，Softmax 负责把每一行变成总和为 1 的权重。</text>
+
+  <rect x="175" y="2700" width="880" height="370" rx="18" class="box-orange"/>
+  <text x="225" y="2755" class="font label orange">① 除以 √dₖ：避免分数过大</text>
+  <text x="225" y="2820" class="mono formula">dₖ = 3，√3 ≈ 1.732</text>
+  <text x="225" y="2885" class="mono matrix-small">[ 1  5  3 ] / 1.732</text>
+  <text x="225" y="2945" class="mono matrix-small">= [ 0.577  2.887  1.732 ]</text>
+  <text x="225" y="3015" class="font small muted">不改变大小顺序，只把数值压到</text>
+  <text x="225" y="3050" class="font small muted">更适合 Softmax 和训练的范围。</text>
+
+  <path d="M1095 2885 L1240 2885" class="arrow-dark"/>
+  <text x="1168" y="2845" text-anchor="middle" class="font tiny muted">归一化</text>
+
+  <rect x="1280" y="2700" width="945" height="370" rx="18" class="box-green"/>
+  <text x="1330" y="2755" class="font label green">② Softmax：变成注意力权重</text>
+  <text x="1330" y="2820" class="mono formula">softmax(xᵢ) = eˣⁱ / Σeˣʲ</text>
+  <text x="1330" y="2885" class="mono matrix-small">I：     [ 0.070  0.707  0.223 ]</text>
+  <text x="1330" y="2945" class="mono matrix-small">love：  [ 0.333  0.333  0.333 ]</text>
+  <text x="1330" y="3005" class="mono matrix-small">AI：    [ 0.168  0.533  0.299 ]</text>
+  <text x="1330" y="3055" class="font small muted">每一行相加 = 1，即 100%。</text>
+
+  <rect x="190" y="3110" width="2040" height="45" rx="12" fill="#eef8f1"/>
+  <text x="1210" y="3141" text-anchor="middle" class="font tiny green">对 I 来说：70.7% 参考 love，22.3% 参考 AI，7.0% 参考自己。</text>
+
+  <path d="M1200 3175 L1200 3235" class="arrow"/>
+
+  <!-- Section 5 -->
+  <rect x="100" y="3235" width="2200" height="640" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="3305" r="30" fill="#237b8a"/>
+  <text x="165" y="3314" text-anchor="middle" class="font section-no">5</text>
+  <text x="220" y="3320" class="font section">Attention Weights × V：按比例取回信息</text>
+  <text x="220" y="3367" class="font body muted">Attention Weights = softmax(Q × K^T / √dₖ)， 权重决定“从谁取多少”，V 决定“取回来的内容是什么”。</text>
+
+  <rect x="190" y="3420" width="760" height="340" rx="18" class="box-green"/>
+  <text x="235" y="3472" class="font label green">注意力权重矩阵 A</text>
+  <text x="235" y="3540" class="mono matrix-small">[ 0.070  0.707  0.223 ] ← I</text>
+  <text x="235" y="3595" class="mono matrix-small">[ 0.333  0.333  0.333 ] ← love</text>
+  <text x="235" y="3650" class="mono matrix-small">[ 0.168  0.533  0.299 ] ← AI</text>
+  <text x="235" y="3720" class="font small muted">每一行是一个词的“参考配方”。</text>
+
+  <path d="M995 3590 L1115 3590" class="arrow-dark"/>
+  <text x="1055" y="3550" text-anchor="middle" class="font tiny muted">加权混合</text>
+
+  <rect x="1145" y="3420" width="530" height="340" rx="18" class="box-orange"/>
+  <text x="1190" y="3472" class="font label orange">Value 矩阵 V</text>
+  <text x="1190" y="3540" class="mono matrix-small">[ 1  0  1 ] ← I</text>
+  <text x="1190" y="3595" class="mono matrix-small">[ 1  2  0 ] ← love</text>
+  <text x="1190" y="3650" class="mono matrix-small">[ 1  1  0 ] ← AI</text>
+  <text x="1190" y="3720" class="font small muted">每一行是一个词提供的内容。</text>
+
+  <path d="M1720 3590 L1840 3590" class="arrow-dark"/>
+  <text x="1780" y="3550" text-anchor="middle" class="font tiny muted">输出</text>
+
+  <rect x="1870" y="3420" width="355" height="340" rx="18" class="box-purple"/>
+  <text x="1915" y="3472" class="font label purple">新表示</text>
+  <text x="1915" y="3540" class="font small purple">每个词都融合了</text>
+  <text x="1915" y="3585" class="font small purple">整句话的上下文。</text>
+  <text x="1915" y="3660" class="font small muted">仍然是数字向量，</text>
+  <text x="1915" y="3705" class="font small muted">不是最终文字答案。</text>
+
+  <path d="M1200 3875 L1200 3935" class="arrow"/>
+
+  <!-- Section 6 Output -->
+  <rect x="100" y="3935" width="2200" height="500" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="4005" r="30" fill="#237b8a"/>
+  <text x="165" y="4014" text-anchor="middle" class="font section-no">6</text>
+  <text x="220" y="4020" class="font section">最终 Output：每个词的上下文向量</text>
+  <text x="220" y="4067" class="font body muted">它不是概率，也不是生成的文字，而是后续网络继续处理的内部特征。</text>
+
+  <rect x="260" y="4130" width="980" height="230" rx="18" class="box-purple"/>
+  <text x="320" y="4185" class="font label purple">Output（3 × 3）</text>
+  <text x="320" y="4245" class="mono matrix">[ 1.000  1.637  0.070 ]  ← I</text>
+  <text x="320" y="4300" class="mono matrix">[ 1.000  1.000  0.333 ]  ← love</text>
+  <text x="320" y="4355" class="mono matrix">[ 1.000  1.365  0.168 ]  ← AI</text>
+
+  <rect x="1330" y="4130" width="830" height="230" rx="18" fill="#f4f8fa" stroke="#c8d8e0" stroke-width="3"/>
+  <text x="1380" y="4185" class="font label teal">如何读这一行？</text>
+  <text x="1380" y="4240" class="font body">I → [1.000, 1.637, 0.070]</text>
+  <text x="1380" y="4290" class="font small muted">这是 I 的新表示：主要融合 love，</text>
+  <text x="1380" y="4330" class="font small muted">因为 I 给 love 的权重最高（70.7%）。</text>
+
+  <path d="M1200 4435 L1200 4495" class="arrow"/>
+
+  <!-- Section 7: detailed calculation for I -->
+  <rect x="100" y="4495" width="2200" height="555" rx="24" class="panel" filter="url(#shadow)"/>
+  <circle cx="165" cy="4565" r="30" fill="#237b8a"/>
+  <text x="165" y="4574" text-anchor="middle" class="font section-no">7</text>
+  <text x="220" y="4580" class="font section">放大看 I：Output 到底怎么得到？</text>
+  <text x="220" y="4627" class="font body muted">把 I 的三个权重分别乘上三个词的 Value，再把结果相加。</text>
+
+  <rect x="180" y="4680" width="740" height="300" rx="18" class="box-green"/>
+  <text x="225" y="4730" class="font label green">I 的权重（从谁取多少）</text>
+  <text x="225" y="4790" class="mono matrix-small">I：     0.070</text>
+  <text x="225" y="4845" class="mono matrix-small">love：  0.707</text>
+  <text x="225" y="4900" class="mono matrix-small">AI：    0.223</text>
+  <text x="225" y="4950" class="font small muted">三项相加 = 1.000</text>
+
+  <path d="M960 4830 L1080 4830" class="arrow-dark"/>
+  <text x="1020" y="4790" text-anchor="middle" class="font tiny muted">multiply + add</text>
+
+  <rect x="1110" y="4680" width="1070" height="300" rx="18" class="box-orange"/>
+  <text x="1155" y="4730" class="font label orange">加权计算（取回什么内容）</text>
+  <text x="1155" y="4785" class="mono matrix-small">Output_I = 0.070×[1,0,1]</text>
+  <text x="1155" y="4835" class="mono matrix-small">          + 0.707×[1,2,0]</text>
+  <text x="1155" y="4885" class="mono matrix-small">          + 0.223×[1,1,0]</text>
+  <text x="1155" y="4940" class="mono matrix-small" style="font-weight:800;fill:#70438f">          = [1.000, 1.637, 0.070]</text>
+
+  <rect x="100" y="5090" width="2200" height="85" rx="18" fill="#17324d"/>
+  <text x="1200" y="5145" text-anchor="middle" class="font" style="font-size:31px;font-weight:800;fill:#ffffff">记忆口诀：Q 问问题，K 做匹配，V 提供内容，Output 融合上下文。</text>
+</svg>
