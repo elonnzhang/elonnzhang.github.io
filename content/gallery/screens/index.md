@@ -15,6 +15,11 @@ images:
     alt: Go Concurrency Explorer 交互学习页面
     width: 3914
     height: 2370
+  - src: /assets/gallery/screenshot_2025_07_28T13_30_35.png
+    title: 接受
+    alt: 普通人心理上习惯被动接受自己的命运
+    width: 1280
+    height: 720
   - src: /assets/gallery/ecc0dff3-817c-4f0e-bf4c-527a47555d4c.jpg
     title: 毛爷爷碰上富兰克林
     alt: mao and fu
