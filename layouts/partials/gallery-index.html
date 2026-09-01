@@ -1,20 +1,20 @@
 <section class="gallery-shell gallery-intro" aria-labelledby="gallery-title">
-  <p class="gallery-kicker">visual archive</p>
-  <h1 id="gallery-title">A small index of<br><span>things worth seeing.</span></h1>
+  <h1 id="gallery-title">Gallery</h1>
   <p>Kindle 截图、网页快照和个人精选照片。按相册整理，打开后按原始比例观看。</p>
 </section>
 <section class="gallery-shell gallery-section-head" aria-labelledby="albums-title">
-  <div><p class="gallery-section-kicker">01 / albums</p><h2 id="albums-title">Albums</h2></div>
+  <h2 id="albums-title">Albums</h2>
   <span>{{ len (where .Pages "Params.galleryKind" "album") }} collections</span>
 </section>
 <section class="gallery-shell gallery-album-grid" aria-label="相册列表">
   {{ range where .Pages.ByDate.Reverse "Params.galleryKind" "album" }}
     {{ $image := index .Params.images 0 }}
+    {{ $imageURL := partial "remote-asset.html" (dict "path" $image.src "variant" "thumb") }}
     <a class="gallery-album-card" href="{{ .RelPermalink }}">
-      <figure><img src="{{ $image.src | relURL }}" alt="{{ $image.alt }}" loading="lazy"></figure>
-      <div><div><h2>{{ .Title }}</h2><p>{{ .Description }}</p></div><span class="gallery-album-card__arrow" aria-hidden="true">↗</span></div>
-      <small>{{ len .Params.images }} photos · {{ .Date.Format "2006.01" }}</small>
+      <figure><img src="{{ $imageURL }}" alt="{{ $image.alt }}" loading="lazy"></figure>
+      <div><div><h2>{{ .Title }}</h2><p>{{ .Description }}</p></div><span class="gallery-album-card__arrow" aria-hidden="true">&rarr;</span></div>
+      <small>{{ len .Params.images }} photos / {{ .Date.Format "2006-01" }}</small>
     </a>
   {{ end }}
 </section>
-<section class="gallery-shell gallery-home-link"><a href="{{ "/gallery/categories/" | relURL }}">Browse by category <span aria-hidden="true">→</span></a></section>
+<section class="gallery-shell gallery-home-link"><a href="{{ "/gallery/categories/" | relURL }}">Browse by category <span aria-hidden="true">&rarr;</span></a></section>

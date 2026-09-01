@@ -1,16 +1,13 @@
 <section class="gallery-shell gallery-intro gallery-intro--compact" aria-labelledby="category-title">
-  <p class="gallery-kicker">visual archive</p>
-  <h1 id="category-title">Categories<span>.</span></h1>
+  <h1 id="category-title">Categories</h1>
   <p>{{ .Description }}</p>
 </section>
-<section class="gallery-shell gallery-category-grid" aria-label="图库分类">
-  {{ range $index, $categoryPage := .Pages.ByTitle }}
-    {{ $page := $categoryPage }}
-    {{ $category := $page.Params.category }}
-    {{ $albums := where site.RegularPages "Section" "gallery" }}
+<nav class="gallery-shell gallery-category-list" aria-label="图库分类">
+  {{ range .Pages.ByTitle }}
+    {{ $category := .Params.category }}
     {{ $count := 0 }}
-    {{ range $albums }}{{ if and (eq .Params.galleryKind "album") (in .Params.categories $category) }}{{ $count = add $count 1 }}{{ end }}{{ end }}
-    <a class="gallery-category-card" href="{{ $page.RelPermalink }}"><span class="gallery-category-card__index">{{ printf "%02d" (add $index 1) }}</span><span><strong>{{ $page.Title }}</strong><small>{{ $page.Description }}</small></span><span class="gallery-category-card__count">{{ $count }} albums ↗</span></a>
+    {{ range where site.RegularPages "Section" "gallery" }}{{ if and (eq .Params.galleryKind "album") (in .Params.categories $category) }}{{ $count = add $count 1 }}{{ end }}{{ end }}
+    <a class="gallery-category-card" href="{{ .RelPermalink }}"><span><strong>{{ .Title }}</strong><small>{{ .Description }}</small></span><span class="gallery-category-card__count">{{ $count }} albums</span></a>
   {{ end }}
-</section>
-<section class="gallery-shell gallery-home-link"><a href="{{ "/gallery/" | relURL }}">Back to albums <span aria-hidden="true">←</span></a></section>
+</nav>
+<section class="gallery-shell gallery-home-link"><a href="{{ "/gallery/" | relURL }}"><span aria-hidden="true">&larr;</span> Back to albums</a></section>

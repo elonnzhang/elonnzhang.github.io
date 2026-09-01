@@ -5,9 +5,9 @@ categories: database
 slug: mysql-innodb-mvcc
 ---
 
-![](/assets/img/Pasted%20image%2020250812160133.png)
+![](/assets/img/ab91ab8a-cd5a-446f-bcc6-f73333545665.png)
 
-![](/assets/img/Pasted%20image%2020250812160211.png)
+![](/assets/img/cc034730-ff89-46da-b7e7-8f9e95d592ea.png)
 
 **MVCC（多版本并发控制）** 是一种数据库并发控制机制，用于管理多个事务并发操作时，确保事务的 **隔离性** 和 **一致性**。在 **MySQL InnoDB** 存储引擎中，MVCC 是实现 **事务隔离** 和 **高并发** 数据访问的关键技术之一。MVCC 允许多个事务在 **不冲突** 的情况下并发执行，同时保证每个事务的 **数据一致性**。
 

@@ -22,7 +22,7 @@ https://www.bilibili.com/video/BV1bP411c7oJ?spm_id_from=333.788.videopod.section
 - 核心算法：使用“相向双指针”技巧。左指针从头，右指针从尾，根据当前和与目标值的关系移动指针，时间复杂度为 O(n)。
 
 
-![](/assets/img/Pasted%20image%2020250819200544.png)
+![](/assets/img/5b141bea-7454-4b4c-8501-35a87beb2a1c.png)
 
 1. 随便找两个数组 eg 3 & 8，
 2. 3+8 = 11 > 9 
@@ -33,7 +33,7 @@ https://www.bilibili.com/video/BV1bP411c7oJ?spm_id_from=333.788.videopod.section
 7. 那么2 和 2-6 中间的数加起来也都小于 8 （同样小于9）
 8. 那么把2 去掉（左指针向后移动）
 
-![](/assets/img/Pasted%20image%2020250819201309.png)
+![](/assets/img/d85935d4-e348-46bd-97f3-9705f635693b.png)
 
 TODO
 ```go
@@ -61,11 +61,11 @@ func twoSum(numbers []int, target int) []int {
 
 
 
-![](/assets/img/Pasted%20image%2020250819201507.png)
+![](/assets/img/3aa44ddc-4d13-4fce-856f-394277b04e64.png)
 
 优化1: 如果最小的三个数加起来 >0 , 那么后面的都大于0了
 优化2:如果x（固定的那个值）和最大的两个数加起来是 < 0 的, 那么x和其他的数相加也都是小于0的
-![](/assets/img/Pasted%20image%2020250819201807.png)![](/assets/img/Pasted%20image%2020250819202017.png)
+![](/assets/img/d7711641-b5a3-4aca-aa4f-b88a45fee1fe.png)![](/assets/img/30e6eb09-bc04-44b8-b5bf-10bb2a2f2319.png)
 ```go
 func threeSum(nums []int) (ans [][]int) {
     // var ans [][]int = make([][]int,0)
@@ -112,10 +112,10 @@ func threeSum(nums []int) (ans [][]int) {
 - 解题思路：采用“相向双指针”法。左指针从左，右指针从右，计算当前容积后，移动较低的指针，直到两指针相遇。这样能在 O(n) 时间复杂度下找到最大值。
 - 关键点：每次移动**较低**的指针，因为容积受限于较短的边。
 
-![](/assets/img/Pasted%20image%2020250819202829.png)
+![](/assets/img/33c9aeaf-bcd5-49b9-b652-d64b11b1ea3c.png)
 
 每次去掉一条线
-![](/assets/img/Pasted%20image%2020250819203109.png)
+![](/assets/img/f2096b5b-202f-4b9d-95cd-35a0831cbc8f.png)
 ```go
 ```
 
@@ -124,7 +124,7 @@ func threeSum(nums []int) (ans [][]int) {
 
 ## 接雨水
 
-![](/assets/img/Pasted%20image%2020250819203314.png)
+![](/assets/img/f7ea934c-cc82-4e1a-b9b8-49d9c85da177.png)
 ### 方法：前缀后缀数组
 这个桶取决于通的左边和右边的高度（木桶原理）
 两个数组                                 
@@ -135,16 +135,16 @@ func threeSum(nums []int) (ans [][]int) {
 
 方法：1. 计算前缀和后缀数组 2. 计算i位置可以接的水
 
-![](/assets/img/Pasted%20image%2020250819204445.png)
+![](/assets/img/dbc9b2f8-a748-45b6-9397-f53e5aafc3e8.png)
 时间复杂度：O(n)
 空间复杂度：O(n)
 ### 方法：双向指针
 
-![](/assets/img/Pasted%20image%2020250819205210.png)
+![](/assets/img/9c738464-e483-40a1-afe5-3952d20af580.png)
 前缀最大值比后缀最大值小 前缀向右扩展
 反之 后缀最大值比前缀最大值小 后缀向左扩展
 
-![](/assets/img/Pasted%20image%2020250819205340.png)
+![](/assets/img/91d769cd-6f9d-41dc-8ab1-df734f9dd390.png)
 ```go
 func trap(height []int) int {
 	preMax, sufMax := 0, 0
@@ -352,12 +352,12 @@ func trap(height []int) int {
 
 ## 长度最小的子数组
 
-![](/assets/img/Pasted%20image%2020250819211019.png)
-![](/assets/img/Pasted%20image%2020250819211033.png)
+![](/assets/img/d07ffb92-4984-4ea6-a224-7d9635301deb.png)
+![](/assets/img/9b35cd4a-5728-4d72-bc95-f051b368a7e7.png)
 
 
 **遍历右端点，逐步移动左端点** 
-![](/assets/img/Pasted%20image%2020250819211319.png)
+![](/assets/img/14d58e1f-4aff-49fd-ae7f-7e5d262dc8ac.png)
 时间复杂度：O(n)
 空间复杂度：O(1)
 
@@ -367,7 +367,7 @@ func trap(height []int) int {
 > - 有些题目窗口大小固定，有些题目窗口大小可变。
 ## 乘积小于 K 的子数组 
 
-![](/assets/img/Pasted%20image%2020250819211901.png)
+![](/assets/img/426767a2-61de-42e6-892b-3ef74469c270.png)
 
 ```go
 func numSubarrayProductLessThanK(nums []int, k int) int {
@@ -392,7 +392,7 @@ func numSubarrayProductLessThanK(nums []int, k int) int {
 ## 无重复字符的最长子串
 
 是否有重复：可以使用一个map来判断
-![](/assets/img/Pasted%20image%2020250819212148.png)
+![](/assets/img/66143528-c96a-4b6a-9eda-d1f99548fce3.png)
 
 时间复杂度：O(n)
 空间复杂度：O(128)
@@ -405,26 +405,26 @@ func numSubarrayProductLessThanK(nums []int, k int) int {
 2. 92. 反转链表 II https://leetcode.cn/problems/reverse-linked-list-ii/solution/you-xie-cuo-liao-yi-ge-shi-pin-jiang-tou-teqq/ 
 3. 25. K 个一组翻转链表 https://leetcode.cn/problems/reverse-nodes-in-k-group/solution/you-xie-cuo-liao-yi-ge-shi-pin-jiang-tou-plfs/
 ## 反转链表
-![](/assets/img/Pasted%20image%2020250820090254.png)
+![](/assets/img/789b3848-e80e-41cf-952d-151e276283b0.png)
 
 ```go
 var pre *ListNode
 cur = head
 ```
 
-![](/assets/img/Pasted%20image%2020250820090812.png)
+![](/assets/img/1ad4de88-ff94-44b4-a613-fa791536f0f6.png)
 ```go
 nxt = cur.Next
 ```
 
-![](/assets/img/Pasted%20image%2020250820090840.png)
+![](/assets/img/1e6d27b5-6b55-4607-9033-867a89ee87e3.png)
 ```go
 cur.Next = pre
 pre = cur
 cur = nxt
 ```
 
-![](/assets/img/Pasted%20image%2020250820091117.png)
+![](/assets/img/6f351e5e-2730-4396-99d2-927048ca6b10.png)
 
 ```go
 func reverseList(head *ListNode) *ListNode {
@@ -446,29 +446,29 @@ func reverseList(head *ListNode) *ListNode {
 如果是反转中间一部分链表？
 ## 反转链表II
 
-![](/assets/img/Pasted%20image%2020250820091402.png)
+![](/assets/img/723b21b3-56c7-4555-9a86-d1a81108dd65.png)
 p0指向要反转部分的前一个节点
 反转结束后，cur指向的是后面不需要反转的节点
-![](/assets/img/Pasted%20image%2020250820091442.png)
+![](/assets/img/fda37cea-2818-4dc4-b2b8-3b79ba127520.png)
 p0.Next.Next = cur (tail.Next = cur)
 p0.Next = pre (pre.Next = head)
 
-![](/assets/img/Pasted%20image%2020250820091533.png)
+![](/assets/img/fe10bfe4-7737-4961-824f-c80148a8a049.png)
 
 新增一个 哨兵节点 dummyNode
 
-![](/assets/img/Pasted%20image%2020250820091732.png)
+![](/assets/img/f1a2dde1-982f-4868-a935-e305093ad73c.png)
 ## K个一组翻转链表
 
-![](/assets/img/Pasted%20image%2020250820101613.png)
+![](/assets/img/e87c4367-3cbc-455e-8361-8fdb65dfdd91.png)
 
-![](/assets/img/Pasted%20image%2020250820092612.png)
-![](/assets/img/Pasted%20image%2020250820092651.png)
+![](/assets/img/023c95b8-3c29-45bf-8a50-cceb148cc386.png)
+![](/assets/img/0b12517d-3e82-4ffe-b757-1866fa850faa.png)
 最后返回哨兵节点的头节点
 
-![](/assets/img/Pasted%20image%2020250820092939.png)
+![](/assets/img/6e58e7eb-e605-450b-9c6c-d287096adef4.png)
 pre、cur的赋值可以移动到循环外
-![](/assets/img/Pasted%20image%2020250820093611.png)
+![](/assets/img/c1c39c0c-5d52-40c3-ba15-d3a25456bc92.png)
 
 
 
@@ -485,30 +485,30 @@ nxt是一个记录指针 记录 cur.Next的
 慢指针走一步 快指针走两步
 ![](/assets/img/fast-slow-ptr.png)
 
-![](/assets/img/Pasted%20image%2020250819212748.png)
+![](/assets/img/2f976863-378b-47b2-b3df-e47fd9ef2610.png)
 长度为奇数，fast.next 为空，slow指向中间
 
-![](/assets/img/Pasted%20image%2020250819212824.png)
+![](/assets/img/8147aecb-1bcd-4fc7-8658-39a4522a8417.png)
 长度为奇数，fast 为空，slow指向中间
 
 ## 链表的中间结点 
 
-![](/assets/img/Pasted%20image%2020250819212953.png)
+![](/assets/img/13955565-e3cf-4004-8dc0-22b575cc9369.png)
 
 ## 环形链表
 
 如果有环，快慢指针一定会相遇的
-![](/assets/img/Pasted%20image%2020250819213240.png)
+![](/assets/img/56ec5ed8-de87-448d-b868-6d814f31a574.png)
 
 ## 环形链表 II (还没理解)
-![](/assets/img/Pasted%20image%2020250819213407.png)
-![](/assets/img/Pasted%20image%2020250819213432.png)
+![](/assets/img/0cc023f2-971f-4385-adc5-dfdb013d3b87.png)
+![](/assets/img/9a1cf19f-e24e-45b4-8df2-e24b163b4baa.png)
 
-![](/assets/img/Pasted%20image%2020250819213449.png)
+![](/assets/img/9b835d81-6278-4d29-a9ed-a0698496aecc.png)
 快慢指针相遇时，慢指针还没走完一整圈 （TODO）
-![](/assets/img/Pasted%20image%2020250819213823.png)
+![](/assets/img/2fbb4da2-990d-49ad-95b6-a8ee92dddf40.png)
 
-![](/assets/img/Pasted%20image%2020250819213921.png)
+![](/assets/img/9313411c-f5c4-4130-b1a3-e07df85192d2.png)
 
 chatGPT解释：
 **快慢指针（Floyd 判圈算法，O(1) 空间）**
@@ -582,16 +582,16 @@ L0 → L1 → … → Ln - 1 → Ln
 请将其重新排列后变为：
 L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
 不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
-![](/assets/img/Pasted%20image%2020250819215122.png)
-![](/assets/img/Pasted%20image%2020250819215248.png)
-![](/assets/img/Pasted%20image%2020250819215144.png)
-![](/assets/img/Pasted%20image%2020250819215315.png)
+![](/assets/img/b3b57e19-cc94-4ff6-a506-7291df0b75bc.png)
+![](/assets/img/350ca243-b9bc-47b0-874b-92065886cc28.png)
+![](/assets/img/008ca4a0-b1e7-461d-8cb3-13b4a1c2c746.png)
+![](/assets/img/78619932-f481-4166-9455-bd15fbd15769.png)
 
 1. 拿到中间节点 876
 2. 反转链表 206
 
-![](/assets/img/Pasted%20image%2020250819215415.png)
-![](/assets/img/Pasted%20image%2020250819215531.png)
+![](/assets/img/50d4b878-fb5c-4eaf-9437-81147d599fcd.png)
+![](/assets/img/4d226a7d-7ec7-4358-b468-958d9089451c.png)
 
 # 八、前后指针
 1. 237. 删除链表中的节点 https://leetcode.cn/problems/delete-node-in-a-linked-list/solution/ru-he-shan-chu-jie-dian-liu-fen-zhong-ga-x3kn/ 
@@ -603,8 +603,8 @@ L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
 
 复制下一个节点的值
 指向下一个节点的Next
-![](/assets/img/Pasted%20image%2020250820102411.png)
-![](/assets/img/Pasted%20image%2020250820102227.png)
+![](/assets/img/7e586925-3fdf-4400-9da5-f4204bb02e0d.png)
+![](/assets/img/a64b03a3-b322-425a-9cc2-8768ebaad3bb.png)
 
 
 ## 删除链表的倒数第 N 个结点
@@ -619,43 +619,43 @@ L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
 初始化一个right指针，先让right走N步
 在初始化一个left指针，此时，left和rihgt一起走，right走到尾部，left走到倒数第N个节点的前一个节点（倒数第N+1个节点）。
 left和right保持了 N 的距离，一次遍历
-![](/assets/img/Pasted%20image%2020250820102821.png)
-![](/assets/img/Pasted%20image%2020250820103003.png)
+![](/assets/img/2688d713-3fac-4a52-a9ae-6a3b3471f708.png)
+![](/assets/img/94b21032-fe61-4cc8-b9a3-39f6b8416256.png)
 
 ## 删除排序链表中的重复元素
 重复元素只保留一个
-![](/assets/img/Pasted%20image%2020250820103106.png)
-![](/assets/img/Pasted%20image%2020250820103212.png)
+![](/assets/img/ba0a5515-d3dd-42fa-90ea-cfbbd6065cbe.png)
+![](/assets/img/4224fd70-e406-4059-b88a-7d3129f5e723.png)
 需要哨兵节点吗？
 不需要，因为头节点可以保留下来的。
-![](/assets/img/Pasted%20image%2020250820103319.png)
+![](/assets/img/15962c7a-b666-49e5-8b40-867471452aa4.png)
 ## 删除排序链表中的重复元素 II
 需要把重复的全部删除
-![](/assets/img/Pasted%20image%2020250820103438.png)
+![](/assets/img/83779443-d4ac-480f-a7ad-e0f51d53392f.png)
 比较下一个节点和下下个节点的值
-![](/assets/img/Pasted%20image%2020250820103716.png)
-![](/assets/img/Pasted%20image%2020250820104741.png)
+![](/assets/img/4a0e88dd-b87f-434e-9757-67db1d94b2c1.png)
+![](/assets/img/6ede7337-2adb-4342-a274-9ba44021f866.png)
 
 # 九、二叉树 递归
 1. 104. 二叉树的最大深度 https://leetcode.cn/problems/maximum-depth-of-binary-tree/solution/kan-wan-zhe-ge-shi-pin-rang-ni-dui-di-gu-44uz/
-![](/assets/img/Pasted%20image%2020250820104933.png)
+![](/assets/img/3d6f3356-14bb-485c-b805-228b0eaf2198.png)
 
 ## 二叉树的最大深度
-![](/assets/img/Pasted%20image%2020250820105033.png)
+![](/assets/img/77f0172f-bb59-4dcb-b46c-31378950329b.png)
 
 
-![](/assets/img/Pasted%20image%2020250820105205.png)
+![](/assets/img/90cc9bcc-162e-44a0-ab08-8a1e9873f6dd.png)
 
-![](/assets/img/Pasted%20image%2020250820105344.png)
+![](/assets/img/6bf66e54-aaac-41ed-8bde-054c5794e61a.png)
 
 
 写法2: 传递一个值，依次往下传递
-![](/assets/img/Pasted%20image%2020250820105614.png)
+![](/assets/img/18556244-73aa-43c4-b58e-892da4f89e3d.png)
 数学归纳法
-![](/assets/img/Pasted%20image%2020250820105315.png)
+![](/assets/img/ff792dce-4281-4924-b91b-a98508954268.png)
 
 图示
-![](/assets/img/Pasted%20image%2020250820105448.png)
+![](/assets/img/3ae3d5c0-efc7-4b59-86a9-0a6ef2129430.png)
 
 # 十、二叉树 相同 对称 平衡 右视图
 1. 100.相同的树 https://leetcode.cn/problems/same-tree/solution/ru-he-ling-huo-yun-yong-di-gui-lai-kan-s-empk/ 
@@ -665,26 +665,26 @@ left和right保持了 N 的距离，一次遍历
 ## 相同的树
 value相同 左子树相同，右子树相同
 isSame(Left,Left) isSame(Right,Right)
-![](/assets/img/Pasted%20image%2020250820123329.png)
+![](/assets/img/623a06f2-d3e8-470a-9830-3bbc114352e3.png)
 边界条件
 一个为空 返回 
 
-![](/assets/img/Pasted%20image%2020250820123255.png)
+![](/assets/img/b7c003ab-2af3-46e3-b115-95db4c32fc19.png)
 ## 对称二叉树
-![](/assets/img/Pasted%20image%2020250820123402.png)
+![](/assets/img/fde0411a-8177-4d31-9c70-d5a4df227e82.png)
 
 isSymmetric(Left,Right) isSymmetric(Right,Left)
-![](/assets/img/Pasted%20image%2020250820123625.png)
+![](/assets/img/8385e51d-77b4-46e7-9ba3-6b751f03d409.png)
 
 ## 平衡二叉树
-![](/assets/img/Pasted%20image%2020250820124432.png)
+![](/assets/img/962789d8-20c5-459b-9497-02706234e435.png)
 
 -1 作为一个标记位，代表不平衡。
 ## 二叉树的右视图
-![](/assets/img/Pasted%20image%2020250820124547.png)
+![](/assets/img/f9a80524-06f3-4690-b665-9ea2bac66e74.png)
 
 右视图，一层一个值。
-![](/assets/img/Pasted%20image%2020250820124804.png)如果深度等于当前ans长度，那么就记录这个值
+![](/assets/img/7c729546-424d-4604-8062-b7ca26b7f094.png)如果深度等于当前ans长度，那么就记录这个值
 
 # 十一、验证二叉搜索树
 1. 98. 验证二叉搜索树 https://leetcode.cn/problems/validate-binary-search-tree/solution/qian-xu-zhong-xu-hou-xu-san-chong-fang-f-yxvh/
@@ -693,11 +693,11 @@ isSymmetric(Left,Right) isSymmetric(Right,Left)
 - 节点的左子树只包含 **严格小于** 当前节点的数。
 - 节点的右子树只包含 **严格大于** 当前节点的数。
 - 所有左子树和右子树自身必须也是二叉搜索树。
-![](/assets/img/Pasted%20image%2020250820125148.png)
+![](/assets/img/b7685b73-fc08-4877-a8d8-2f6df151dd25.png)
 
 
 前序：先访问节点值。每一个节点值，都必须在一个范围内
-![](/assets/img/Pasted%20image%2020250820125303.png)
+![](/assets/img/51d8b703-a92e-47ff-9320-2d59caa73801.png)
 中序： 先访问左子树，在访问节点值，在访问右子树。严格递增
 需要传入上一个节点值
 
@@ -826,7 +826,7 @@ func lcaDeepestLeaves(root *TreeNode) *TreeNode {
 
 
 
-![](/assets/img/Pasted%20image%2020250821105659.png)
+![](/assets/img/ac0456a8-2f9a-41fd-8077-44767bd63391.png)
 
 
 ## 打家劫舍
@@ -847,10 +847,10 @@ func rob(nums []int) int {
 
 重复计算太多了，需要保存一下
 
-![](/assets/img/Pasted%20image%2020250821110534.png)
+![](/assets/img/a91c8456-b75b-4aeb-892e-2f34deca9692.png)
 
 
-![](/assets/img/Pasted%20image%2020250821110658.png)
+![](/assets/img/9d87888f-c73e-4784-a0c1-7d5577af7acb.png)
 
 O(n) 的空间复杂度
 ```go
@@ -875,42 +875,42 @@ O(1) 的空间复杂度
 1. 494. 目标和 https://leetcode.cn/problems/target-sum/solution/jiao-ni-yi-bu-bu-si-kao-dong-tai-gui-hua-s1cx/ 
 2. 322. 零钱兑换 https://leetcode.cn/problems/coin-change/solution/jiao-ni-yi-bu-bu-si-kao-dong-tai-gui-hua-21m5/
 
-![](/assets/img/Pasted%20image%2020250820130848.png)
-![](/assets/img/Pasted%20image%2020250820131149.png)
+![](/assets/img/ffd1ae4a-226b-4418-95e2-5ab4794bba2c.png)
+![](/assets/img/b7c5be45-68e7-4949-a143-d1ece4a71a10.png)
 
-![](/assets/img/Pasted%20image%2020250820131459.png)
+![](/assets/img/1f1e44c6-b2a1-496c-be95-1838f27ed940.png)
 ## 目标和
 给你一个非负整数数组 `nums` 和一个整数 `target` 。
 向数组中的每个整数前添加 `'+'` 或 `'-'` ，然后串联起所有整数，可以构造一个 **表达式** ：
 - 例如，`nums = [2, 1]` ，可以在 `2` 之前添加 `'+'` ，在 `1` 之前添加 `'-'` ，然后串联起来得到表达式 `"+2-1"` 。
 返回可以通过上述方法构造的、运算结果等于 `target` 的不同 **表达式** 的数目。
 
-![](/assets/img/Pasted%20image%2020250820131433.png)![](/assets/img/Pasted%20image%2020250820131712.png)
+![](/assets/img/804585d2-bdae-4a15-8333-64171f8ba84d.png)![](/assets/img/635b22b1-e03b-4711-aae5-826e454ccf65.png)
 
 
 改成递推
-![](/assets/img/Pasted%20image%2020250820131933.png)
+![](/assets/img/f44d107f-aa18-4ff0-ac12-91cec0cb939b.png)
 
-![](/assets/img/Pasted%20image%2020250820132050.png)
+![](/assets/img/b7e3e7a5-3b47-464a-8e26-bdd82d347645.png)
 
 %2
 
-![](/assets/img/Pasted%20image%2020250820132120.png)
+![](/assets/img/34cf8c02-2765-4c33-94cf-f7d643483de9.png)
 
 从左到右计算，前面的值会被覆盖，-》 修改为从右往左计算
 
-![](/assets/img/Pasted%20image%2020250820132302.png)
+![](/assets/img/91d9687e-7979-4fa5-ae21-9ca6ac8d0ee4.png)
 
-![](/assets/img/Pasted%20image%2020250820132453.png)
+![](/assets/img/e0b9dc28-90e5-4ebd-a3d6-d200d9fa6a9f.png)
 
 Emmm， 脑子宕机了。
 ## 零钱兑换
 
-![](/assets/img/Pasted%20image%2020250820132612.png)
+![](/assets/img/6cc8f43e-119a-40fb-928f-868afed2b538.png)
 
 
 动态规划（自低向上）
-![](/assets/img/Pasted%20image%2020250821091751.png)
+![](/assets/img/cb6ab4c2-4d29-47a5-a696-2a20f6d297c6.png)
 
 ```go
 func coinChange(coins []int, amount int) int {
@@ -991,9 +991,9 @@ func numSquares(n int) int {
 1. 1143. 最长公共子序列 https://leetcode.cn/problems/longest-common-subsequence/solutions/2133188/jiao-ni-yi-bu-bu-si-kao-dong-tai-gui-hua-lbz5/ 
 2. 72. 编辑距离 https://leetcode.cn/problems/edit-distance/solutions/2133222/jiao-ni-yi-bu-bu-si-kao-dong-tai-gui-hua-uo5q/
 ## 最长公共子序列
-![](/assets/img/Pasted%20image%2020250821111541.png)
+![](/assets/img/fce62a30-0251-4745-999c-c4f54f15b0a8.png)
 
-![](/assets/img/Pasted%20image%2020250821111651.png)
+![](/assets/img/1709f19d-17fe-47c5-8a92-2181c96117ef.png)
 
 
 https://www.bilibili.com/video/BV17iTvzcEXN/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=61d0ab7742b04564fc1fbeb00533f72e
@@ -1002,7 +1002,7 @@ https://www.bilibili.com/video/BV17iTvzcEXN/?spm_id_from=333.1007.top_right_bar_
 
 ## 编辑距离
 
-![](/assets/img/Pasted%20image%2020250825102503.png)
+![](/assets/img/9abf9dae-d0e4-45e4-9f37-befca2b87f8a.png)
 e去掉
 r去掉
 h改为r
@@ -1011,27 +1011,27 @@ s -> t
 删除一个字符 -> 去掉s一个字符
 插入一个字符 -> 去掉 t 一个字符
 修改一个字符 -> s，t分别去掉一个
-![](/assets/img/Pasted%20image%2020250825102419.png)
+![](/assets/img/73a49f8b-445f-4e50-b070-143661b762f5.png)
 
 # 二十、线性 DP
 1. 300.最长递增子序列 https://leetcode.cn/problems/longest-increasing-subsequence/solution/jiao-ni-yi-bu-bu-si-kao-dpfu-o1-kong-jia-4zma/
 ## 最长递增子序列 LIS
 
-![](/assets/img/Pasted%20image%2020250821115259.png)
+![](/assets/img/7593f487-6d70-496b-b305-1412e7256006.png)
 
 子集性 回溯
-![](/assets/img/Pasted%20image%2020250821115516.png)
+![](/assets/img/db125d82-5660-4ff7-84d9-7109a2daf7b0.png)
 
 ### 递归
-![](/assets/img/Pasted%20image%2020250826140854.png)
+![](/assets/img/6e61ddda-078e-47d4-8e24-32795491d229.png)
 遍历每个值的为右端点，再向前遍历
 
 ### 递推
-![](/assets/img/Pasted%20image%2020250821115821.png)
+![](/assets/img/4f317bff-9ea6-4b61-97b5-bc3bdfbaf21c.png)
 
 ### 贪心+二分查找
 
-![](/assets/img/Pasted%20image%2020250826141203.png)
+![](/assets/img/3a90737b-8f97-4904-86c5-e2b77618d95d.png)
 
 ```go
 func lengthOfLIS(nums []int) int {
@@ -1123,7 +1123,7 @@ func maxProfit(prices []int) int {
 
 ## 543.二叉树的直径
 树的直径：
-![](/assets/img/Pasted%20image%2020250904144955.png)
+![](/assets/img/47cb8cdd-7d10-45f1-85d7-453fb3ae7dcf.png)
 ![](Pasted%20image%2020250904145311.png)
 
 ```go
@@ -1169,7 +1169,7 @@ func maxPathSum(root *TreeNode) int {
 
 ## 每日温度
 ### 从右到左
-![](/assets/img/Pasted%20image%2020250825104258.png)
+![](/assets/img/4f80db90-955f-4f5f-a6e0-a54b97c31f3a.png)
 
 
 6 ：7入栈
@@ -1177,7 +1177,7 @@ func maxPathSum(root *TreeNode) int {
 2：5入栈
 5:   栈顶不的复合条件，出栈，然后4入站（6的下标-5的下标）
 
-![](/assets/img/Pasted%20image%2020250825105117.png)
+![](/assets/img/4f74bc2a-cc2c-48ab-8a8b-d80bd7d3461a.png)
 
 ### 从左到右
 
@@ -1205,7 +1205,7 @@ func dailyTemperatures(temperatures []int) []int {
 
 ## 接雨水
 ### 横向计算
-![](/assets/img/Pasted%20image%2020250825132000.png)
+![](/assets/img/64b8df55-0eb8-4f8b-b671-e76540fad10e.png)
 面积由三个下标决定
 
  - 当前元素下标
@@ -1233,9 +1233,9 @@ func dailyTemperatures(temperatures []int) []int {
 5 4的最小值 时顶边的高度
 2 是底边的高度
 
-![](/assets/img/Pasted%20image%2020250826134938.png)
+![](/assets/img/84810de8-73bb-4757-a9b6-b239b4659144.png)
 
-![](/assets/img/Pasted%20image%2020250826134656.png)
+![](/assets/img/082675de-a566-4211-b62f-e18c2df6f8bc.png)
 
 ## 494、下一个更大的元素I
 ```go
@@ -1288,9 +1288,9 @@ func nextGreaterElements(nums []int) []int {
 1. 239.滑动窗口最大值 https://leetcode.cn/problems/sliding-window-maximum/solution/shi-pin-yi-ge-shi-pin-miao-dong-dan-diao-ezj6/
 ## 滑动窗口最大值
 
-![](/assets/img/Pasted%20image%2020250826135247.png)
+![](/assets/img/cab16907-dcc0-424f-8891-f1d46d3d56cb.png)
 
-![](/assets/img/Pasted%20image%2020250826135428.png)
+![](/assets/img/6e909b9a-ff97-4373-9019-ad4e72b33a8c.png)
 
 
 ## 单调队列套路

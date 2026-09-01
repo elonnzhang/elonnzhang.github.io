@@ -1,13 +1,14 @@
 <section class="gallery-shell gallery-intro gallery-intro--compact" aria-labelledby="album-title">
-  <p class="gallery-kicker">album / {{ .Date.Format "2006.01.02" }}</p>
-  <h1 id="album-title">{{ .Title }}<span>.</span></h1>
+  <h1 id="album-title">{{ .Title }}</h1>
   <p>{{ .Description }}</p>
 </section>
-<section class="gallery-shell gallery-album-toolbar"><a href="{{ "/gallery/" | relURL }}">← Albums</a><span>{{ len .Params.images }} photos / click to expand</span></section>
+<section class="gallery-shell gallery-album-toolbar"><a href="{{ "/gallery/" | relURL }}"><span aria-hidden="true">&larr;</span> Albums</a><span>{{ len .Params.images }} photos / {{ .Date.Format "2006-01-02" }}</span></section>
 <section class="gallery-grid" data-gallery-grid aria-label="{{ .Title }} 图片">
   {{ range $index, $image := .Params.images }}
-    <a class="gallery-item" href="{{ $image.src | relURL }}" data-gallery-item data-gallery-index="{{ $index }}" data-gallery-width="{{ $image.width }}" data-gallery-height="{{ $image.height }}" data-gallery-title="{{ $image.title }}" data-gallery-alt="{{ $image.alt }}" data-gallery-album="{{ $.Title }}" data-gallery-category="{{ delimit $.Params.categories ", " }}" aria-label="打开：{{ $image.title }}">
-      <figure><img src="{{ $image.src | relURL }}" alt="{{ $image.alt }}" width="{{ $image.width }}" height="{{ $image.height }}" loading="lazy"><span class="gallery-item__overlay"><strong>{{ $image.title }}</strong><small>{{ delimit $.Params.categories " · " }}</small><i>{{ printf "%02d" (add $index 1) }}</i></span></figure>
+    {{ $thumbURL := partial "remote-asset.html" (dict "path" $image.src "variant" "thumb") }}
+    {{ $displayURL := partial "remote-asset.html" (dict "path" $image.src "variant" "display") }}
+    <a class="gallery-item" href="{{ $displayURL }}" data-gallery-item data-gallery-index="{{ $index }}" data-gallery-width="{{ $image.width }}" data-gallery-height="{{ $image.height }}" data-gallery-title="{{ $image.title }}" data-gallery-alt="{{ $image.alt }}" data-gallery-album="{{ $.Title }}" data-gallery-category="{{ delimit $.Params.categories ", " }}" aria-label="打开：{{ $image.title }}">
+      <figure><img src="{{ $thumbURL }}" alt="{{ $image.alt }}" width="{{ $image.width }}" height="{{ $image.height }}" loading="lazy"><span class="gallery-item__overlay"><strong>{{ $image.title }}</strong><i>{{ printf "%02d" (add $index 1) }}</i></span></figure>
     </a>
   {{ end }}
 </section>

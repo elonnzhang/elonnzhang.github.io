@@ -1,0 +1,5 @@
+{{- $src := .Destination -}}
+{{- if and (not (urls.Parse $src).IsAbs) (or (hasPrefix $src "/assets/gallery/") (hasPrefix $src "/assets/images/")) -}}
+{{- $src = partial "remote-asset.html" (dict "path" $src "variant" "display") -}}
+{{- end -}}
+<img src="{{ $src | safeURL }}" alt="{{ .PlainText }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">

@@ -1,0 +1,34 @@
+{{- /*
+  Accepts a repository asset path such as /assets/gallery/foo.jpg.
+  Optional context: variant (thumb|display) selects a compressed WebP variant.
+*/ -}}
+{{- $src := "" -}}
+{{- if reflect.IsMap . -}}
+{{- $src = string .path -}}
+{{- else -}}
+{{- $src = string . -}}
+{{- end -}}
+{{- $variant := "" -}}
+{{- with .variant -}}{{- $variant = . -}}{{- end -}}
+{{- $path := strings.TrimPrefix "/" $src -}}
+{{- $isRemote := false -}}
+{{- range slice "assets/gallery" "assets/images" "assets/img" -}}
+{{- if hasPrefix $path . -}}{{- $isRemote = true -}}{{- end -}}
+{{- end -}}
+{{- if and site.Params.remoteAssets.enabled $isRemote -}}
+{{- if and $variant (not (urls.Parse $src).IsAbs) -}}
+{{- $extension := path.Ext $path -}}
+{{- $filename := path.Base $path -}}
+{{- $stem := strings.TrimSuffix $extension $filename -}}
+{{- $variantDir := cond (eq $variant "thumb") "thumb" "display" -}}
+{{- if eq $variant "thumb" -}}
+{{- printf "%s/%s/%s.webp" (strings.TrimSuffix "/" site.Params.remoteAssets.baseURL) $variantDir $stem -}}
+{{- else -}}
+{{- printf "%s/%s/%s.webp" (strings.TrimSuffix "/" site.Params.remoteAssets.baseURL) $variantDir $stem -}}
+{{- end -}}
+{{- else -}}
+{{- printf "%s/%s" (strings.TrimSuffix "/" site.Params.remoteAssets.baseURL) $path -}}
+{{- end -}}
+{{- else -}}
+{{- relURL $src -}}
+{{- end -}}

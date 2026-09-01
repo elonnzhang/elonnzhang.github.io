@@ -43,6 +43,9 @@ params:
   siteTagline: Systems, code, and things worth understanding.
   customDomain: jiabin.dev
   defaultDomain: elonnzhang.github.io
+  remoteAssets:
+    enabled: false
+    baseURL: https://blog-assets.jiabin.dev
   social:
     github: https://github.com/elonnzhang
     email: mailto:elonnzhang@gmail.com

@@ -16,7 +16,7 @@ slug: golang-gmp
 
 ### 总览
 
-![](/assets/img/Pasted%20image%2020250814152829.png)
+![](/assets/img/0fac1127-3a5c-4baa-b83a-f4381e28644d.png)
 
 
 
@@ -34,7 +34,7 @@ slug: golang-gmp
 ​ 6、当 M 系统调用结束时候，这个 G 会尝试获取一个空闲的 P 执行，并放入到这个 P 的本地队列。如果获取不到 P，那么这个线程 M 变成休眠状态， 加入到空闲线程中，然后这个 G 会被放入全局队列中。
 
 
-![](/assets/img/Pasted%20image%2020250814153412.png)
+![](/assets/img/e48c86d3-ca0b-423f-ab57-67a01482511e.png)
 
 
 
@@ -47,7 +47,7 @@ goroutine 的生命周期
 // 4. Terminated - function returns
 ```
 
-![](/assets/img/Pasted%20image%2020250814154843.png)
+![](/assets/gallery/8dd53422-791e-434a-b06d-0d93e5c401a1.png)
 https://www.concurrency.rocks/tutorials/basic-goroutines
 
 

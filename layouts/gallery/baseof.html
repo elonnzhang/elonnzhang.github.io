@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="{{ .Description | default "Kindle 截图、网页快照和个人精选照片。" }}">
-    <meta name="theme-color" content="#f4f2ee">
+    <meta id="gallery-theme-color" name="theme-color" content="#f7f7f2">
     <title>{{ .Title }} · Gallery / jiabin.dev</title>
+    <link rel="icon" href="{{ "/assets/gallery-mark.svg" | relURL }}" type="image/svg+xml">
     <script>
       (function () {
         var root = document.documentElement;
         var eink = /(?:^|[?&])eink=(?:1|true|yes)(?:&|$)/i.test(window.location.search);
         var web = /(?:^|[?&])web=1(?:&|$)/i.test(window.location.search);
         var saved = "";
-        try { saved = window.localStorage.getItem("gallery-theme") || ""; } catch (error) {}
+        try { saved = window.localStorage.getItem("elonnzhang-theme") || ""; } catch (error) {}
         var theme = saved === "dark" || saved === "light" ? saved : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
         root.setAttribute("data-gallery-theme", eink && !web ? "light" : theme);
         if (eink && !web) root.setAttribute("data-gallery-eink", "true");
+        var meta = document.getElementById("gallery-theme-color");
+        if (meta) meta.setAttribute("content", root.getAttribute("data-gallery-theme") === "dark" ? "#111210" : "#f7f7f2");
       }());
     </script>
     {{ $style := resources.Get "css/gallery.scss" | toCSS | minify | fingerprint }}
@@ -27,7 +30,7 @@
     <header class="gallery-header">
       <div class="gallery-shell gallery-header__inner">
         <a class="gallery-brand" href="{{ "/gallery/" | relURL }}" aria-label="Gallery 首页">
-          <span class="gallery-brand__glyph" aria-hidden="true">◒</span><span>
+          {{ partial "gallery-mark.html" . }}<span>
             <strong>Gallery</strong>
             <small>jiabin.dev / visual index</small>
           </span>
@@ -36,12 +39,12 @@
           <a href="{{ "/gallery/" | relURL }}">Albums</a>
           <a href="{{ "/gallery/categories/" | relURL }}">Categories</a>
           <a href="{{ "/" | relURL }}">Notes <span aria-hidden="true">↗</span></a>
-          <button class="gallery-theme" type="button" data-gallery-theme-toggle aria-label="切换深色模式" title="切换深色模式">◐</button>
+          <button class="gallery-theme" type="button" data-gallery-theme-toggle aria-label="切换深色模式" title="切换深色模式"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg></button>
         </nav>
       </div>
     </header>
     <main id="gallery-main" class="gallery-main">{{ block "main" . }}{{ end }}</main>
-    <footer class="gallery-footer"><div class="gallery-shell"><span>© {{ now.Format "2006" }} elonnzhang</span><span>photos, screenshots, things worth keeping</span></div></footer>
+    <footer class="gallery-footer"><div class="gallery-shell"><span>© {{ now.Format "2006" }} elonnzhang</span><span>照片、截图与 Kindle 笔记</span></div></footer>
     {{ block "scripts" . }}{{ end }}
   </body>
 </html>

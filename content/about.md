@@ -46,7 +46,7 @@ description: 关于 elonnzhang 的技术博客与个人项目。
  5. LG V30
 
 
-![Image](/assets/images/SCR-20260830-rizd.jpg)
+![深圳人才公园](/assets/images/d3b78c89-b419-40fa-8f04-ba8a1699ae75.jpg)
 
 [Go Change Lab](/go-change-lab/)，用交互方式记录 Go 版本演进。
 

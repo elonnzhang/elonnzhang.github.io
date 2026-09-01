@@ -1,23 +1,10 @@
 .DS_Store
 */.DS_Store
 
-# Bundler cache
-.bundle
-/vendor/
-Gemfile.lock
-
-# Jekyll cache
-.jekyll-cache
-.jekyll-metadata
-_site
-
 # Hugo output and lock files
 public
 resources/_gen
 .hugo_build.lock
-
-# RubyGems
-*.gem
 
 # NPM dependencies
 node_modules
@@ -30,9 +17,13 @@ package-lock.json
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/tasks.json
+.obsidian/
 .obsidian/workspace.json
 
 # Misc
-_sass/vendors
 assets/js/dist
 assets/.DS_Store
+.wrangler/
+
+.agents/
+skills-lock.json
