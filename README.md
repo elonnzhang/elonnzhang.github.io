@@ -18,8 +18,9 @@ Linux
 | Timeline          | Where        |
 | ----------------- | ------------ |
 | 2025.10 - Now.    | @Baidu       |
-| 2021.04 - 2025.09 | @Tencent TEG |
-| 2021.04 - 2025.09 | @Tencent PCG |
+| 2023.01 - 2025.09 | @Tencent TEG |
+| 2022.07 - 2022.12 | @Tencent PCG |
+| 2021.04 - 2025.12 | @Tencent PCG intern|
 
 
 ## What I use

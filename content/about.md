@@ -4,7 +4,7 @@ pageKind: about
 date: 1997-03-29
 description: 关于 elonnzhang 的技术博客与个人项目。
 ---
-# Elonnzhang /
+Elonnzhang /
 
 
 ## Work
@@ -12,7 +12,8 @@ description: 关于 elonnzhang 的技术博客与个人项目。
 | Timeline          | Where    |
 | ----------------- | -------- |
 | 2025.10 - Now.    | @Baidu   |
-| 2021.04 - 2025.09 | {{< ann dir="n" color="blue" note="in TEG Database" >}}@Tencent{{< /ann >}} |
+| 2023.01 - 2025.09 | {{< ann dir="w" color="blue" note="in TEG Database" >}}@Tencent{{< /ann >}} |
+| 2021.04 - 2022.12 | {{< ann dir="w" color="blue" note="in PCG Incident" >}}@Tencent{{< /ann >}} |
 
 
 ## What I use
