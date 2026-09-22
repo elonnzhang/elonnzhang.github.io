@@ -1,0 +1,41 @@
+{{- /* Hand-drawn annotation via neat-annotations.
+       Positional:
+         {{< ann n amber "no refresh needed" >}}in real time{{< /ann >}}
+         {{< ann amber >}}important{{< /ann >}}
+       Named (do not mix with positional):
+         {{< ann dir="n" color="amber" note="no refresh needed" >}}in real time{{< /ann >}}
+         {{< ann dir="n" note="hot pink" color="#ff1493" >}}target{{< /ann >}}
+       Directions: n ne e se s sw w nw
+       Colors: amber blue green red purple rainbow, or any CSS color. */ -}}
+{{- $dirs := slice "n" "ne" "e" "se" "s" "sw" "w" "nw" -}}
+{{- $palette := slice "amber" "blue" "green" "red" "purple" "rainbow" -}}
+{{- $dir := .Get "dir" -}}
+{{- $color := .Get "color" -}}
+{{- $note := .Get "note" -}}
+{{- $nomark := .Get "nomark" -}}
+{{- $extra := .Get "class" -}}
+{{- $style := .Get "style" -}}
+{{- range $i := (seq 0 5) -}}
+  {{- with $.Get $i -}}
+    {{- if and (not $dir) (in $dirs .) -}}
+      {{- $dir = . -}}
+    {{- else if and (not $color) (or (in $palette .) (strings.HasPrefix . "#")) -}}
+      {{- $color = . -}}
+    {{- else if not $note -}}
+      {{- $note = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if and $note (not $dir) -}}{{- $dir = "n" -}}{{- end -}}
+{{- $classes := slice "ann" -}}
+{{- with $dir -}}{{- $classes = $classes | append (printf "ann-%s" .) -}}{{- end -}}
+{{- if and $color (in $palette $color) -}}{{- $classes = $classes | append (printf "ann-%s" $color) -}}{{- end -}}
+{{- if or (eq $nomark "true") (eq $nomark true) -}}{{- $classes = $classes | append "ann-no-mark" -}}{{- end -}}
+{{- with $extra -}}{{- $classes = $classes | append . -}}{{- end -}}
+{{- $customColor := "" -}}
+{{- if and $color (not (in $palette $color)) -}}{{- $customColor = $color -}}{{- end -}}
+{{- $styleAttr := $style -}}
+{{- if $customColor -}}
+  {{- $styleAttr = printf "--ann-color: %s;%s" $customColor (cond (ne $style "") (printf " %s" $style) "") -}}
+{{- end -}}
+<span class="{{ delimit $classes " " }}"{{- with $note }} data-note="{{ . }}"{{ end }}{{- with $styleAttr }} style="{{ . | safeCSS }}"{{ end }}>{{ $.Page.RenderString (dict "display" "inline") .Inner }}</span>{{- /* keep the following period on the same line */ -}}

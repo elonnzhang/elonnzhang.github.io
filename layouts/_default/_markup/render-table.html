@@ -1,0 +1,35 @@
+{{- /* TUI patch: wrap every Markdown table in a horizontal scroll container so a
+      wide table scrolls inside its own box instead of widening the whole page
+      (which on mobile let the page scroll right into empty space). Keeps the
+      default archie table markup; the wrapper is the only addition. */ -}}
+<div class="table-wrap">
+  <table
+    {{- range $k, $v := .Attributes }}
+      {{- if $v }} {{ $k | safeHTMLAttr }}="{{ $v }}"{{ end }}
+    {{- end }}>
+    <thead>
+      {{- range .THead }}
+        <tr>
+          {{- range . }}
+            <th
+              {{- with .Alignment }} style="text-align: {{ . }};"{{ end }}>
+              {{- .Text -}}
+            </th>
+          {{- end }}
+        </tr>
+      {{- end }}
+    </thead>
+    <tbody>
+      {{- range .TBody }}
+        <tr>
+          {{- range . }}
+            <td
+              {{- with .Alignment }} style="text-align: {{ . }};"{{ end }}>
+              {{- .Text -}}
+            </td>
+          {{- end }}
+        </tr>
+      {{- end }}
+    </tbody>
+  </table>
+</div>

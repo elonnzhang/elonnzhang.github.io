@@ -19,6 +19,57 @@ html[data-theme="dark"] {
   --tui-border: var(--color-border-dark, #0066ff);
 }
 
+/* neat-annotations uses light-dark(); drive it from the TUI toggle. */
+html { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* Annotation labels: Patrick Hand (latin) + Ma Shan Zheng (CJK handwritten kaishu).
+   Both OFL, locally subsetted. Uncovered CJK falls through to system kaiti. */
+@font-face {
+  font-display: swap;
+  font-family: "Patrick Hand";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/patrick-hand-latin.woff2") format("woff2");
+  unicode-range: U+0020-007E;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Ma Shan Zheng";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/ma-shan-zheng-cjk.woff2") format("woff2");
+  unicode-range: U+3000-303F, U+4E00-9FFF, U+FF00-FFEF;
+}
+
+.ann {
+  --ann-font: "Patrick Hand", "Ma Shan Zheng", "Kaiti SC", "STKaiti", "KaiTi", cursive;
+  display: inline;
+  line-height: inherit;
+  padding: 0.04em 0.22em;
+  margin: 0;
+  box-shadow: none;
+  vertical-align: baseline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Arrows need a box; highlight-only markers stay inline. */
+.ann[data-note] {
+  display: inline-block;
+}
+
+.ann::after {
+  z-index: 1;
+  font-weight: 400;
+  font-size: 1.05rem;
+}
+
+.ann::before {
+  z-index: 1;
+}
+
 /* Terminal-style prompt used as the site brand in the header.
    One continuous underline is drawn on this container; the caret is an
    inline-block so it is excluded from the underline. */
@@ -521,6 +572,16 @@ pre.mermaid:not([data-processed="true"]) {
   max-width: 100%;
 }
 
+/* Wide tables scroll inside their own box (via the render-table hook wrapper)
+   instead of widening the page — on narrow screens that page-level overflow
+   let you scroll right into empty space. The table keeps archie's width:100%,
+   so tables that fit still fill the column and never show a scrollbar. */
+.table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Hidden by default (narrow screens); shown as a fixed right-docked panel when
    the viewport is wide enough to fit it beside the centered content. */
 .toc {
@@ -614,16 +675,24 @@ pre.mermaid:not([data-processed="true"]) {
     display: none;
   }
 
+  /* Flex + center so the <details> box hugs its <summary> (a bare block
+     details is a text line-box taller than the summary, which floats the
+     hamburger a few px above the moon button). Now both toggles are 32px boxes
+     centered on the same nav line. Keep position:relative for the dropdown. */
   html:not(.eink) .nav-menu {
-    display: block;
+    display: flex;
+    align-items: center;
     position: relative;
   }
 
+  /* Match #dark-mode-toggle exactly: same 0.5rem padding + 1px border + 4px
+     radius around a 1.5rem .feather icon, so the two header buttons render at
+     an identical size. */
   html:not(.eink) .nav-menu__toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.35rem;
+    padding: 0.5rem;
     border: 1px solid var(--tui-border);
     border-radius: 4px;
     color: var(--color-text, #232333);
@@ -687,6 +756,28 @@ pre.mermaid:not([data-processed="true"]) {
   }
 }
 
+/* Dark mode: keep both header toggle buttons clearly visible. archie/the patch
+   colour their .feather icons from a text token that stays dark, so on the dark
+   header the moon crescent and the hamburger lines nearly vanish. Pin a light
+   icon colour for both (the .feather SVGs use stroke: currentColor, so this
+   drives the stroke), and give #dark-mode-toggle the same bordered box the
+   hamburger already has so the two match. Keep the dark-on-accent hover. */
+html[data-theme="dark"] #dark-mode-toggle,
+html[data-theme="dark"]:not(.eink) .nav-menu__toggle {
+  color: var(--color-text-dark, #ffffff);
+}
+
+html[data-theme="dark"] #dark-mode-toggle {
+  border: 1px solid var(--tui-border);
+  border-radius: 4px;
+}
+
+html[data-theme="dark"] #dark-mode-toggle:hover,
+html[data-theme="dark"] #dark-mode-toggle:focus {
+  color: #000000;
+  background: var(--tui-accent);
+}
+
 /* ------------------------------------------------------------------ */
 /* E-Ink mode (patch). eink-init.js adds html.eink + forces the palette */
 /* variables to black & white; these rules handle structure and hiding. */
@@ -732,7 +823,11 @@ html.eink .space-switcher[open] > .space-switcher__menu {
   display: none !important;
 }
 
-/* Code blocks and diagrams in plain black & white. */
+/* Code blocks and diagrams in plain black & white.
+   Cover .highlight (dark chrome), language badges, and selection:
+   eink-init forces --color-primary to black, which would otherwise make
+   ::selection a solid black fill. */
+html.eink .highlight,
 html.eink pre,
 html.eink code {
   background: #fff !important;
@@ -741,9 +836,89 @@ html.eink code {
   box-shadow: none !important;
 }
 
+html.eink .highlight {
+  overflow: visible;
+  border-radius: 0;
+}
+
+html.eink .highlight pre code[class*="language-"]::before {
+  display: none !important;
+}
+
+html.eink ::selection,
+html.eink *::selection {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.eink ::-moz-selection,
+html.eink *::-moz-selection {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.eink .chroma span {
+  color: inherit !important;
+  background: transparent !important;
+  font-weight: inherit !important;
+  font-style: inherit !important;
+}
+
 html.eink img,
 html.eink .mermaid svg {
   filter: grayscale(1);
+}
+
+/* neat-annotations: arrows/labels sit outside the target.
+   Reserve space on the annotation itself (inline-block margins)
+   so a following heading cannot slide under the label. */
+.post-content .body {
+  overflow: visible;
+}
+
+.ann-n,
+.ann-ne,
+.ann-nw {
+  margin-bottom: 4.75rem;
+}
+
+.ann-s,
+.ann-se,
+.ann-sw {
+  margin-top: 4.75rem;
+}
+
+.ann-e {
+  margin-inline-start: 7.5rem;
+}
+
+.ann-w {
+  margin-inline-end: 7.5rem;
+}
+
+html.eink .ann::before,
+html.eink .ann::after {
+  display: none !important;
+}
+
+html.eink .ann,
+html.eink .ann-n,
+html.eink .ann-ne,
+html.eink .ann-nw,
+html.eink .ann-s,
+html.eink .ann-se,
+html.eink .ann-sw,
+html.eink .ann-e,
+html.eink .ann-w {
+  margin: 0 !important;
+}
+
+html.eink .ann {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0;
+  border-bottom: 1px dashed #000;
 }
 
 /* Footer E-Ink / Web mode entries: show the relevant one for the mode. */

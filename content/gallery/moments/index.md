@@ -25,5 +25,15 @@ images:
     alt: 妹妹偷玩 iPad 留下的纸条
     width: 3928
     height: 3013
+  - src: /assets/gallery/ChatGPT-Image-2026-9-22-17_12_21.png
+    title: note
+    alt: AppleWorld
+    width: 100
+    height: 100
+  - src: /assets/gallery/ChatGPT-Image-2026-9-22-17_12_21.png
+    title: note
+    alt: AppleWorld
+    width: 100
+    height: 100
 
 ---

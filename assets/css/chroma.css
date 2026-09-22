@@ -1,0 +1,154 @@
+/* Chroma syntax highlighting for the TUI patch.
+ *
+ * Hugo emits class-based tokens because markup.highlight.noClasses is false.
+ * Archie only styles the .highlight chrome / language badges, so token colors
+ * have to live here.
+ *
+ * Regenerated with:
+ *   hugo gen chromastyles --style=github --omitClassComments
+ *   hugo gen chromastyles --style=monokai --omitClassComments
+ *
+ * Light = GitHub (default Archie paper look).
+ * Dark  = Monokai (matches Archie's --color-background-pre-dark #272822).
+ * Block backgrounds are left to Archie's pre/.highlight rules.
+ */
+
+/* Light (default, before data-theme is set, and html[data-theme="light"]) */
+.chroma { -webkit-text-size-adjust:none; }
+.chroma .err { color:#f6f8fa;background-color:#82071e }
+.chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
+.chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }
+.chroma .lntable { border-spacing:0;padding:0;margin:0;border:0; }
+.chroma .hl { background-color:#dedede }
+.chroma .lnt { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f }
+.chroma .ln { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f }
+.chroma .line { display:flex; }
+.chroma .k { color:#cf222e }
+.chroma .kc { color:#cf222e }
+.chroma .kd { color:#cf222e }
+.chroma .kn { color:#cf222e }
+.chroma .kp { color:#cf222e }
+.chroma .kr { color:#cf222e }
+.chroma .kt { color:#cf222e }
+.chroma .na { color:#1f2328 }
+.chroma .nc { color:#1f2328 }
+.chroma .no { color:#0550ae }
+.chroma .nd { color:#0550ae }
+.chroma .ni { color:#6639ba }
+.chroma .nl { color:#900;font-weight:bold }
+.chroma .nn { color:#24292e }
+.chroma .nx { color:#1f2328 }
+.chroma .nt { color:#0550ae }
+.chroma .nb { color:#6639ba }
+.chroma .bp { color:#6a737d }
+.chroma .nv { color:#953800 }
+.chroma .vc { color:#953800 }
+.chroma .vg { color:#953800 }
+.chroma .vi { color:#953800 }
+.chroma .vm { color:#953800 }
+.chroma .nf { color:#6639ba }
+.chroma .fm { color:#6639ba }
+.chroma .s { color:#0a3069 }
+.chroma .sa { color:#0a3069 }
+.chroma .sb { color:#0a3069 }
+.chroma .sc { color:#0a3069 }
+.chroma .dl { color:#0a3069 }
+.chroma .sd { color:#0a3069 }
+.chroma .s2 { color:#0a3069 }
+.chroma .se { color:#0a3069 }
+.chroma .sh { color:#0a3069 }
+.chroma .si { color:#0a3069 }
+.chroma .sx { color:#0a3069 }
+.chroma .sr { color:#0a3069 }
+.chroma .s1 { color:#0a3069 }
+.chroma .ss { color:#032f62 }
+.chroma .m { color:#0550ae }
+.chroma .mb { color:#0550ae }
+.chroma .mf { color:#0550ae }
+.chroma .mh { color:#0550ae }
+.chroma .mi { color:#0550ae }
+.chroma .il { color:#0550ae }
+.chroma .mo { color:#0550ae }
+.chroma .o { color:#0550ae }
+.chroma .ow { color:#0550ae }
+.chroma .or { color:#0550ae }
+.chroma .p { color:#1f2328 }
+.chroma .c { color:#57606a }
+.chroma .ch { color:#57606a }
+.chroma .cm { color:#57606a }
+.chroma .c1 { color:#57606a }
+.chroma .cs { color:#57606a }
+.chroma .cp { color:#57606a }
+.chroma .cpf { color:#57606a }
+.chroma .gd { color:#82071e;background-color:#ffebe9 }
+.chroma .ge { color:#1f2328 }
+.chroma .gi { color:#116329;background-color:#dafbe1 }
+.chroma .go { color:#1f2328 }
+.chroma .gl { text-decoration:underline }
+.chroma .w { color:inherit }
+
+/* Dark */
+html[data-theme="dark"] .chroma { color:#f8f8f2;-webkit-text-size-adjust:none; }
+html[data-theme="dark"] .chroma .err { color:#960050;background-color:#1e0010 }
+html[data-theme="dark"] .chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
+html[data-theme="dark"] .chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }
+html[data-theme="dark"] .chroma .lntable { border-spacing:0;padding:0;margin:0;border:0; }
+html[data-theme="dark"] .chroma .hl { background-color:#3c3d38 }
+html[data-theme="dark"] .chroma .lnt { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f }
+html[data-theme="dark"] .chroma .ln { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f }
+html[data-theme="dark"] .chroma .line { display:flex; }
+html[data-theme="dark"] .chroma .k { color:#66d9ef }
+html[data-theme="dark"] .chroma .kc { color:#66d9ef }
+html[data-theme="dark"] .chroma .kd { color:#66d9ef }
+html[data-theme="dark"] .chroma .kn { color:#f92672 }
+html[data-theme="dark"] .chroma .kp { color:#66d9ef }
+html[data-theme="dark"] .chroma .kr { color:#66d9ef }
+html[data-theme="dark"] .chroma .kt { color:#66d9ef }
+html[data-theme="dark"] .chroma .na { color:#a6e22e }
+html[data-theme="dark"] .chroma .nc { color:#a6e22e }
+html[data-theme="dark"] .chroma .no { color:#66d9ef }
+html[data-theme="dark"] .chroma .nd { color:#a6e22e }
+html[data-theme="dark"] .chroma .ne { color:#a6e22e }
+html[data-theme="dark"] .chroma .nx { color:#a6e22e }
+html[data-theme="dark"] .chroma .nt { color:#f92672 }
+html[data-theme="dark"] .chroma .nf { color:#a6e22e }
+html[data-theme="dark"] .chroma .fm { color:#a6e22e }
+html[data-theme="dark"] .chroma .l { color:#ae81ff }
+html[data-theme="dark"] .chroma .ld { color:#e6db74 }
+html[data-theme="dark"] .chroma .s { color:#e6db74 }
+html[data-theme="dark"] .chroma .sa { color:#e6db74 }
+html[data-theme="dark"] .chroma .sb { color:#e6db74 }
+html[data-theme="dark"] .chroma .sc { color:#e6db74 }
+html[data-theme="dark"] .chroma .dl { color:#e6db74 }
+html[data-theme="dark"] .chroma .sd { color:#e6db74 }
+html[data-theme="dark"] .chroma .s2 { color:#e6db74 }
+html[data-theme="dark"] .chroma .se { color:#ae81ff }
+html[data-theme="dark"] .chroma .sh { color:#e6db74 }
+html[data-theme="dark"] .chroma .si { color:#e6db74 }
+html[data-theme="dark"] .chroma .sx { color:#e6db74 }
+html[data-theme="dark"] .chroma .sr { color:#e6db74 }
+html[data-theme="dark"] .chroma .s1 { color:#e6db74 }
+html[data-theme="dark"] .chroma .ss { color:#e6db74 }
+html[data-theme="dark"] .chroma .m { color:#ae81ff }
+html[data-theme="dark"] .chroma .mb { color:#ae81ff }
+html[data-theme="dark"] .chroma .mf { color:#ae81ff }
+html[data-theme="dark"] .chroma .mh { color:#ae81ff }
+html[data-theme="dark"] .chroma .mi { color:#ae81ff }
+html[data-theme="dark"] .chroma .il { color:#ae81ff }
+html[data-theme="dark"] .chroma .mo { color:#ae81ff }
+html[data-theme="dark"] .chroma .o { color:#f92672 }
+html[data-theme="dark"] .chroma .ow { color:#f92672 }
+html[data-theme="dark"] .chroma .or { color:#f92672 }
+html[data-theme="dark"] .chroma .p { color:#f8f8f2 }
+html[data-theme="dark"] .chroma .c { color:#75715e }
+html[data-theme="dark"] .chroma .ch { color:#75715e }
+html[data-theme="dark"] .chroma .cm { color:#75715e }
+html[data-theme="dark"] .chroma .c1 { color:#75715e }
+html[data-theme="dark"] .chroma .cs { color:#75715e }
+html[data-theme="dark"] .chroma .cp { color:#75715e }
+html[data-theme="dark"] .chroma .cpf { color:#75715e }
+html[data-theme="dark"] .chroma .gd { color:#f92672 }
+html[data-theme="dark"] .chroma .ge { font-style:italic }
+html[data-theme="dark"] .chroma .gi { color:#a6e22e }
+html[data-theme="dark"] .chroma .gs { font-weight:bold }
+html[data-theme="dark"] .chroma .gu { color:#75715e }

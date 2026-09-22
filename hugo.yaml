@@ -43,6 +43,8 @@ params:
   customJS:
     - assets/js/eink-init.js
   customCSS:
+    - css/chroma.css
+    - css/neat-annotations.css
     - css/tui-patch.css
   mainSections:
     - posts

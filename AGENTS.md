@@ -13,8 +13,11 @@ The site runs on the athul/archie theme as the base, with a thin TUI patch layer
   - _default/_markup/render-codeblock-mermaid.html renders ```mermaid fences as a fullscreen-capable figure.
   - partials/pagedescription.html clamps the home body-fallback preview to 5 lines.
   - gallery/* and partials/gallery-*, remote-asset.html are the self-contained gallery subsystem (its own chrome, unrelated to archie).
+  - shortcodes/ann.html wraps [neat-annotations](https://github.com/syabro/neat-annotations) for Markdown: `{{</* ann n amber "label" */>}}target{{</* /ann */>}}`.
   - shortcodes/instagram.html keeps content that uses that shortcode building.
-- assets/css/tui-patch.css is the TUI style patch, loaded via archie's `params.customCSS`. It carries the prompt, `cd ..` link, mermaid, TOC docking, list spacing, paginator, and scrollbar-gutter rules.
+- assets/css/tui-patch.css is the TUI style patch, loaded via archie's `params.customCSS`. It carries the prompt, `cd ..` link, mermaid, TOC docking, list spacing, paginator, scrollbar-gutter, annotation-spacing, and `--ann-font` (Patrick Hand + Ma Shan Zheng) rules.
+- assets/css/chroma.css is the class-based syntax-highlight stylesheet (Hugo Chroma tokens). Light = GitHub, dark = Monokai keyed off `html[data-theme]`. Loaded before tui-patch.css so E-Ink overrides still win.
+- assets/css/neat-annotations.css is the vendored neat-annotations stylesheet (MIT). Loaded before tui-patch.css.
 - static/assets/js/ holds patch scripts: space-switcher.js (close dropdown on outside-click/scroll/Esc), mermaid.js (official one-pass render), mermaid-fullscreen.js (fit-to-viewport overlay), plus the legacy TUI scripts.
 - tui-patch/layouts/ preserves the original full custom TUI theme (baseof, index, header, footer, seo, etc.). It is outside Hugo's watched dirs, so it is inert; keep it as reference for further patch work. Do not re-add these into layouts/ wholesale or they will override archie again.
 
@@ -72,5 +75,5 @@ After changing templates, styles, routes, or content:
 3. When changing the header, TOC, mermaid, or page widths, check at both a wide (>=1360px, TOC docks right) and a narrow width.
 4. When touching mermaid, verify diagrams render (not empty), fit as an overview, and the fullscreen overlay opens and closes.
 5. Run git diff --check.
-6. tui-patch.css is loaded through archie's `params.customCSS`; confirm the fingerprinted file appears in the built <head>.
+6. tui-patch.css, chroma.css, and neat-annotations.css are loaded through archie's `params.customCSS`; confirm the fingerprinted files appear in the built <head>.
 

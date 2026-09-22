@@ -1,6 +1,8 @@
-// TUI patch: close the header space-switcher dropdown on outside click, scroll, or Escape.
+// TUI patch: close the header dropdowns (space-switcher + mobile nav-menu) on
+// outside click, scroll, or Escape. Both are <details>; the nav-menu is only a
+// dropdown at mobile widths but sharing the logic is harmless when it's hidden.
 (function () {
-  var switchers = document.querySelectorAll(".space-switcher");
+  var switchers = document.querySelectorAll(".space-switcher, .nav-menu");
   if (!switchers.length) return;
 
   function closeAll(except) {

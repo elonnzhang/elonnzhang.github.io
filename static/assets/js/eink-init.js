@@ -36,7 +36,13 @@
     "--color-background": "#ffffff",
     "--color-background-dark": "#ffffff",
     "--color-background-pre": "#ffffff",
+    "--color-background-pre-dark": "#ffffff",
+    "--color-background-code": "#ffffff",
+    "--color-background-code-dark": "#ffffff",
     "--color-background-toc": "#ffffff",
+    "--color-background-toc-dark": "#ffffff",
+    "--color-background-draft": "#ffffff",
+    "--color-background-draft-dark": "#ffffff",
     "--tui-accent": "#000000",
     "--tui-border": "#000000"
   };
@@ -45,8 +51,12 @@
   });
 
   // Neutralize archie's dark stylesheet so E-Ink is always light B&W.
-  var darkStyle = document.getElementById("darkModeStyle");
-  if (darkStyle) {
-    darkStyle.disabled = true;
+  // themetoggle.js runs later in the body and may re-enable it from localStorage.
+  function lockLight() {
+    var darkStyle = document.getElementById("darkModeStyle");
+    if (darkStyle) darkStyle.disabled = true;
+    root.setAttribute("data-theme", "light");
   }
+  lockLight();
+  document.addEventListener("DOMContentLoaded", lockLight);
 })();

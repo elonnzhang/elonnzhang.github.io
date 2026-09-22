@@ -12,11 +12,18 @@ What is active today:
 
 - Base: themes/archie/ (enabled with `theme: archie`). Default archie look — light
   UI, monospace, `#`-prefixed headings, purple accents, mermaid-friendly.
-- Patch styles: assets/css/tui-patch.css, loaded via archie's `params.customCSS`.
+- Patch styles: assets/css/tui-patch.css, assets/css/chroma.css, and
+  assets/css/neat-annotations.css, loaded via archie's `params.customCSS`.
 - Patch markup: layouts/ overrides only (see AGENTS.md "Theme architecture").
 - Patch scripts: static/assets/js/{space-switcher,mermaid,mermaid-fullscreen}.js.
 - Config: hugo.yaml sets `theme`, `params.mode: toggle`, `params.favicon`,
   `params.mainSections`, `params.customCSS`, and `menu.main`.
+- Syntax highlighting: Hugo Chroma with `markup.highlight.noClasses: false`.
+  Token colors live in chroma.css (GitHub light / Monokai dark, keyed off
+  `html[data-theme]`); Archie still owns the `.highlight` chrome and language
+  badges.
+- Hand-drawn callouts: vendored neat-annotations plus `layouts/shortcodes/ann.html`.
+  Markdown: `{{</* ann n amber "label" */>}}target{{</* /ann */>}}`.
 
 Active TUI elements (patched onto archie):
 

@@ -76,7 +76,9 @@
   var root = document.documentElement;
   function sync() {
     var dm = document.getElementById("darkModeStyle");
-    var dark = dm ? !dm.disabled : (localStorage.getItem("theme-storage") === "dark");
+    var eink = root.classList.contains("eink");
+    if (eink && dm) dm.disabled = true;
+    var dark = eink ? false : (dm ? !dm.disabled : (localStorage.getItem("theme-storage") === "dark"));
     root.setAttribute("data-theme", dark ? "dark" : "light");
   }
   sync();

@@ -1,6 +1,6 @@
 # Asset Guide
 
-The assets directory contains resources processed by Hugo Pipes. The main entry point is assets/css/main.scss, which imports the TUI styles.
+The assets directory contains resources processed by Hugo Pipes. Live styles are `css/chroma.css` (Chroma token colors), `css/neat-annotations.css` (hand-drawn callouts), and `css/tui-patch.css` (TUI overlay), all loaded via `params.customCSS`. `main.scss` is a leftover and is not wired on the archie base.
 
 ## Rules
 

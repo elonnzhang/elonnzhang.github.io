@@ -12,6 +12,13 @@
           <p>{{ .Site.Params.Subtitle | .Page.RenderString }}</p>
           {{- end -}}
         </div>
+        <center>
+          <span class="ann ann-n ann-green" data-note="我所向往的">自由</span>
+          <span class="ann ann-s ann-amber" data-note="我所期待的">和谐</span>
+        </center>
+
+        <hr />
+        <br />
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }} {{ $paginator := .Paginate (where
         $pages "Params.hidden" "ne" true) }} {{ range $paginator.Pages }}
         <section class="list-item">

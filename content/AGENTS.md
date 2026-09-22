@@ -22,6 +22,7 @@ Use draft: true for unfinished content. Do not put template placeholders in publ
 - Preserve article slugs and add aliases when an old URL needs compatibility.
 - Use Markdown headings, fenced code blocks, tables, and links normally.
 - Use /assets/... or another root-relative URL for local images.
+- Hand-drawn callouts use the `ann` shortcode (neat-annotations). Example: `{{</* ann n amber "no refresh needed" */>}}in real time{{</* /ann */>}}`. Directions: n ne e se s sw w nw. Colors: amber blue green red purple rainbow.
 - Do not use Obsidian embeds or Jekyll Liquid tags in published Hugo content.
 - Keep source attribution in clipping front matter or article content.
 
