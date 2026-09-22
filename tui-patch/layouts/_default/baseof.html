@@ -6,7 +6,7 @@
     <div id="wrapper">
       {{ partial "header.html" . }}
       <div class="container{{ if .IsHome }} container--post-index{{ end }}">
-        <main id="main-content">{{ block "main" . }}{{ end }}</main>
+        <main id="main-content">{{ if not .IsHome }}{{ partial "back-button.html" . }}{{ end }}{{ block "main" . }}{{ end }}</main>
       </div>
     </div>
     {{ partial "footer.html" . }}
@@ -20,6 +20,7 @@
     <script src="{{ "/assets/js/eink-reader.js" | relURL }}" defer></script>
     <script src="{{ "/assets/js/space-transition.js" | relURL }}" defer></script>
     <script src="{{ "/assets/js/theme.js" | relURL }}" defer></script>
+    <script src="{{ "/assets/js/back-button.js" | relURL }}" defer></script>
     {{ block "scripts" . }}{{ end }}
   </body>
 </html>

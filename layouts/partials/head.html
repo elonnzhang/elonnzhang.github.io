@@ -1,37 +1,88 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="Hugo">
-  <meta name="color-scheme" content="light dark">
-  <meta id="theme-color" name="theme-color" content="#f7f7f2">
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var ua = navigator.userAgent || "";
-      var preview = /(?:^|[?&])eink=(?:1|true|yes)(?:&|$)/i.test(window.location.search);
-      var web = /(?:\?|&)web=1(?:&|$)/.test(window.location.search);
-      var kindle = /\bKindle(?:\/|\s(?!Fire))/i.test(ua) && !/\bSilk\//i.test(ua);
-      var forced = {{ if eq .Params.force_eink true }}true{{ else }}false{{ end }} && !web;
-      var isEink = !web && (kindle || preview || forced);
-      root.className += (root.className ? " " : "") + "js";
-      if (!("open" in document.createElement("details"))) root.className += " no-details";
-      if (isEink) {
-        root.className += " eink";
-        root.setAttribute("data-eink", "true");
-        root.setAttribute("data-theme", "light");
-        if (preview) root.setAttribute("data-eink-preview", "true");
-        if (kindle) root.setAttribute("data-kindle", "true");
-        return;
-      }
-      var theme = "";
-      try { theme = window.localStorage.getItem("elonnzhang-theme") || ""; } catch (error) {}
-      if (theme !== "light" && theme !== "dark") theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      root.setAttribute("data-theme", theme);
-      document.getElementById("theme-color").setAttribute("content", theme === "dark" ? "#111210" : "#f7f7f2");
-    }());
-  </script>
-  {{ $style := resources.Get "css/main.scss" | toCSS | minify | fingerprint }}
-  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
-  {{ with .OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }} RSS">{{ end }}
-  {{ partial "seo.html" . }}
-</head>
+{{- define "feathericon" -}}
+  {{- if eq .Icon "sun" -}}
+    <svg class="feather" viewBox="0 0 24 24" fill="none" stroke="#232333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  {{- else if eq .Icon "moon" -}}
+    <svg class="feather" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  {{- else -}}
+    {{- $featherURL := "https://unpkg.com/feather-icons@4.29.2/dist/feather-sprite.svg" -}}
+    {{- if not (.UseCDN | default false) -}}
+      {{- $svgResource := resources.Get "svg/feather-sprite.svg" -}}
+      {{- if $svgResource -}}
+        {{- $featherURL = ($svgResource | fingerprint).RelPermalink -}}
+      {{- else -}}
+        {{- $featherURL = (absURL "svg/feather-sprite.svg") -}}
+      {{- end -}}
+    {{- end -}}
+    <svg class="feather">
+       <use href="{{ printf "%s#%s" $featherURL .Icon }}" />
+    </svg>
+  {{- end -}}
+{{- end -}}
+
+{{- /* TUI patch: terminal-style prompt as the site brand */ -}}
+{{- $current := "home" -}}
+{{- if eq .RelPermalink "/archive/" }}{{ $current = "archive" }}
+{{- else if eq .RelPermalink "/about/" }}{{ $current = "about" }}
+{{- else if eq .RelPermalink "/blog/" }}{{ $current = "blog" }}
+{{- else if eq .RelPermalink "/clippings/" }}{{ $current = "clippings" }}
+{{- else if eq .RelPermalink "/code-space/" }}{{ $current = "code-space" }}
+{{- else if hasPrefix .RelPermalink "/tags" }}{{ $current = "tags" }}
+{{- else if hasPrefix .RelPermalink "/categories" }}{{ $current = "categories" }}
+{{- else if eq .Section "posts" }}{{ $current = "blog" }}
+{{- else if eq .Section "clippings" }}{{ $current = "clippings" }}
+{{- else if eq .Section "code-space" }}{{ $current = "code-space" }}
+{{- end -}}
+<header>
+	<div class="main">
+		<span class="tui-prompt">
+			<a class="tui-prompt__owner" href="{{ absLangURL "/" }}" aria-label="{{ .Site.Title }} home">{{ site.Params.owner | default .Site.Title }}</a><details class="space-switcher{{ if eq $current "home" }} space-switcher--hint{{ end }}"><summary class="tui-prompt__space" aria-label="切换空间 / switch space"><span class="tui-prompt__at">@{{ $current }}$</span><span class="tui-prompt__caret" aria-hidden="true">▾</span></summary><nav class="space-switcher__menu" aria-label="空间 / spaces"><span class="space-switcher__command" aria-hidden="true">$ cd ~/</span>{{ range hugo.Data.site.spaces }}<a href="{{ .url | relURL }}" data-space-link="{{ .name }}"{{ if eq $current .name }} aria-current="page"{{ end }}><span class="space-switcher__mark" aria-hidden="true">{{ if eq $current .name }}&gt;{{ else }}&nbsp;{{ end }}</span><span>{{ .label }}</span>{{ if eq $current .name }}<span class="space-switcher__cwd">[cwd]</span>{{ end }}</a>{{ end }}</nav></details>
+		</span>
+	</div>
+	<nav>
+		<div class="nav-links-inline">
+			{{ range .Site.Menus.main }}
+			<a href="{{ .URL }}">{{ .Name }}</a>
+			{{ end }}
+		</div>
+		<details class="nav-menu">
+			<summary class="nav-menu__toggle" aria-label="菜单 / menu" title="菜单 / menu"><svg class="feather" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></summary>
+			<div class="nav-menu__links">
+				{{ range .Site.Menus.main }}
+				<a href="{{ .URL }}">{{ .Name }}</a>
+				{{ end }}
+			</div>
+		</details>
+		{{ if eq .Site.Params.mode "toggle" -}}
+		<button id="dark-mode-toggle" class="nav-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" type="button">{{template "feathericon" (dict "UseCDN" .Site.Params.useCDN "Icon" "sun") }}</button>
+		<script src="{{ absURL "js/themetoggle.js" }}"></script>
+		{{ end }}
+	</nav>
+  <link rel="icon" type="image/x-icon" href="favicon.png">
+</header>
+<script>
+(function () {
+  var root = document.documentElement;
+  function sync() {
+    var dm = document.getElementById("darkModeStyle");
+    var dark = dm ? !dm.disabled : (localStorage.getItem("theme-storage") === "dark");
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+  }
+  sync();
+  var btn = document.getElementById("dark-mode-toggle");
+  if (btn) btn.addEventListener("click", function () { setTimeout(sync, 0); });
+})();
+</script>
+<script src="{{ "/assets/js/space-switcher.js" | relURL }}" defer></script>
+<script src="{{ "/assets/js/eink-reader.js" | relURL }}" defer></script>

@@ -1,0 +1,11 @@
+{{ define "main" }}
+  {{ if eq .Params.galleryKind "category" }}
+    {{ partial "gallery-category.html" . }}
+  {{ else }}
+    {{ partial "gallery-album.html" . }}
+  {{ end }}
+{{ end }}
+
+{{ define "scripts" }}
+  <script src="{{ "/assets/js/gallery.js" | relURL }}" defer></script>
+{{ end }}

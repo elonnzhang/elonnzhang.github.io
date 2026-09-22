@@ -1,0 +1,11 @@
+{{- /* Code-block render hook for ```mermaid fences.
+       Keep the source in a <pre> until mermaid.js swaps in the SVG.
+       Wrap in a figure with a fullscreen button; flag the page so
+       single.html loads the mermaid runtime + fullscreen helper. */ -}}
+{{- .Page.Store.Set "hasMermaid" true -}}
+<figure class="mermaid-figure">
+  <button class="mermaid-fullscreen" type="button" aria-label="全屏查看图表 / view fullscreen" title="全屏查看">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"/></svg>
+  </button>
+  <pre class="mermaid" data-mermaid role="img" aria-label="Mermaid diagram">{{ .Inner | htmlEscape | safeHTML }}</pre>
+</figure>

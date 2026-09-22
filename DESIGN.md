@@ -1,5 +1,45 @@
 # Personal Site Design System
 
+## 0. Current Architecture (archie base + TUI patch)
+
+The live site was rebuilt on the athul/archie Hugo theme as the base, with a thin
+TUI patch layered on top via Hugo's normal theme-override mechanism. Sections 1–9
+below describe the original fully-custom TUI theme; that theme is preserved (inert)
+under tui-patch/ and is the reference for the patch, not the currently active
+markup. When the two disagree, this section wins for what actually ships.
+
+What is active today:
+
+- Base: themes/archie/ (enabled with `theme: archie`). Default archie look — light
+  UI, monospace, `#`-prefixed headings, purple accents, mermaid-friendly.
+- Patch styles: assets/css/tui-patch.css, loaded via archie's `params.customCSS`.
+- Patch markup: layouts/ overrides only (see AGENTS.md "Theme architecture").
+- Patch scripts: static/assets/js/{space-switcher,mermaid,mermaid-fullscreen}.js.
+- Config: hugo.yaml sets `theme`, `params.mode: toggle`, `params.favicon`,
+  `params.mainSections`, `params.customCSS`, and `menu.main`.
+
+Active TUI elements (patched onto archie):
+
+- Header prompt `elonnzhang@<space>$`: owner links home, `@<space>$ ▾` opens a
+  `<details>` space dropdown fed by data/site.yaml; one continuous accent
+  underline under `elonnzhang@<space>$`; dropdown closes on outside-click, scroll,
+  or Esc.
+- `cd ..` back link at the top of single, term, terms, and archive pages.
+- Archive page (layouts/_default/archive.html) grouped by year; English dates
+  (`Jan 2, 2006`) across list/single/term/archive.
+- Home body-fallback preview clamped to 5 lines.
+- Right-docked, fixed article outline (Hugo `.TableOfContents`) shown at
+  >=1360px via `toc: true` front matter; hidden on narrower widths so it never
+  squeezes the body.
+- Mermaid: official one-pass render, default theme, breakout width up to ~1100px,
+  fit-to-container overview, and a fit-to-viewport fullscreen overlay.
+- `scrollbar-gutter: stable` to stop header jump between short/long pages.
+
+Known gaps versus the original design below: E-Ink mode, the custom home landing
+panels, the dark phosphor-green palette, the unified-list-item component, and
+reading progress are part of the preserved TUI (tui-patch/) and are not wired on
+the archie base. Re-introduce them as patches if needed.
+
 ## 1. Product And Visual Direction
 
 This is a personal engineering site built with Hugo. Its primary visual language is a terminal TUI: prompt-like labels, monospace headings, compact metadata, underlined links, dashed rules, and restrained interaction feedback.

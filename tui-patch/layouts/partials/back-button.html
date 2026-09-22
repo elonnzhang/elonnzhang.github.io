@@ -1,0 +1,9 @@
+{{ $back := "/" }} {{ if and (eq .Section "posts") (ne .RelPermalink "/blog/") }}{{ $back = "/blog/" }} {{ else if and
+(eq .Section "clippings") (ne .RelPermalink "/clippings/") }}{{ $back = "/clippings/" }} {{ else if and (eq .Section
+"code-space") (ne .RelPermalink "/code-space/") }}{{ $back = "/code-space/" }} {{ else if eq .Params.pageKind
+"ink-reader" }}{{ $back = "/" }} {{ end }}
+<p class="page-back">
+  <a class="back-command" href="{{ $back | relURL }}" data-back-button aria-label="返回" title="返回"
+    ><span aria-hidden="true">$ </span><span>cd ..</span></a
+  >
+</p>

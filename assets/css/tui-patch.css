@@ -1,0 +1,757 @@
+/* TUI patch layer — sits on top of the archie base theme. */
+
+/* Reserve scrollbar space so the layout doesn't jump between short pages (no
+   scrollbar, e.g. home) and long pages (scrollbar, e.g. clippings). */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Accent tokens for the TUI patch. archie applies its dark palette through a
+   separate `--color-primary-dark` variable (not by overriding --color-primary),
+   so mirror that here keyed off html[data-theme] (synced in head.html). */
+:root {
+  --tui-accent: var(--color-primary, #dc143c);
+  --tui-border: var(--color-border, #663399);
+}
+
+html[data-theme="dark"] {
+  --tui-accent: var(--color-primary-dark, #50fa7b);
+  --tui-border: var(--color-border-dark, #0066ff);
+}
+
+/* Terminal-style prompt used as the site brand in the header.
+   One continuous underline is drawn on this container; the caret is an
+   inline-block so it is excluded from the underline. */
+.tui-prompt {
+  display: inline;
+  font-family: "Roboto Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--tui-accent);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
+}
+
+/* "elonnzhang" — links to home. Underline is inherited from .tui-prompt;
+   suppress archie's default per-link border-bottom to avoid a double line. */
+.tui-prompt__owner {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: none;
+  border-block-end: none;
+}
+
+.tui-prompt__owner:focus-visible {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 3px;
+}
+
+/* "@<section>$ ▾" — toggles the space dropdown. */
+.tui-prompt__space {
+  display: inline;
+  cursor: pointer;
+  list-style: none;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tui-prompt__space::-webkit-details-marker { display: none; }
+.tui-prompt__space::marker { content: ""; }
+
+/* "@<section>$" — underline is inherited from .tui-prompt. */
+.tui-prompt__at {
+  text-decoration: none;
+}
+
+.tui-prompt__space:focus-visible {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 3px;
+}
+
+/* Caret that rotates when the dropdown is open. */
+.tui-prompt__caret {
+  display: inline-block;
+  margin-left: 0.4em;
+  width: 1em;
+  color: var(--tui-accent);
+  font-size: 0.7em;
+  text-decoration: none;
+  transition: transform 140ms ease;
+}
+
+.space-switcher[open] .tui-prompt__caret {
+  transform: rotate(180deg);
+}
+
+/* Dropdown container. */
+.space-switcher {
+  position: relative;
+  display: inline;
+}
+
+/* Dropdown menu — dark terminal panel, works in both light and dark mode. */
+.space-switcher__menu {
+  position: absolute;
+  z-index: 85;
+  top: calc(100% + 6px);
+  left: 0;
+  display: none;
+  width: 258px;
+  max-width: calc(100vw - 32px);
+  padding: 7px 0;
+  border: 1px solid #30352d;
+  border-radius: 3px;
+  background: #181a18;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  font-family: "Roboto Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.space-switcher[open] > .space-switcher__menu {
+  display: grid;
+}
+
+.space-switcher__command {
+  display: block;
+  padding: 2px 12px 6px;
+  color: #a8aa9f;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.space-switcher__menu a {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 3px 12px;
+  color: #edf1e8;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.space-switcher__menu a:hover {
+  background: #263028;
+  color: #ffffff;
+}
+
+.space-switcher__menu a[aria-current="page"] {
+  color: #39ff14;
+  font-weight: 700;
+}
+
+.space-switcher__menu a:focus-visible {
+  outline: 1px solid #39ff14;
+  outline-offset: -2px;
+  background: #263028;
+  color: #ffffff;
+}
+
+.space-switcher__mark {
+  color: #39ff14;
+  text-align: center;
+}
+
+.space-switcher__cwd {
+  color: #a8aa9f;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* neat-annotations hint on the header prompt path (home page only).
+   Points at "@home$ ▾" — the space switcher, i.e. change working directory.
+   Hidden once the dropdown is opened, on mobile, and in E-Ink. */
+.space-switcher--hint::before {
+  content: "";
+  position: absolute;
+  z-index: 86;
+  left: 46%;
+  top: calc(100% + 2px);
+  width: 58px;
+  height: 40px;
+  background: var(--tui-accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='58' height='40' viewBox='0 0 58 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54 33 C42 33 20 30 9 11' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M4 20 L9 11 L19 15' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='58' height='40' viewBox='0 0 58 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54 33 C42 33 20 30 9 11' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M4 20 L9 11 L19 15' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.space-switcher--hint::after {
+  content: "点这里 cd 到别处";
+  position: absolute;
+  z-index: 86;
+  left: calc(46% + 64px);
+  top: calc(100% + 12px);
+  transform: rotate(-3deg);
+  width: max-content;
+  max-width: 170px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-size: 0.8rem;
+  line-height: 1.05;
+  color: var(--tui-accent);
+  opacity: 0.95;
+  pointer-events: none;
+}
+.space-switcher--hint[open]::before,
+.space-switcher--hint[open]::after { display: none; }
+@media (max-width: 720px) {
+  .space-switcher--hint::before,
+  .space-switcher--hint::after { display: none; }
+}
+html.eink .space-switcher--hint::before,
+html.eink .space-switcher--hint::after { display: none; }
+
+/* The hint hangs below the prompt, so reserve a little top room in the body
+   on the home page to keep the arrow clear of the first line of content.
+   :has() scopes this to the home header (the only page with the hint); it is
+   skipped in E-Ink, where the annotation itself is hidden. */
+html:not(.eink) .content:has(.space-switcher--hint) > main {
+  padding-top: 1.6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tui-prompt__caret { transition: none; }
+}
+
+/* "cd .." back link at the top-left of single/post pages. */
+.tui-back {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: 1.25rem;
+  font-family: "Roboto Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--color-text, #232333);
+}
+
+.tui-back__cmd {
+  font-weight: 700;
+  color: var(--tui-accent);
+}
+
+.tui-back:hover .tui-back__cmd,
+.tui-back:focus-visible .tui-back__cmd {
+  text-decoration: underline;
+}
+
+.tui-back__cmd::before {
+  content: "$ ";
+  color: inherit;
+  opacity: 0.6;
+}
+
+.tui-back__hint {
+  opacity: 0.55;
+  font-size: 0.85em;
+}
+
+.tui-back:focus-visible {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 3px;
+}
+
+/* List spacing — give the post lists more breathing room. */
+/* Home / section list (archie index + list layout). */
+.list-item {
+  margin-bottom: 2.75rem;
+}
+
+.list-item .title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.list-item time {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  opacity: 0.7;
+}
+
+.list-item .description {
+  margin: 0.2rem 0 0.9rem;
+  line-height: 1.7;
+}
+
+.list-item .readmore {
+  display: inline-block;
+}
+
+/* neat-annotations trial: a hand-drawn hint on the FIRST post's "Read more".
+   Technique from https://github.com/syabro/neat-annotations (MIT), reduced to a
+   single self-contained element (no markup change) and restyled for this site:
+   the arrow sits to the right and points back at the link, label further right. */
+.list-item:first-of-type .readmore {
+  position: relative;
+  overflow: visible;
+}
+.list-item:first-of-type .readmore::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  left: calc(100% + 4px);
+  top: calc(50% - 19px);
+  width: 46px;
+  height: 38px;
+  background: var(--tui-accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M43 19 C32 18 15 18 3 19' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M10 13 L3 19 L10 25' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M43 19 C32 18 15 18 3 19' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M10 13 L3 19 L10 25' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.list-item:first-of-type .readmore::after {
+  content: "点这看全文";
+  position: absolute;
+  z-index: 4;
+  left: calc(100% + 56px);
+  top: 50%;
+  transform: translateY(-50%) rotate(-4deg);
+  width: max-content;
+  max-width: 160px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-size: 0.8rem;
+  line-height: 1.05;
+  color: var(--tui-accent);
+  opacity: 0.95;
+  pointer-events: none;
+}
+@media (max-width: 720px) {
+  .list-item:first-of-type .readmore::before,
+  .list-item:first-of-type .readmore::after { display: none; }
+}
+html.eink .list-item:first-of-type .readmore::before,
+html.eink .list-item:first-of-type .readmore::after { display: none; }
+
+/* Archive / taxonomy term lists (ul.posts > li.post). */
+.posts {
+  line-height: 1.7;
+}
+
+.posts .post {
+  margin-bottom: 1rem;
+}
+
+/* Extra gap between year groups on the archive page. */
+.page-title + .posts,
+h2 + .posts {
+  margin-top: 0.75rem;
+}
+
+/* Paginator — Prev on the left, Next on the right (flanking the divider). */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination .page-item {
+  display: inline-flex;
+}
+
+.pagination .page-prev { margin-right: auto; }
+.pagination .page-next { margin-left: auto; }
+
+/* Home list: when falling back to body content (no description),
+   clamp the preview to at most 5 lines. */
+.description--clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
+}
+
+.description--clamp :where(p) {
+  margin: 0;
+}
+
+/* Mermaid diagrams — strip archie's code-block box and center the SVG. */
+.mermaid-figure {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Break out of the 800px article column (up to ~1100px) without ever
+     exceeding the viewport, so large diagrams get more room for an overview. */
+  width: min(1100px, calc(100vw - 3rem));
+  margin-top: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+pre.mermaid,
+.mermaid {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  overflow-x: auto;
+  text-align: center;
+  line-height: normal;
+}
+
+/* Raw source shown before mermaid.js runs (fallback). */
+pre.mermaid:not([data-processed="true"]) {
+  font-family: "Roboto Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+.mermaid svg {
+  display: block;
+  height: auto;
+  /* Fit the diagram to the (widened) container as an overview; scale down if
+     larger, keep natural size if smaller. Overrides archie's `svg` icon cap. */
+  max-width: 100%;
+  max-height: none;
+  max-inline-size: 100%;
+  max-block-size: none;
+  margin: 0 auto;
+}
+
+/* Fullscreen button on each diagram. */
+.mermaid-fullscreen {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--tui-border);
+  border-radius: 4px;
+  background: var(--color-background, #fff);
+  color: var(--color-text, #232333);
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.mermaid-figure:hover .mermaid-fullscreen,
+.mermaid-fullscreen:focus-visible {
+  opacity: 1;
+}
+
+.mermaid-fullscreen:hover,
+.mermaid-fullscreen:focus-visible {
+  background: var(--tui-accent);
+  color: #fff;
+}
+
+/* Fullscreen overlay. */
+.mermaid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(12, 14, 18, 0.94);
+}
+
+.mermaid-overlay__content {
+  position: absolute;
+  top: 56px;
+  right: 24px;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mermaid-overlay__content svg {
+  display: block;
+  /* Fixed box (content fills the viewport minus padding); the viewBox +
+     preserveAspectRatio scale the diagram to fit inside it — fully visible,
+     as large as possible. */
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+}
+
+.mermaid-overlay__close {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 1001;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mermaid-overlay__close:hover,
+.mermaid-overlay__close:focus-visible {
+  border-color: #fff;
+  background: var(--tui-accent);
+}
+
+/* Article outline (Hugo .TableOfContents) — dock to the right margin so it
+   never squeezes the article body. */
+
+/* Keep the article body full width; the TOC is taken out of the flow below. */
+.post-container {
+  display: block;
+}
+
+.post-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Hidden by default (narrow screens); shown as a fixed right-docked panel when
+   the viewport is wide enough to fit it beside the centered content. */
+.toc {
+  display: none;
+}
+
+@media screen and (min-width: 1360px) {
+  .toc {
+    display: block;
+    position: fixed;
+    top: 6.5rem;
+    right: 1.75rem;
+    width: 240px;
+    max-width: 240px;
+    max-height: calc(100vh - 9rem);
+    margin: 0;
+    overflow-y: auto;
+    z-index: 40;
+    font-size: 0.85rem;
+  }
+
+  /* Nested lists: modest indent so the "*" markers are never clipped. */
+  .toc nav ul ul {
+    padding-left: 1.25rem;
+  }
+
+  /* TOC links: drop archie's heavy red underline; underline only on hover. */
+  .toc a {
+    border-bottom: none;
+    border-block-end: none;
+  }
+
+  .toc a:hover,
+  .toc a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* --- Mobile / narrow-screen adaptation --------------------------------------
+   Two breakpoints:
+   - <=1024px: the content column fills the viewport (drop the 800px cap) so
+     narrow windows and tablets are not boxed in by wide side gutters.
+   - <=720px (phones only): the header nav links collapse behind a hamburger
+     disclosure. Normal web keeps the links inline and visible. The menu is a
+     pure-CSS <details> (no JS; gated on :not(.eink)). */
+
+/* Desktop / normal web default: an always-on inline link list flows inside
+   <nav> exactly as archie renders it (display: contents hoists the links as
+   direct flex children), and the hamburger <details> is hidden. A closed
+   <details> hides its own non-summary content no matter what CSS it carries,
+   so the desktop links live in this separate list and are duplicated inside
+   the <details> for the mobile dropdown. */
+.nav-links-inline {
+  display: contents;
+}
+
+.nav-menu {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  /* Content fills the viewport instead of the 800px reading column. */
+  .content {
+    max-width: 100%;
+    max-inline-size: 100%;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-inline: 0.75rem;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Keep the header on one row (override archie's column stack at <=599px) so
+     the prompt stays left and the menu + toggle stay right; wrap only if
+     genuinely out of room. */
+  html:not(.eink) header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  html:not(.eink) header .main {
+    font-size: 1.25rem;
+  }
+
+  /* Collapse the nav into a hamburger disclosure: hide the inline link list and
+     reveal the hamburger <details>. */
+  html:not(.eink) .nav-links-inline {
+    display: none;
+  }
+
+  html:not(.eink) .nav-menu {
+    display: block;
+    position: relative;
+  }
+
+  html:not(.eink) .nav-menu__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    border: 1px solid var(--tui-border);
+    border-radius: 4px;
+    color: var(--color-text, #232333);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  html:not(.eink) .nav-menu__toggle::-webkit-details-marker { display: none; }
+  html:not(.eink) .nav-menu__toggle::marker { content: ""; }
+
+  html:not(.eink) .nav-menu__toggle:hover,
+  html:not(.eink) .nav-menu[open] .nav-menu__toggle {
+    background: var(--tui-accent);
+    color: #ffffff;
+  }
+
+  html:not(.eink) .nav-menu__toggle:focus-visible {
+    outline: 2px solid var(--tui-accent);
+    outline-offset: 2px;
+  }
+
+  /* Dropdown panel — a dark terminal panel matching the space switcher, so it
+     reads the same in light and dark mode. Right-aligned under the hamburger. */
+  html:not(.eink) .nav-menu__links {
+    display: none;
+    position: absolute;
+    z-index: 90;
+    top: calc(100% + 8px);
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    min-width: 200px;
+    max-width: calc(100vw - 1.5rem);
+    padding: 6px 0;
+    border: 1px solid #30352d;
+    border-radius: 3px;
+    background: #181a18;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+    font-family: "Roboto Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  html:not(.eink) .nav-menu[open] .nav-menu__links {
+    display: flex;
+  }
+
+  html:not(.eink) .nav-menu__links a {
+    display: block;
+    padding: 8px 16px;
+    color: #edf1e8;
+    font-size: 14px;
+    line-height: 22px;
+    border-bottom: none;
+    border-block-end: none;
+    white-space: nowrap;
+  }
+
+  html:not(.eink) .nav-menu__links a:hover,
+  html:not(.eink) .nav-menu__links a:focus-visible {
+    background: #263028;
+    color: #ffffff;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* E-Ink mode (patch). eink-init.js adds html.eink + forces the palette */
+/* variables to black & white; these rules handle structure and hiding. */
+/* ------------------------------------------------------------------ */
+html.eink,
+html.eink body {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* Serif reading face for body copy; keep code/prompt monospace. */
+html.eink body {
+  font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
+}
+
+html.eink pre,
+html.eink code,
+html.eink kbd,
+html.eink .tui-prompt,
+html.eink .tui-back,
+html.eink .toc {
+  font-family: "Roboto Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* No motion on E-Ink. */
+html.eink *,
+html.eink *::before,
+html.eink *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Hide interactive/decorative chrome that doesn't belong on E-Ink. */
+html.eink #dark-mode-toggle,
+html.eink .tui-prompt__caret,
+html.eink .space-switcher__menu,
+html.eink .mermaid-fullscreen {
+  display: none !important;
+}
+
+/* Prevent the space dropdown from opening on E-Ink. */
+html.eink .space-switcher[open] > .space-switcher__menu {
+  display: none !important;
+}
+
+/* Code blocks and diagrams in plain black & white. */
+html.eink pre,
+html.eink code {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #000 !important;
+  box-shadow: none !important;
+}
+
+html.eink img,
+html.eink .mermaid svg {
+  filter: grayscale(1);
+}
+
+/* Footer E-Ink / Web mode entries: show the relevant one for the mode. */
+.eink-web-mode-entry { display: none; }
+html.eink .eink-mode-entry { display: none; }
+html.eink .eink-web-mode-entry { display: inline; }
+
+/* Header nav links — slightly smaller than the default. */
+header > nav a {
+  font-size: 0.8125rem;
+}

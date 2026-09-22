@@ -1,15 +1,12 @@
 {{ define "main" }}
 <main>
-  {{ $back := "/" }}
-  {{ with .CurrentSection }}{{ if and .RelPermalink (ne .RelPermalink $.RelPermalink) }}{{ $back = .RelPermalink }}{{ end }}{{ end }}
-  <a class="tui-back" href="{{ $back }}" aria-label="返回上一页 / go up"><span class="tui-back__cmd">cd ..</span><span class="tui-back__hint" aria-hidden="true"># 返回上一页</span></a>
   <article>
     <div class="post-container">
       <!-- Main Content -->
       <div class="post-content">
         <div class="title">
           <h1 class="title">{{ .Title }}</h1>
-          <div class="meta">Posted on {{ .Date.Format "Jan 2, 2006" }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</div>
+          <div class="meta">Posted on {{ dateFormat ":date_medium" .Date }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</div>
         </div>
         {{ if isset .Params "tldr" }}
         <div class="tldr">
@@ -53,10 +50,5 @@
     {{- partial "disqus.html" . -}}
     {{- end -}}
   </article>
-  {{ if .Page.Store.Get "hasMermaid" }}
-  <script src="{{ "/assets/js/vendor/mermaid.min.js" | relURL }}" defer></script>
-  <script src="{{ "/assets/js/mermaid.js" | relURL }}" defer></script>
-  <script src="{{ "/assets/js/mermaid-fullscreen.js" | relURL }}" defer></script>
-  {{ end }}
 </main>
 {{ end }}

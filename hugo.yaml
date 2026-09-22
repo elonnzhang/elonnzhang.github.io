@@ -7,6 +7,7 @@ languages:
     label: Chinese
     weight: 1
 title: elonnzhang
+theme: archie
 enableRobotsTXT: true
 ignoreFiles:
   - (^|/)AGENTS\.md$
@@ -37,18 +38,53 @@ outputFormats:
     isPlainText: true
     rel: alternate
 params:
+  mode: toggle
+  favicon: /assets/favicon.png
+  customJS:
+    - assets/js/eink-init.js
+  customCSS:
+    - css/tui-patch.css
+  mainSections:
+    - posts
+    - clippings
+    - code-space
   owner: elonnzhang
   authorEmail: elonnzhang@gmail.com
   description: BLOG / engineering notes on Go, systems, databases and AI tools.
   siteTagline: Systems, code, and things worth understanding.
+  subtitle: Systems, code, and things worth understanding.
   customDomain: jiabin.dev
   defaultDomain: elonnzhang.github.io
   remoteAssets:
     enabled: false
     baseURL: https://blog-assets.jiabin.dev
   social:
-    github: https://github.com/elonnzhang
-    email: mailto:elonnzhang@gmail.com
+    - name: GitHub
+      icon: github
+      url: https://github.com/elonnzhang
+    - name: Email
+      icon: mail
+      url: mailto:elonnzhang@gmail.com
+menu:
+  main:
+    - name: Home
+      url: /
+      weight: 1
+    - name: Blog
+      url: /blog/
+      weight: 2
+    - name: Clippings
+      url: /clippings/
+      weight: 3
+    - name: Archive
+      url: /archive/
+      weight: 4
+    - name: About
+      url: /about/
+      weight: 5
+    - name: Tags
+      url: /tags/
+      weight: 6
 services:
   rss:
     limit: 20

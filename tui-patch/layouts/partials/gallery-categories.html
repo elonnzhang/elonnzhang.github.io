@@ -1,0 +1,13 @@
+<section class="gallery-shell gallery-intro gallery-intro--compact" aria-labelledby="category-title">
+  <h1 id="category-title">Categories</h1>
+  <p>{{ .Description }}</p>
+</section>
+<nav class="gallery-shell gallery-category-list" aria-label="图库分类">
+  {{ range .Pages.ByTitle }}
+    {{ $category := .Params.category }}
+    {{ $count := 0 }}
+    {{ range where site.RegularPages "Section" "gallery" }}{{ if and (eq .Params.galleryKind "album") (in .Params.categories $category) }}{{ $count = add $count 1 }}{{ end }}{{ end }}
+    <a class="gallery-category-card" href="{{ .RelPermalink }}"><span><strong>{{ .Title }}</strong><small>{{ .Description }}</small></span><span class="gallery-category-card__count">{{ $count }} albums</span></a>
+  {{ end }}
+</nav>
+<section class="gallery-shell gallery-home-link"><a href="{{ "/gallery/" | relURL }}"><span aria-hidden="true">&larr;</span> Back to albums</a></section>
