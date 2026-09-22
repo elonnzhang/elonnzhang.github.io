@@ -17,7 +17,7 @@ package-lock.json
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/tasks.json
-.obsidian/
+.obsidian/*
 .obsidian/workspace.json
 
 # Misc
@@ -27,3 +27,12 @@ assets/.DS_Store
 
 .agents/
 skills-lock.json
+.obsidian/app.json
+.obsidian/appearance.json
+.obsidian/daily-notes.json
+.obsidian/plugins/obsidian-excalidraw-plugin/data.json
+.obsidian/plugins/obsidian-excalidraw-plugin/manifest.json
+.obsidian/plugins/obsidian-outliner/main.js
+.obsidian/plugins/obsidian-style-settings/data.json
+.obsidian/themes/Baseline/manifest.json
+.obsidian/themes/Baseline/theme.css

@@ -2,7 +2,11 @@
 title: VS Code Custom UI CSS 配置
 date: 2026-07-25
 categories: tooling
+tags:
+ - tool
+ - vscode
 slug: vscode-custom-ui
+description: 使用插件自定义 VSCode 的样式，隐藏元素。
 ---
 
 

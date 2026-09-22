@@ -166,6 +166,40 @@ html[data-theme="dark"] #wrapper > header {
   margin: 0 auto;
 }
 
+.page-back {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.back-command {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 32px;
+  padding: 2px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-command:hover {
+  border-color: var(--accent);
+  background: var(--surface);
+  color: var(--heading);
+  text-decoration: none;
+}
+
+.back-command:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
 .space-switcher {
   position: relative;
   flex: 0 0 380px;
@@ -713,6 +747,24 @@ pre {
   line-height: 1.65;
   white-space: pre;
   -webkit-overflow-scrolling: touch;
+}
+
+pre.mermaid {
+  overflow-x: auto;
+  text-align: center;
+  white-space: pre;
+}
+
+pre.mermaid svg {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+pre.mermaid-error {
+  text-align: left;
 }
 
 code.highlighter-rouge {
@@ -1820,6 +1872,16 @@ html.eink .landing-page-card__frame {
     padding-right: 0;
   }
 
+  .page-back {
+    margin-bottom: 12px;
+  }
+
+  .back-command {
+    min-height: 30px;
+    padding: 2px 7px;
+    font-size: 12px;
+  }
+
   .space-switcher,
   .space-switcher-fallback {
     padding-right: 58px;
@@ -2409,6 +2471,13 @@ html.eink .header-container {
   padding-right: 0;
 }
 
+html.eink .back-command {
+  border-color: #000000;
+  background: #ffffff;
+  color: #000000;
+  text-decoration: none;
+}
+
 html.eink img {
   filter: grayscale(100%);
   outline: 1px solid #000000;
@@ -2732,6 +2801,13 @@ html.eink.eink-reader-enabled .pagination {
 
   .header-container {
     padding-right: 0;
+  }
+
+  .back-command {
+    border-color: #000000;
+    background: #ffffff;
+    color: #000000 !important;
+    text-decoration: none;
   }
 
   .space-switcher__menu {
