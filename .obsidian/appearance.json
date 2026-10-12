@@ -1,5 +1,8 @@
 {
   "cssTheme": "Baseline",
   "textFontFamily": "LXGW WenKai",
-  "nativeMenus": true
+  "interfaceFontFamily": "TencentSans",
+  "translucency": true,
+  "monospaceFontFamily": "FiraCode Nerd Font",
+  "baseFontSize": 18
 }

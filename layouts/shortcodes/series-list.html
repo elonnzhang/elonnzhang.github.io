@@ -1,0 +1,32 @@
+{{- /* Render every page in a series in its explicit reading order.
+     Usage: {{< series-list "adk" >}} */ -}}
+{{- $series := .Get 0 -}}
+{{- if not $series -}}
+  {{- errorf "The %q shortcode requires a positional series name. See %s" .Name .Position -}}
+{{- else -}}
+  {{- $pages := where site.RegularPages "Params.series" "eq" $series -}}
+  {{- if not $pages -}}
+    {{- errorf "The %q shortcode could not find any pages in series %q. See %s" .Name $series .Position -}}
+  {{- else -}}
+    {{- $items := slice -}}
+    {{- range $pages -}}
+      {{- $page := . -}}
+      {{- if isset .Params "series_order" -}}
+        {{- $items = $items | append (dict "order" (int .Params.series_order) "page" $page) -}}
+      {{- else -}}
+        {{- errorf "Page %q belongs to series %q but has no series_order" $page.File.Path $series -}}
+      {{- end -}}
+    {{- end -}}
+    <ol class="series-list">
+      {{- range sort $items "order" "asc" }}
+        {{- $page := .page }}
+        <li class="series-list__item">
+          <a href="{{ $page.RelPermalink }}">{{ $page.LinkTitle }}</a>
+          {{- with $page.Description }}
+            <p class="series-list__description">{{ . }}</p>
+          {{- end }}
+        </li>
+      {{- end }}
+    </ol>
+  {{- end -}}
+{{- end -}}

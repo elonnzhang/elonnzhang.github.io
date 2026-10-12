@@ -6,11 +6,27 @@
 {{ end }}
 
 <ul class="posts">
-	{{- range .Data.Pages -}}
-		{{- if (not (in (.Site.Params.excludedTypes | default (slice "page")) .Type)) -}}
-		<li class="post">
-			<a href="{{ .RelPermalink }}">{{.Title}}</a> <span class="meta">{{ .Date.Format "Jan 2, 2006" }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</span>
-		</li>
+	{{- $pages := .Data.Pages -}}
+	{{- $listedSeries := slice -}}
+	{{- range $pages -}}
+		{{- if not (in (.Site.Params.excludedTypes | default (slice "page")) .Type) -}}
+			{{- $series := .Params.series -}}
+			{{- if and (eq $.RelPermalink "/blog/") $series -}}
+				{{- if not (in $listedSeries $series) -}}
+					{{- $listedSeries = $listedSeries | append $series -}}
+					{{- range sort (where $pages "Params.series" $series) "Params.series_order" "asc" -}}
+					{{- if not (in ($.Site.Params.excludedTypes | default (slice "page")) .Type) -}}
+					<li class="post">
+						<a href="{{ .RelPermalink }}">{{ .Title }}</a> <span class="meta">{{ .Date.Format "Jan 2, 2006" }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</span>
+					</li>
+					{{- end -}}
+					{{- end -}}
+				{{- end -}}
+			{{- else -}}
+			<li class="post">
+				<a href="{{ .RelPermalink }}">{{ .Title }}</a> <span class="meta">{{ .Date.Format "Jan 2, 2006" }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</span>
+			</li>
+			{{- end -}}
 		{{- end -}}
 	{{- end -}}
 </ul>

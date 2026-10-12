@@ -5,8 +5,8 @@
   "baseline-style@@background-contrast-light": "contrast-light",
   "baseline-style@@color-scheme-dark": "tiniri-dark",
   "baseline-style@@font-interface-override": "'Segoe UI Variable', 'Segoe UI Variable Text', 'Segoe UI'",
-  "baseline-style@@radius-modifier": 1,
-  "baseline-style@@layout-style": "layout-baseline",
+  "baseline-style@@radius-modifier": 1.5,
+  "baseline-style@@layout-style": "layout-cards",
   "baseline-style@@status-bar-style": "status-bar-cupertino",
   "baseline-style@@anim-motion-baseline": "cubic-bezier(0.32, 0.72, 0, 1)",
   "baseline-style@@anim-speed-modifier": 0.9,
@@ -74,6 +74,14 @@
   "baseline-style@@tag-border-width": 1,
   "baseline-style@@tag-background@@dark": "#FFFFFF00",
   "baseline-style@@tag-background@@light": "#FFFFFF00",
-  "baseline-style@@prompt-style": "prompt-baseline",
-  "baseline-style@@input-style": "input-baseline"
+  "obsidian-velocity-config@@prevent-exit": false,
+  "obsidian-velocity@@file-line-width": 45,
+  "baseline-style@@element-style": "input-fluent",
+  "baseline-style@@tab-style": "tab-floating",
+  "baseline-style@@tab-top-left-style": "tab-top-left-icon",
+  "baseline-style@@nav-action": "nav-action-center",
+  "baseline-style@@tab-left-style": "tab-left-icon",
+  "baseline-style@@tab-right-style": "tab-right-icon",
+  "baseline-style@@translucent-light-opacity": 0,
+  "baseline-style@@translucent-dark-opacity": 0
 }

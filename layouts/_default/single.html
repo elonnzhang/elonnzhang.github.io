@@ -3,7 +3,11 @@
   {{ $back := "/" }}
   {{ with .CurrentSection }}{{ if and .RelPermalink (ne .RelPermalink $.RelPermalink) }}{{ $back = .RelPermalink }}{{ end }}{{ end }}
   <a class="tui-back" href="{{ $back }}" aria-label="返回上一页 / go up"><span class="tui-back__cmd">cd ..</span><span class="tui-back__hint" aria-hidden="true"># 返回上一页</span></a>
-  <article>
+  <article id="article" class="post" data-reading-progress>
+    <div id="reading-progress" class="reading-progress" role="progressbar" aria-label="阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <span class="reading-progress__value"></span>
+      <span class="reading-progress__label">[0%]</span>
+    </div>
     <div class="post-container">
       <!-- Main Content -->
       <div class="post-content">
@@ -36,10 +40,15 @@
 
       <!-- TOC -->
       {{ if and (isset .Params "toc") (.Params.toc) }}
-      <div class="toc">
-        <strong>Table of contents:</strong>
-        {{ .TableOfContents }}
-      </div>
+      <aside class="toc" aria-label="Table of contents">
+        <div class="toc__header">
+          <strong>Table of contents:</strong>
+          <button class="toc__toggle" type="button" aria-expanded="true" aria-controls="article-toc" title="隐藏目录">
+            <span class="toc__toggle-label">hide</span><span aria-hidden="true">[-]</span>
+          </button>
+        </div>
+        <div id="article-toc" class="toc__content">{{ .TableOfContents }}</div>
+      </aside>
       {{ end }}
     </div>
 
@@ -53,6 +62,8 @@
     {{- partial "disqus.html" . -}}
     {{- end -}}
   </article>
+  <button class="back-to-top" type="button" aria-label="回到页面顶部" title="回到页面顶部"><span aria-hidden="true">$ ↑</span><span class="back-to-top__label">top</span></button>
+  <script src="{{ "/assets/js/reading-progress.js" | relURL }}" defer></script>
   {{ if .Page.Store.Get "hasMermaid" }}
   <script src="{{ "/assets/js/vendor/mermaid.min.js" | relURL }}" defer></script>
   <script src="{{ "/assets/js/mermaid.js" | relURL }}" defer></script>

@@ -1,5 +1,4 @@
 {
   "folder": "content/posts",
-  "autorun": true,
   "template": "content/posts/draft-title.md"
 }

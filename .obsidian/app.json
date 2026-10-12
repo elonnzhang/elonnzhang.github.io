@@ -7,5 +7,7 @@
   "propertiesInDocument": "source",
   "useMarkdownLinks": true,
   "promptDelete": false,
-  "newLinkFormat": "absolute"
+  "newLinkFormat": "absolute",
+  "readableLineLength": true,
+  "openBehavior": "daily"
 }

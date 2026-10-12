@@ -44,9 +44,13 @@
 
     overlay.appendChild(closeBtn);
     overlay.appendChild(content);
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "图表全屏预览");
     document.body.appendChild(overlay);
     document.documentElement.style.overflow = "hidden";
     openOverlay = overlay;
+    closeBtn.focus();
 
     closeBtn.addEventListener("click", close);
     overlay.addEventListener("click", function (event) {
